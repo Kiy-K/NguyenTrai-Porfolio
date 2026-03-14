@@ -1,0 +1,46 @@
+@import "tailwindcss";
+
+@theme {
+  --font-playfair: var(--font-playfair), serif;
+}
+
+:root {
+  --color-parchment: #F4EBD0;
+  --color-ink: #2C1E16;
+  --color-gold: #B8860B;
+  --color-accent: #8B3A3A;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  
+  body {
+    @apply bg-[#F4EBD0] text-[#2C1E16] font-playfair selection:bg-[#B8860B]/30 selection:text-[#8B3A3A];
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-playfair text-[#2C1E16];
+  }
+}
+
+/* Clean Section Divider */
+.medieval-divider {
+  height: 1px;
+  background-color: #B8860B;
+  position: relative;
+  margin: 2rem auto;
+  width: 100px;
+  opacity: 0.5;
+}
+
+/* Button Styles */
+.vintage-btn {
+  @apply bg-[#8B3A3A] text-white font-bold py-2 px-6 rounded-sm hover:bg-[#6B1717] hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300 shadow-md uppercase tracking-wider text-sm font-playfair;
+}
+
+/* Input Styles */
+.vintage-input {
+  @apply w-full px-4 py-2 bg-white border border-[#B8860B] rounded-sm text-[#2C1E16] focus:outline-none focus:border-[#8B3A3A] focus:ring-1 focus:ring-[#8B3A3A] transition-all font-playfair shadow-sm;
+}
