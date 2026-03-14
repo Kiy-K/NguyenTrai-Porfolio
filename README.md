@@ -1,30 +1,33 @@
-# 🎓 Student Project Portfolio / Portfolio Dự Án Sinh Viên
+# 📜 Nguyễn Trãi - Danh nhân văn hóa thế giới (World Cultural Celebrity)
 
 *(Bilingual README: English & Vietnamese)*
 
-A clean, simple, and responsive Next.js application designed for students to showcase their school projects and products. It includes a built-in AI integration (OpenAI-compatible) to automatically summarize project descriptions.
+A beautifully designed, responsive Next.js application dedicated to showcasing the life, works, and legacy of Nguyễn Trãi - a prominent Vietnamese scholar, poet, and world cultural celebrity.
 
-Một ứng dụng Next.js giao diện sạch, đơn giản và tương thích với mọi thiết bị, được thiết kế dành cho sinh viên để trưng bày các dự án và sản phẩm trên trường. Dự án có tích hợp sẵn AI (tương thích OpenAI) để tự động tóm tắt mô tả dự án.
+Một ứng dụng Next.js giao diện đẹp mắt và tương thích mọi thiết bị, được thiết kế để trưng bày về cuộc đời, sự nghiệp và di sản của Nguyễn Trãi - danh nhân văn hóa thế giới, nhà tư tưởng, nhà thơ lớn của dân tộc Việt Nam.
 
 ---
 
 ## ✨ Features / Tính năng nổi bật
 
-- **Product List Page**: Responsive grid showcasing all projects. *(Trang danh sách dự án dạng lưới)*
-- **Product Detail Page**: Full description, image gallery, and video support. *(Trang chi tiết dự án với hình ảnh và video)*
-- **AI Summarization**: Built-in AI button to summarize long descriptions using OpenAI, Mistral, or Gemini. *(Tích hợp AI tóm tắt mô tả dự án)*
-- **About Us Page**: Introduce your team members and roles. *(Trang giới thiệu nhóm)*
-- **Responsive Design**: Works perfectly on mobile, tablet, and desktop. *(Giao diện tương thích mọi thiết bị)*
+- **Elegant UI/UX**: Designed with a classic, elegant theme using the Playfair Display font and warm colors to reflect the historical significance. *(Giao diện thanh lịch, cổ điển với tông màu ấm và font chữ Playfair Display)*
+- **Smart Navigation**: Features a sticky, auto-hiding navigation bar that smoothly slides out of view when scrolling down to maximize reading space, and instantly reappears when scrolling up. *(Thanh điều hướng thông minh tự động ẩn khi cuộn xuống và hiện lại khi cuộn lên)*
+- **Smooth Scrolling**: Enjoy a seamless browsing experience with smooth anchor scrolling across the application. *(Trải nghiệm cuộn trang mượt mà)*
+- **Content Categories**: Organized sections for his biography, literary works, and historical contributions. *(Phân loại nội dung rõ ràng: tiểu sử, tác phẩm văn học, đóng góp lịch sử)*
+- **Admin Dashboard**: Built-in admin page (`/admin`) to manage content and entries. *(Trang quản trị tích hợp để quản lý nội dung)*
+- **AI Integration**: Built-in AI summarization to quickly digest long historical texts and descriptions. *(Tích hợp AI tóm tắt các văn bản lịch sử dài)*
+- **Responsive Design**: Flawless experience across mobile, tablet, and desktop devices. *(Tương thích hoàn hảo trên mọi thiết bị)*
 
 ---
 
 ## 🛠 Tech Stack / Công nghệ sử dụng
 
 - **Framework**: [Next.js 15](https://nextjs.org/) (App Router)
-- **Database**: [Upstash Redis](https://upstash.com/) (Serverless Redis)
 - **Styling**: [Tailwind CSS v4](https://tailwindcss.com/)
+- **Animations**: Tailwind animations (`animate-in`, `fade-in`, `slide-in`)
 - **Icons**: [Lucide React](https://lucide.dev/)
-- **AI Integration**: [OpenAI Node.js SDK](https://github.com/openai/openai-node)
+- **Database**: [Upstash Redis](https://upstash.com/) (Serverless Redis) for content storage
+- **AI Integration**: [OpenAI Node.js SDK](https://github.com/openai/openai-node) (Compatible with OpenAI, Mistral, or Gemini)
 
 ---
 
@@ -34,20 +37,18 @@ Một ứng dụng Next.js giao diện sạch, đơn giản và tương thích v
 /
 ├── app/                  # Next.js App Router pages (Các trang chính)
 │   ├── page.tsx          # Homepage / Trang chủ
-│   ├── about/            # About Us page / Trang giới thiệu
-│   ├── api/products/     # API Routes for Products (GET, POST)
-│   ├── api/summarize/    # AI API Endpoint / API xử lý AI
-│   └── products/[id]/    # Product Detail Page / Trang chi tiết dự án
+│   ├── admin/            # Admin Dashboard / Trang quản trị
+│   ├── api/              # API Routes (Products, Summarize)
+│   └── products/[id]/    # Detail Pages for specific works/events / Trang chi tiết
 ├── components/           # Reusable UI components (Các component dùng chung)
-│   ├── Navigation.tsx    # Thanh điều hướng
-│   ├── ProductCard.tsx   # Thẻ dự án
+│   ├── Navigation.tsx    # Thanh điều hướng thông minh (Sticky Auto-hide)
+│   ├── CategoryLayout.tsx# Bố cục theo danh mục
+│   ├── ProductCard.tsx   # Thẻ nội dung
 │   └── SummarizeButton.tsx # Nút tóm tắt AI
-├── data/                 # Mock data (Dữ liệu mẫu)
-│   └── products.ts       # Example product data / Dữ liệu dự án mẫu
-└── lib/                  # Utility functions (Các hàm tiện ích)
-    ├── ai.ts             # AI Client Configuration / Cấu hình AI
-    ├── redis.ts          # Upstash Redis Connection / Kết nối Upstash Redis
-    └── data.ts           # Data Fetching Logic / Logic lấy dữ liệu
+├── lib/                  # Utility functions (Các hàm tiện ích)
+│   ├── ai.ts             # AI Client Configuration / Cấu hình AI
+│   ├── redis.ts          # Upstash Redis Connection / Kết nối Upstash Redis
+│   └── data.ts           # Data Fetching Logic / Logic lấy dữ liệu
 ```
 
 ---
@@ -57,7 +58,7 @@ Một ứng dụng Next.js giao diện sạch, đơn giản và tương thích v
 ### 1. Clone the repository (Tải mã nguồn)
 ```bash
 git clone <your-github-repo-url>
-cd student-portfolio
+cd nguyen-trai-portfolio
 ```
 
 ### 2. Install dependencies (Cài đặt thư viện)
@@ -87,43 +88,17 @@ Open [http://localhost:3000](http://localhost:3000) in your browser. *(Mở trì
 
 ## 🌐 Deployment / Hướng dẫn triển khai (Hosting)
 
-### Option 1: Vercel (Highly Recommended / Khuyên dùng)
+### Vercel (Highly Recommended / Khuyên dùng)
 Vercel is the easiest way to deploy Next.js apps. *(Vercel là cách dễ nhất để deploy Next.js)*
 
 1. Push your code to a GitHub repository. *(Đẩy code lên GitHub)*
 2. Go to [Vercel.com](https://vercel.com/) and sign in with GitHub. *(Đăng nhập Vercel bằng GitHub)*
 3. Click **Add New... -> Project**.
 4. Import your GitHub repository. *(Nhập repo GitHub của bạn)*
-5. In the **Environment Variables** section, add your `OPENAI_API_KEY`. *(Thêm biến môi trường OPENAI_API_KEY)*
+5. In the **Environment Variables** section, add your `OPENAI_API_KEY` and Redis credentials. *(Thêm biến môi trường)*
 6. Click **Deploy**. Your site will be live in minutes! *(Bấm Deploy và đợi vài phút)*
 
-### Option 2: GitHub Pages (Static Export)
-If you want to host on GitHub Pages, you need to export the Next.js app as static HTML. Note: API routes (like the AI summarizer) **will not work** on GitHub Pages because it requires a Node.js server.
-*(Nếu dùng GitHub Pages, tính năng AI sẽ không hoạt động vì GitHub Pages không hỗ trợ server Node.js)*
-
-1. Open `next.config.ts` and add `output: 'export'`:
-   ```typescript
-   const nextConfig: NextConfig = {
-     output: 'export',
-     // ... other config
-   };
-   ```
-2. Update `package.json` scripts:
-   ```bash
-   npm install -D gh-pages
-   ```
-   Add to `package.json`:
-   ```json
-   "scripts": {
-     "build": "next build",
-     "deploy": "touch out/.nojekyll && gh-pages -d out"
-   }
-   ```
-3. Run the deployment:
-   ```bash
-   npm run build
-   npm run deploy
-   ```
+*(Lưu ý: Không nên sử dụng GitHub Pages cho dự án này vì GitHub Pages không hỗ trợ các API routes của Next.js cần thiết cho tính năng AI và Redis).*
 
 ---
-*Built with ❤️ for students.*
+*Tự hào tôn vinh giá trị văn hóa và lịch sử Việt Nam.*
