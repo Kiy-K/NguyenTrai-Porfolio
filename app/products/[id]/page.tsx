@@ -5,10 +5,8 @@ import { getProduct } from '@/lib/data';
 import Navigation from '@/components/Navigation';
 import SummarizeButton from '@/components/SummarizeButton';
 import ShareButton from '@/components/ShareButton';
-import ReactPlayer from 'react-player';
+import VideoPlayer from '@/components/VideoPlayer';
 import BackButton from '@/components/BackButton';
-
-const Player = ReactPlayer as any;
 
 export const revalidate = 900; // Cache for 15 minutes
 
@@ -109,16 +107,10 @@ export default async function ProductDetail({ params }: { params: Promise<{ id: 
 
             {/* Video Section */}
             {product.video && (
-              <div>
+              <div className="mb-12">
                 <h3 className="text-2xl font-bold text-[#2C1E16] mb-6 font-playfair border-b border-[#D4C4A8] pb-2">Video giới thiệu</h3>
                 <div className="rounded-sm overflow-hidden bg-black aspect-video relative border border-[#D4C4A8] shadow-lg">
-                  <Player 
-                    url={product.video} 
-                    controls 
-                    width="100%" 
-                    height="100%"
-                    style={{ position: 'absolute', top: 0, left: 0 }}
-                  />
+                  <VideoPlayer url={product.video} />
                 </div>
               </div>
             )}

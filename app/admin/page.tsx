@@ -7,10 +7,8 @@ import Footer from '@/components/Footer';
 import { useRouter } from 'next/navigation';
 import { UploadCloud, X, ArrowLeft, Users } from 'lucide-react';
 import Image from 'next/image';
-import ReactPlayer from 'react-player';
+import VideoPlayer from '@/components/VideoPlayer';
 import BackButton from '@/components/BackButton';
-
-const Player = ReactPlayer as any;
 
 export default function AdminPage() {
   const router = useRouter();
@@ -37,6 +35,26 @@ export default function AdminPage() {
   const [status, setStatus] = useState<{ type: 'success' | 'error' | 'loading' | null, message: string }>({ type: null, message: '' });
   const [showClearConfirm, setShowClearConfirm] = useState(false);
   const [imageToRemove, setImageToRemove] = useState<number | null>(null);
+  const [isUploading, setIsUploading] = useState(false);
+
+  const uploadToCloudinary = async (file: File, resourceType: 'image' | 'video' = 'image') => {
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('resourceType', resourceType);
+
+    const response = await fetch('/api/upload', {
+      method: 'POST',
+      body: formData,
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.error || 'Lỗi khi tải lên server');
+    }
+
+    const data = await response.json();
+    return data.secure_url;
+  };
 
   // AI Title Suggestions State
   const [titleSuggestions, setTitleSuggestions] = useState<string[]>([]);
@@ -131,7 +149,7 @@ export default function AdminPage() {
     }
   };
 
-  const processFiles = (files: File[]) => {
+  const processFiles = async (files: File[]) => {
     const validFiles = files.filter(file => {
       if (file.size > 5 * 1024 * 1024) {
         setStatus({ type: 'error', message: `File ${file.name} vượt quá dung lượng 5MB và sẽ bị bỏ qua.` });
@@ -140,15 +158,23 @@ export default function AdminPage() {
       return true;
     });
 
-    validFiles.forEach(file => {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        if (e.target?.result) {
-          setImages(prev => [...prev, e.target!.result as string]);
-        }
-      };
-      reader.readAsDataURL(file);
-    });
+    if (validFiles.length === 0) return;
+
+    setIsUploading(true);
+    setStatus({ type: 'loading', message: 'Đang tải ảnh lên Cloudinary...' });
+
+    try {
+      const uploadPromises = validFiles.map(file => uploadToCloudinary(file, 'image'));
+      const uploadedUrls = await Promise.all(uploadPromises);
+      
+      setImages(prev => [...prev, ...uploadedUrls]);
+      setStatus({ type: 'success', message: 'Tải ảnh lên thành công!' });
+      setTimeout(() => setStatus({ type: null, message: '' }), 3000);
+    } catch (error: any) {
+      setStatus({ type: 'error', message: error.message || 'Lỗi khi tải ảnh lên.' });
+    } finally {
+      setIsUploading(false);
+    }
   };
 
   const handleVideoDragOver = (e: React.DragEvent) => {
@@ -175,7 +201,7 @@ export default function AdminPage() {
     }
   };
 
-  const processVideo = (file?: File) => {
+  const processVideo = async (file?: File) => {
     if (!file) return;
     
     // 5GB limit
@@ -184,9 +210,19 @@ export default function AdminPage() {
       return;
     }
 
-    // Create object URL for preview
-    const videoUrl = URL.createObjectURL(file);
-    setFormData(prev => ({ ...prev, video: videoUrl }));
+    setIsUploading(true);
+    setStatus({ type: 'loading', message: 'Đang tải video lên Cloudinary...' });
+
+    try {
+      const videoUrl = await uploadToCloudinary(file, 'video');
+      setFormData(prev => ({ ...prev, video: videoUrl }));
+      setStatus({ type: 'success', message: 'Tải video lên thành công!' });
+      setTimeout(() => setStatus({ type: null, message: '' }), 3000);
+    } catch (error: any) {
+      setStatus({ type: 'error', message: error.message || 'Lỗi khi tải video lên.' });
+    } finally {
+      setIsUploading(false);
+    }
   };
 
   const handleImageDragStart = (e: React.DragEvent, index: number) => {
@@ -576,13 +612,7 @@ export default function AdminPage() {
                     </button>
                   </div>
                   <div className="rounded-lg overflow-hidden bg-black aspect-video relative border-4 border-[#2C1E16] shadow-xl">
-                    <Player 
-                      url={formData.video} 
-                      controls 
-                      width="100%" 
-                      height="100%"
-                      style={{ position: 'absolute', top: 0, left: 0 }}
-                    />
+                    <VideoPlayer url={formData.video} />
                   </div>
                 </div>
               )}
@@ -591,16 +621,16 @@ export default function AdminPage() {
             <div className="pt-6">
               <button 
                 type="submit" 
-                disabled={status.type === 'loading'} 
-                className="w-full bg-[#B8860B] text-[#FFFDF5] font-bold text-xl py-4 px-6 rounded-lg border-2 border-[#8B3A3A] hover:bg-[#8B3A3A] hover:text-[#FFFDF5] hover:border-[#B8860B] transition-all duration-300 shadow-lg font-playfair flex justify-center items-center uppercase tracking-widest"
+                disabled={status.type === 'loading' || isUploading} 
+                className={`w-full bg-[#B8860B] text-[#FFFDF5] font-bold text-xl py-4 px-6 rounded-lg border-2 border-[#8B3A3A] transition-all duration-300 shadow-lg font-playfair flex justify-center items-center uppercase tracking-widest ${status.type === 'loading' || isUploading ? 'opacity-70 cursor-not-allowed' : 'hover:bg-[#8B3A3A] hover:text-[#FFFDF5] hover:border-[#B8860B]'}`}
               >
-                {status.type === 'loading' ? (
+                {status.type === 'loading' || isUploading ? (
                   <span className="flex items-center">
                     <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                       <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                       <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                     </svg>
-                    Đang xử lý...
+                    {isUploading ? 'Đang tải file lên...' : 'Đang xử lý...'}
                   </span>
                 ) : 'Thêm Bài Viết'}
               </button>

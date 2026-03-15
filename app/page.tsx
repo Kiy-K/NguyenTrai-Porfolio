@@ -2,6 +2,7 @@ import { getProducts } from '@/lib/data';
 import Navigation from '@/components/Navigation';
 import Footer from '@/components/Footer';
 import CategoryLayout from '@/components/CategoryLayout';
+import HeroImage from '@/components/HeroImage';
 import { Suspense } from 'react';
 
 export const revalidate = 900; // Cache for 15 minutes
@@ -24,10 +25,13 @@ export default async function Home() {
           
           <div className="w-24 h-[1px] bg-[#B8860B] mx-auto my-8 animate-in zoom-in duration-700 delay-500 fill-mode-both"></div>
           
-          <p className="max-w-3xl mx-auto text-2xl text-[#5C4033] italic font-playfair leading-relaxed animate-in fade-in slide-in-from-bottom-4 duration-1000 delay-700 fill-mode-both">
-            &quot;Việc nhân nghĩa cốt ở yên dân<br/>
-            Quân điếu phạt trước lo trừ bạo&quot;
-          </p>
+          <div className="flex flex-col items-center justify-center mb-8 animate-in fade-in slide-in-from-bottom-4 duration-1000 delay-600 fill-mode-both">
+            <HeroImage />
+            <p className="max-w-3xl mx-auto text-2xl text-[#5C4033] italic font-playfair leading-relaxed">
+              &quot;Việc nhân nghĩa cốt ở yên dân<br/>
+              Quân điếu phạt trước lo trừ bạo&quot;
+            </p>
+          </div>
         </div>
 
         {/* Category Layout */}
