@@ -13,7 +13,25 @@ export async function GET() {
   }
 }
 
-// POST /api/products - Thêm sản phẩm mới
+// DELETE /api/products - Xóa toàn bộ sản phẩm (Clear database)
+export async function DELETE() {
+  try {
+    if (!process.env.UPSTASH_REDIS_REST_URL) {
+      return NextResponse.json({ error: 'Chưa cấu hình Redis' }, { status: 500 });
+    }
+
+    // Reset the portfolio_data_v4 key to an empty array
+    await redis.set('portfolio_data_v4', { products: [] });
+    
+    // Revalidate paths to ensure fresh data
+    revalidatePath('/', 'layout');
+    
+    return NextResponse.json({ success: true, message: 'Đã xóa toàn bộ dữ liệu' }, { status: 200 });
+  } catch (error) {
+    console.error('Error clearing database:', error);
+    return NextResponse.json({ error: 'Không thể xóa dữ liệu' }, { status: 500 });
+  }
+}
 export async function POST(request: Request) {
   try {
     if (!process.env.UPSTASH_REDIS_REST_URL) {

@@ -35,6 +35,8 @@ export default function AdminPage() {
   const [draggedImageIndex, setDraggedImageIndex] = useState<number | null>(null);
   const [dragOverImageIndex, setDragOverImageIndex] = useState<number | null>(null);
   const [status, setStatus] = useState<{ type: 'success' | 'error' | 'loading' | null, message: string }>({ type: null, message: '' });
+  const [showClearConfirm, setShowClearConfirm] = useState(false);
+  const [imageToRemove, setImageToRemove] = useState<number | null>(null);
 
   // AI Title Suggestions State
   const [titleSuggestions, setTitleSuggestions] = useState<string[]>([]);
@@ -132,7 +134,7 @@ export default function AdminPage() {
   const processFiles = (files: File[]) => {
     const validFiles = files.filter(file => {
       if (file.size > 5 * 1024 * 1024) {
-        alert(`File ${file.name} vượt quá dung lượng 5MB và sẽ bị bỏ qua.`);
+        setStatus({ type: 'error', message: `File ${file.name} vượt quá dung lượng 5MB và sẽ bị bỏ qua.` });
         return false;
       }
       return true;
@@ -178,7 +180,7 @@ export default function AdminPage() {
     
     // 5GB limit
     if (file.size > 5 * 1024 * 1024 * 1024) {
-      alert(`Video ${file.name} vượt quá dung lượng 5GB và sẽ bị bỏ qua.`);
+      setStatus({ type: 'error', message: `Video ${file.name} vượt quá dung lượng 5GB và sẽ bị bỏ qua.` });
       return;
     }
 
@@ -222,8 +224,44 @@ export default function AdminPage() {
   };
 
   const removeImage = (index: number) => {
-    if (window.confirm('Bạn có chắc chắn muốn xóa ảnh này không?')) {
-      setImages(prev => prev.filter((_, i) => i !== index));
+    setImageToRemove(index);
+  };
+
+  const confirmRemoveImage = () => {
+    if (imageToRemove !== null) {
+      setImages(prev => prev.filter((_, i) => i !== imageToRemove));
+      setImageToRemove(null);
+    }
+  };
+
+  const handleClearDatabase = () => {
+    setShowClearConfirm(true);
+  };
+
+  const confirmClearDatabase = async () => {
+    setShowClearConfirm(false);
+    setStatus({ type: 'loading', message: 'Đang xóa dữ liệu...' });
+
+    try {
+      const res = await fetch('/api/products', {
+        method: 'DELETE',
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.error || 'Có lỗi xảy ra khi xóa dữ liệu');
+      }
+
+      setStatus({ type: 'success', message: 'Đã xóa toàn bộ dữ liệu thành công!' });
+      
+      // Chuyển hướng về trang chủ sau 1.5 giây
+      setTimeout(() => {
+        window.location.href = '/';
+      }, 1500);
+
+    } catch (error: any) {
+      setStatus({ type: 'error', message: error.message });
     }
   };
 
@@ -290,8 +328,15 @@ export default function AdminPage() {
       <Navigation />
       
       <main className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="mb-8 animate-in fade-in slide-in-from-left-4 duration-500">
+        <div className="mb-8 flex justify-between items-center animate-in fade-in slide-in-from-left-4 duration-500">
           <BackButton fallbackUrl="/" />
+          <button
+            type="button"
+            onClick={handleClearDatabase}
+            className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors font-medium text-sm shadow-sm"
+          >
+            Xóa toàn bộ dữ liệu (Clear DB)
+          </button>
         </div>
 
         <div className="bg-white rounded-sm shadow-sm border border-[#D4C4A8] overflow-hidden p-8 sm:p-12 relative animate-in fade-in slide-in-from-bottom-8 duration-700">
@@ -564,6 +609,62 @@ export default function AdminPage() {
         </div>
       </main>
       <Footer />
+
+      {/* Modal Xóa Toàn Bộ Dữ Liệu */}
+      {showClearConfirm && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
+          <div className="bg-white rounded-xl shadow-2xl p-8 max-w-md w-full mx-4 border-2 border-[#8B3A3A] animate-in zoom-in-95 duration-200">
+            <h3 className="text-2xl font-bold text-[#8B3A3A] mb-4 font-playfair text-center">Cảnh Báo Nguy Hiểm!</h3>
+            <p className="text-[#2C1E16] mb-6 text-center text-lg">
+              Bạn có chắc chắn muốn xóa <strong>TOÀN BỘ</strong> dữ liệu? Hành động này không thể hoàn tác!
+            </p>
+            <div className="flex justify-center gap-4">
+              <button
+                type="button"
+                onClick={() => setShowClearConfirm(false)}
+                className="px-6 py-3 bg-gray-200 text-gray-800 font-bold rounded-lg hover:bg-gray-300 transition-colors font-playfair"
+              >
+                Hủy Bỏ
+              </button>
+              <button
+                type="button"
+                onClick={confirmClearDatabase}
+                className="px-6 py-3 bg-red-600 text-white font-bold rounded-lg hover:bg-red-700 transition-colors font-playfair shadow-md"
+              >
+                Xóa Dữ Liệu
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Modal Xóa Ảnh */}
+      {imageToRemove !== null && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
+          <div className="bg-white rounded-xl shadow-2xl p-8 max-w-sm w-full mx-4 border border-[#D4C4A8] animate-in zoom-in-95 duration-200">
+            <h3 className="text-xl font-bold text-[#2C1E16] mb-4 font-playfair text-center">Xóa Ảnh</h3>
+            <p className="text-[#5C4033] mb-6 text-center">
+              Bạn có chắc chắn muốn xóa ảnh này không?
+            </p>
+            <div className="flex justify-center gap-4">
+              <button
+                type="button"
+                onClick={() => setImageToRemove(null)}
+                className="px-5 py-2 bg-gray-200 text-gray-800 font-bold rounded-lg hover:bg-gray-300 transition-colors font-playfair"
+              >
+                Hủy
+              </button>
+              <button
+                type="button"
+                onClick={confirmRemoveImage}
+                className="px-5 py-2 bg-red-600 text-white font-bold rounded-lg hover:bg-red-700 transition-colors font-playfair shadow-md"
+              >
+                Xóa Ảnh
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

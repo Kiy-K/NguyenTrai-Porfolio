@@ -2,23 +2,24 @@ import { redis } from './redis';
 import { products as mockProducts, Product } from '@/data/products';
 import { unstable_cache } from 'next/cache';
 
-// Hàm lấy danh sách sản phẩm từ Redis (hoặc dữ liệu mẫu nếu chưa cấu hình)
+// Hàm lấy danh sách sản phẩm từ Redis
 export const getProducts = unstable_cache(
   async (): Promise<Product[]> => {
     if (!process.env.UPSTASH_REDIS_REST_URL) {
-      return mockProducts;
+      console.warn('UPSTASH_REDIS_REST_URL is not set. Returning empty array.');
+      return [];
     }
     try {
       const data = await redis.get<{ products: Product[] }>('portfolio_data_v4');
-      if (!data || !data.products || data.products.length === 0) {
-        // Khởi tạo dữ liệu mẫu vào Redis nếu chưa có
-        await redis.set('portfolio_data_v4', { products: mockProducts });
-        return mockProducts;
+      if (!data || !data.products) {
+        // Khởi tạo mảng rỗng vào Redis nếu chưa có
+        await redis.set('portfolio_data_v4', { products: [] });
+        return [];
       }
       return data.products;
     } catch (e) {
       console.error('Lỗi Redis:', e);
-      return mockProducts;
+      return [];
     }
   },
   ['products-cache'],
