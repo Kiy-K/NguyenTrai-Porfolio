@@ -1,5 +1,7 @@
 import type {Metadata} from 'next';
 import { Playfair_Display } from 'next/font/google';
+import { Analytics } from "@vercel/analytics/next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import './globals.css'; // Global styles
 import AutoReloader from '@/components/AutoReloader';
 
@@ -20,6 +22,8 @@ export default function RootLayout({children}: {children: React.ReactNode}) {
       <body suppressHydrationWarning className="font-playfair bg-[#F4EBD0] text-[#2C1E16]">
         <AutoReloader />
         {children}
+        <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   );
