@@ -1,4 +1,3 @@
-import { getProducts } from '@/lib/data';
 import Navigation from '@/components/Navigation';
 import Footer from '@/components/Footer';
 import CategoryLayout from '@/components/CategoryLayout';
@@ -8,9 +7,6 @@ import { Suspense } from 'react';
 export const revalidate = 900; // Cache for 15 minutes
 
 export default async function Home() {
-  // Lấy danh sách sản phẩm từ Redis hoặc dữ liệu mẫu
-  const allProducts = await getProducts();
-
   return (
     <div className="min-h-screen bg-[#F4EBD0] font-playfair flex flex-col">
       <Navigation />
@@ -36,7 +32,7 @@ export default async function Home() {
 
         {/* Category Layout */}
         <Suspense fallback={<div className="text-center py-12 text-[#8B3A3A]">Đang tải...</div>}>
-          <CategoryLayout allProducts={allProducts} />
+          <CategoryLayout />
         </Suspense>
       </main>
 
