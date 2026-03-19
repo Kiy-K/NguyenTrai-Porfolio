@@ -43,7 +43,7 @@ function NavigationContent() {
             </Link>
           </div>
           <div className="hidden sm:ml-6 sm:flex sm:items-center sm:space-x-8">
-            <Link 
+            <a 
               href="/admin" 
               className={`inline-flex items-center px-4 py-2 rounded-full text-lg font-medium transition-all duration-300 font-playfair border-2 ${
                 pathname === '/admin' 
@@ -52,7 +52,7 @@ function NavigationContent() {
               }`}
             >
               Thêm bài viết
-            </Link>
+            </a>
           </div>
 
           {/* Mobile menu button */}
@@ -94,7 +94,7 @@ function NavigationContent() {
         </div>
         
         <div className="flex-1 overflow-y-auto py-4 space-y-4">
-          <Link
+          <a
             href="/admin"
             onClick={() => setIsOpen(false)}
             className={`block mx-6 px-6 py-4 rounded-full text-lg font-medium font-playfair transition-all duration-300 text-center border-2 ${
@@ -104,7 +104,7 @@ function NavigationContent() {
             }`}
           >
             Thêm bài viết mới
-          </Link>
+          </a>
         </div>
       </div>
     </nav>

@@ -5,5 +5,7 @@ export const SECTIONS = [
   { id: 'tranh-ve', name: 'Tranh vẽ', path: '/sections/tranh-ve' },
   { id: 'tro-choi', name: 'Trò chơi', path: '/sections/tro-choi' },
   { id: 'kich', name: 'Kịch', path: '/sections/kich' },
+  { id: 'rap', name: 'Nhạc Rap', path: '/sections/rap' },
+  { id: 'ban-do-so', name: 'Bản đồ số', path: '/sections/ban-do-so' },
   { id: 'hinh-anh', name: 'Một số hình ảnh thực hiện dự án', path: '/sections/hinh-anh' },
 ];

@@ -8,6 +8,7 @@ export default function VideoPlayer({ url }: { url: string }) {
   const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setIsMounted(true);
   }, []);
 
@@ -20,7 +21,7 @@ export default function VideoPlayer({ url }: { url: string }) {
   }
 
   // CldVideoPlayer needs a unique ID for each player instance on the page
-  const playerId = `video-player-${Math.random().toString(36).substring(7)}`;
+  const playerId = `video-player-${url.replace(/[^a-zA-Z0-9]/g, '-')}`;
 
   return (
     <div className="w-full h-full absolute top-0 left-0">

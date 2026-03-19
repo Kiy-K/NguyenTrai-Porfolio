@@ -28,7 +28,7 @@ export default async function SectionPage({ params }: { params: Promise<{ id: st
       <Navigation />
       
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 flex-grow w-full relative">
-        <div className="animate-in fade-in slide-in-from-bottom-4 duration-500 ease-out fill-mode-both">
+        <div className="animate-in fade-in slide-in-from-bottom-8 duration-[1200ms] ease-out fill-mode-both">
           {/* Section Title */}
           <div className="flex items-center justify-center gap-4 mb-12 relative">
             <div className="absolute left-0">

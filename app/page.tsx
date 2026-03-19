@@ -13,15 +13,15 @@ export default async function Home() {
       
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 flex-grow w-full relative">
         {/* Hero Section */}
-        <div className="text-center mt-12 mb-24 relative p-12 animate-in fade-in slide-in-from-bottom-8 duration-1000">
+        <div className="text-center mt-12 mb-24 relative p-12 animate-in fade-in slide-in-from-bottom-4 duration-[1500ms] ease-out">
           <h1 className="text-5xl font-bold text-[#2C1E16] sm:text-6xl lg:text-7xl font-playfair mb-6 tracking-wide">
-            <span className="block text-xl text-[#8B3A3A] mb-4 font-playfair italic tracking-widest animate-in fade-in duration-1000 delay-300 fill-mode-both">- Danh Nhân Văn Hóa -</span>
+            <span className="block text-xl text-[#8B3A3A] mb-4 font-playfair italic tracking-widest animate-in fade-in duration-[1500ms] delay-300 fill-mode-both">- Danh Nhân Văn Hóa -</span>
             Nguyễn Trãi
           </h1>
           
-          <div className="w-24 h-[1px] bg-[#B8860B] mx-auto my-8 animate-in zoom-in duration-700 delay-500 fill-mode-both"></div>
+          <div className="w-24 h-[1px] bg-[#B8860B] mx-auto my-8 animate-in fade-in zoom-in-95 duration-[1500ms] delay-500 ease-out fill-mode-both"></div>
           
-          <div className="flex flex-col items-center justify-center mb-8 animate-in fade-in slide-in-from-bottom-4 duration-1000 delay-600 fill-mode-both">
+          <div className="flex flex-col items-center justify-center mb-8 animate-in fade-in slide-in-from-bottom-4 duration-[1500ms] delay-700 ease-out fill-mode-both">
             <HeroImage />
             <p className="max-w-3xl mx-auto text-2xl text-[#5C4033] italic font-playfair leading-relaxed">
               &quot;Việc nhân nghĩa cốt ở yên dân<br/>
