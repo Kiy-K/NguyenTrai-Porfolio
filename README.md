@@ -57,7 +57,7 @@ Một ứng dụng Next.js giao diện đẹp mắt và tương thích mọi thi
 
 ### 1. Clone the repository (Tải mã nguồn)
 ```bash
-git clone (https://github.com/Kiy-K/NguyenTrai-Porfolio.git
+git clone https://github.com/Kiy-K/NguyenTrai-Porfolio.git
 cd NguyenTrai-Porfolio
 ```
 
