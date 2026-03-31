@@ -353,10 +353,10 @@ export default function AdminPage() {
       }
 
       setStatus({ type: 'success', message: 'Đã xóa toàn bộ dữ liệu thành công!' });
-      
-      // Chuyển hướng về trang chủ sau 1.5 giây
+
       setTimeout(() => {
-        window.location.href = '/';
+        router.push('/');
+        router.refresh();
       }, 1500);
 
     } catch (error: any) {
@@ -405,11 +405,11 @@ export default function AdminPage() {
       }
 
       setStatus({ type: 'success', message: 'Thêm bài viết thành công! Đang chuyển hướng...' });
-      
+
       // Capture the section path BEFORE resetting the form
       const targetSection = formData.section;
       const sectionPath = SECTIONS.find(s => s.name === targetSection)?.path || '/';
-      
+
       setFormData({ title: '', description: '', fullDescription: '', video: '', teamMembers: '', section: SECTIONS[0].name });
       setImages([]);
       setMuxUploadState('idle');
@@ -417,11 +417,10 @@ export default function AdminPage() {
       setMuxUploadId('');
       setMuxPlaybackId('');
       setMuxAssetId('');
-      
-      // Chuyển hướng về trang chuyên mục tương ứng sau 1.5 giây
-      // Sử dụng window.location.href để đảm bảo dữ liệu được tải lại mới nhất
+
       setTimeout(() => {
-        window.location.href = sectionPath;
+        router.push(sectionPath);
+        router.refresh();
       }, 1500);
 
     } catch (error: any) {
