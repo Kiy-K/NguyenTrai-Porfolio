@@ -33,6 +33,10 @@ export default function AdminPage() {
   const [isVideoDragging, setIsVideoDragging] = useState(false);
   const videoInputRef = useRef<HTMLInputElement>(null);
   const pollTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const xhrRef = useRef<XMLHttpRequest | null>(null);
+  const pollRetryCountRef = useRef(0);
+  const stallTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const checkPollRef = useRef<(() => void) | null>(null);
   const [draggedImageIndex, setDraggedImageIndex] = useState<number | null>(null);
   const [dragOverImageIndex, setDragOverImageIndex] = useState<number | null>(null);
   const [status, setStatus] = useState<{ type: 'success' | 'error' | 'loading' | null, message: string }>({ type: null, message: '' });
@@ -51,6 +55,34 @@ export default function AdminPage() {
     window.addEventListener('beforeunload', handleBeforeUnload);
     return () => window.removeEventListener('beforeunload', handleBeforeUnload);
   }, [isUploading]);
+
+  // Resume polling immediately when user switches back to this tab
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'visible' && muxUploadState === 'processing') {
+        if (pollTimeoutRef.current) clearTimeout(pollTimeoutRef.current);
+        checkPollRef.current?.();
+      }
+    };
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    return () => document.removeEventListener('visibilitychange', handleVisibilityChange);
+  }, [muxUploadState]);
+
+  const cancelUpload = () => {
+    xhrRef.current?.abort();
+    xhrRef.current = null;
+    if (pollTimeoutRef.current) clearTimeout(pollTimeoutRef.current);
+    if (stallTimeoutRef.current) clearTimeout(stallTimeoutRef.current);
+    checkPollRef.current = null;
+    pollRetryCountRef.current = 0;
+    setMuxUploadState('idle');
+    setMuxUploadProgress(0);
+    setMuxUploadId('');
+    setMuxPlaybackId('');
+    setMuxAssetId('');
+    setIsUploading(false);
+    setStatus({ type: null, message: '' });
+  };
 
   // Mux video upload state
   const [muxUploadState, setMuxUploadState] = useState<'idle' | 'uploading' | 'processing' | 'ready' | 'error'>('idle');
@@ -224,10 +256,13 @@ export default function AdminPage() {
   };
 
   const pollMuxStatus = (uploadId: string) => {
+    pollRetryCountRef.current = 0;
+
     const check = async () => {
       try {
         const res = await fetch(`/api/mux/asset/${uploadId}`);
         const data = await res.json();
+        pollRetryCountRef.current = 0; // reset on success
 
         if (data.status === 'ready') {
           setMuxPlaybackId(data.playbackId);
@@ -246,15 +281,24 @@ export default function AdminPage() {
           return;
         }
 
-        // Still processing — schedule next check (non-recursive, cancellable)
+        // Still processing — schedule next check
         pollTimeoutRef.current = setTimeout(check, 3000);
-      } catch (error: any) {
-        setMuxUploadState('error');
-        setStatus({ type: 'error', message: error.message || 'Lỗi khi xử lý video.' });
-        setIsUploading(false);
+      } catch {
+        pollRetryCountRef.current++;
+        if (pollRetryCountRef.current >= 4) {
+          setMuxUploadState('error');
+          setStatus({ type: 'error', message: 'Mất kết nối khi kiểm tra trạng thái video. Vui lòng thử lại.' });
+          setIsUploading(false);
+          return;
+        }
+        // Retry with backoff: 5s, 10s, 15s
+        const delay = 5000 * pollRetryCountRef.current;
+        setStatus({ type: 'loading', message: `Mất kết nối, thử lại sau ${delay / 1000}s... (lần ${pollRetryCountRef.current}/3)` });
+        pollTimeoutRef.current = setTimeout(check, delay);
       }
     };
 
+    checkPollRef.current = check;
     check();
   };
 
@@ -280,16 +324,36 @@ export default function AdminPage() {
       // Step 2: PUT the file directly to Mux (bypasses our server — handles large files fine)
       await new Promise<void>((resolve, reject) => {
         const xhr = new XMLHttpRequest();
+        xhrRef.current = xhr;
+
+        // Stall detection: if no progress for 60s, warn (but keep uploading)
+        const resetStall = () => {
+          if (stallTimeoutRef.current) clearTimeout(stallTimeoutRef.current);
+          stallTimeoutRef.current = setTimeout(() => {
+            setStatus({ type: 'loading', message: 'Kết nối chậm — đang tiếp tục tải lên, vui lòng đợi...' });
+          }, 60_000);
+        };
+        resetStall();
+
         xhr.upload.addEventListener('progress', (e) => {
           if (e.lengthComputable) {
             setMuxUploadProgress(Math.round((e.loaded / e.total) * 100));
+            resetStall();
           }
         });
         xhr.addEventListener('load', () => {
+          if (stallTimeoutRef.current) clearTimeout(stallTimeoutRef.current);
           if (xhr.status >= 200 && xhr.status < 300) resolve();
           else reject(new Error(`Upload thất bại: HTTP ${xhr.status}`));
         });
-        xhr.addEventListener('error', () => reject(new Error('Lỗi mạng khi upload')));
+        xhr.addEventListener('error', () => {
+          if (stallTimeoutRef.current) clearTimeout(stallTimeoutRef.current);
+          reject(new Error('Lỗi mạng khi upload'));
+        });
+        xhr.addEventListener('abort', () => {
+          if (stallTimeoutRef.current) clearTimeout(stallTimeoutRef.current);
+          reject(new Error('Upload đã bị hủy'));
+        });
         xhr.open('PUT', uploadUrl);
         xhr.send(file);
       });
@@ -697,7 +761,13 @@ export default function AdminPage() {
                       style={{ width: `${muxUploadProgress}%` }}
                     />
                   </div>
-                  <p className="text-sm text-[#5C4033] text-center font-playfair">{muxUploadProgress}%</p>
+                  <p className="text-sm text-[#5C4033] text-center font-playfair mb-4">{muxUploadProgress}%</p>
+                  <p className="text-xs text-[#5C4033]/70 text-center italic mb-3">Vui lòng không đóng tab này trong khi tải lên.</p>
+                  <div className="text-center">
+                    <button type="button" onClick={cancelUpload} className="text-sm text-red-600 hover:text-red-800 font-bold underline transition-colors">
+                      Hủy upload
+                    </button>
+                  </div>
                 </div>
               )}
 
@@ -708,7 +778,10 @@ export default function AdminPage() {
                     <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
                   </svg>
                   <p className="text-base font-bold text-[#2C1E16] font-playfair">Mux đang xử lý video...</p>
-                  <p className="text-sm text-[#5C4033] italic mt-1">Quá trình này có thể mất vài phút.</p>
+                  <p className="text-sm text-[#5C4033] italic mt-1 mb-4">Quá trình này có thể mất vài phút. Bạn có thể để tab này chạy nền.</p>
+                  <button type="button" onClick={cancelUpload} className="text-sm text-red-600 hover:text-red-800 font-bold underline transition-colors">
+                    Hủy và chọn video khác
+                  </button>
                 </div>
               )}
 
