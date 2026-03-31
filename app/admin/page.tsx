@@ -19,6 +19,18 @@ export default function AdminPage() {
   useEffect(() => {
     setIsClient(true);
   }, []);
+
+  // Warn user if they try to leave while an upload is in progress
+  useEffect(() => {
+    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+      if (isUploading) {
+        e.preventDefault();
+        e.returnValue = '';
+      }
+    };
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    return () => window.removeEventListener('beforeunload', handleBeforeUnload);
+  }, [isUploading]);
   const [formData, setFormData] = useState({
     title: '',
     description: '',
@@ -31,6 +43,7 @@ export default function AdminPage() {
   const [isDragging, setIsDragging] = useState(false);
   const [isVideoDragging, setIsVideoDragging] = useState(false);
   const videoInputRef = useRef<HTMLInputElement>(null);
+  const pollTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [draggedImageIndex, setDraggedImageIndex] = useState<number | null>(null);
   const [dragOverImageIndex, setDragOverImageIndex] = useState<number | null>(null);
   const [status, setStatus] = useState<{ type: 'success' | 'error' | 'loading' | null, message: string }>({ type: null, message: '' });
@@ -209,37 +222,39 @@ export default function AdminPage() {
     }
   };
 
-  const pollMuxStatus = async (uploadId: string) => {
-    const check = async (): Promise<void> => {
-      const res = await fetch(`/api/mux/asset/${uploadId}`);
-      const data = await res.json();
+  const pollMuxStatus = (uploadId: string) => {
+    const check = async () => {
+      try {
+        const res = await fetch(`/api/mux/asset/${uploadId}`);
+        const data = await res.json();
 
-      if (data.status === 'ready') {
-        setMuxPlaybackId(data.playbackId);
-        setMuxAssetId(data.assetId);
-        setMuxUploadState('ready');
-        setStatus({ type: 'success', message: 'Video đã sẵn sàng!' });
-        setTimeout(() => setStatus({ type: null, message: '' }), 3000);
+        if (data.status === 'ready') {
+          setMuxPlaybackId(data.playbackId);
+          setMuxAssetId(data.assetId);
+          setMuxUploadState('ready');
+          setStatus({ type: 'success', message: 'Video đã sẵn sàng!' });
+          setTimeout(() => setStatus({ type: null, message: '' }), 3000);
+          setIsUploading(false);
+          return;
+        }
+
+        if (data.status === 'error') {
+          setMuxUploadState('error');
+          setStatus({ type: 'error', message: 'Mux xử lý video thất bại' });
+          setIsUploading(false);
+          return;
+        }
+
+        // Still processing — schedule next check (non-recursive, cancellable)
+        pollTimeoutRef.current = setTimeout(check, 3000);
+      } catch (error: any) {
+        setMuxUploadState('error');
+        setStatus({ type: 'error', message: error.message || 'Lỗi khi xử lý video.' });
         setIsUploading(false);
-        return;
       }
-
-      if (data.status === 'error') {
-        throw new Error('Mux xử lý video thất bại');
-      }
-
-      // Still uploading/processing — poll again in 3 seconds
-      await new Promise(resolve => setTimeout(resolve, 3000));
-      return check();
     };
 
-    try {
-      await check();
-    } catch (error: any) {
-      setMuxUploadState('error');
-      setStatus({ type: 'error', message: error.message || 'Lỗi khi xử lý video.' });
-      setIsUploading(false);
-    }
+    check();
   };
 
   const processVideo = async (file?: File) => {
@@ -250,6 +265,9 @@ export default function AdminPage() {
     setMuxUploadState('uploading');
     setMuxUploadProgress(0);
     setStatus({ type: 'loading', message: 'Đang chuẩn bị tải video lên Mux...' });
+
+    // Cancel any previous poll before starting a new upload
+    if (pollTimeoutRef.current) clearTimeout(pollTimeoutRef.current);
 
     try {
       // Step 1: Get a one-time direct upload URL from our server (credentials stay server-side)
@@ -280,8 +298,9 @@ export default function AdminPage() {
       setStatus({ type: 'loading', message: 'Video đã tải lên, đang xử lý...' });
 
       // Step 3: Poll until the asset is ready
-      await pollMuxStatus(uploadId);
+      pollMuxStatus(uploadId);
     } catch (error: any) {
+      if (pollTimeoutRef.current) clearTimeout(pollTimeoutRef.current);
       setMuxUploadState('error');
       setStatus({ type: 'error', message: error.message || 'Lỗi khi tải video lên.' });
       setIsUploading(false);
