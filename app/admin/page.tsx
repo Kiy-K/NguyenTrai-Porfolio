@@ -356,7 +356,6 @@ export default function AdminPage() {
 
       setTimeout(() => {
         router.push('/');
-        router.refresh();
       }, 1500);
 
     } catch (error: any) {
@@ -420,7 +419,6 @@ export default function AdminPage() {
 
       setTimeout(() => {
         router.push(sectionPath);
-        router.refresh();
       }, 1500);
 
     } catch (error: any) {
