@@ -21,6 +21,8 @@
     "cloudinary": "^2.9.0",
     "clsx": "^2.1.1",
     "lucide-react": "^0.553.0",
+    "@mux/mux-node": "^9.0.0",
+    "@mux/mux-player-react": "^3.4.0",
     "motion": "^12.23.24",
     "next": "^16.2.0",
     "next-cloudinary": "^6.17.5",

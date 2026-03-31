@@ -8,6 +8,7 @@ import { useRouter } from 'next/navigation';
 import { UploadCloud, X, ArrowLeft, Users } from 'lucide-react';
 import Image from 'next/image';
 import VideoPlayer from '@/components/VideoPlayer';
+import MuxVideoPlayer from '@/components/MuxVideoPlayer';
 import BackButton from '@/components/BackButton';
 
 export default function AdminPage() {
@@ -36,6 +37,13 @@ export default function AdminPage() {
   const [showClearConfirm, setShowClearConfirm] = useState(false);
   const [imageToRemove, setImageToRemove] = useState<number | null>(null);
   const [isUploading, setIsUploading] = useState(false);
+
+  // Mux video upload state
+  const [muxUploadState, setMuxUploadState] = useState<'idle' | 'uploading' | 'processing' | 'ready' | 'error'>('idle');
+  const [muxUploadProgress, setMuxUploadProgress] = useState(0);
+  const [muxUploadId, setMuxUploadId] = useState('');
+  const [muxPlaybackId, setMuxPlaybackId] = useState('');
+  const [muxAssetId, setMuxAssetId] = useState('');
 
   const uploadToCloudinary = async (file: File, resourceType: 'image' | 'video' = 'image') => {
     const formData = new FormData();
@@ -201,26 +209,81 @@ export default function AdminPage() {
     }
   };
 
-  const processVideo = async (file?: File) => {
-    if (!file) return;
-    
-    // 5GB limit
-    if (file.size > 5 * 1024 * 1024 * 1024) {
-      setStatus({ type: 'error', message: `Video ${file.name} vượt quá dung lượng 5GB và sẽ bị bỏ qua.` });
-      return;
-    }
+  const pollMuxStatus = async (uploadId: string) => {
+    const check = async (): Promise<void> => {
+      const res = await fetch(`/api/mux/asset/${uploadId}`);
+      const data = await res.json();
 
-    setIsUploading(true);
-    setStatus({ type: 'loading', message: 'Đang tải video lên Cloudinary...' });
+      if (data.status === 'ready') {
+        setMuxPlaybackId(data.playbackId);
+        setMuxAssetId(data.assetId);
+        setMuxUploadState('ready');
+        setStatus({ type: 'success', message: 'Video đã sẵn sàng!' });
+        setTimeout(() => setStatus({ type: null, message: '' }), 3000);
+        setIsUploading(false);
+        return;
+      }
+
+      if (data.status === 'error') {
+        throw new Error('Mux xử lý video thất bại');
+      }
+
+      // Still uploading/processing — poll again in 3 seconds
+      await new Promise(resolve => setTimeout(resolve, 3000));
+      return check();
+    };
 
     try {
-      const videoUrl = await uploadToCloudinary(file, 'video');
-      setFormData(prev => ({ ...prev, video: videoUrl }));
-      setStatus({ type: 'success', message: 'Tải video lên thành công!' });
-      setTimeout(() => setStatus({ type: null, message: '' }), 3000);
+      await check();
     } catch (error: any) {
+      setMuxUploadState('error');
+      setStatus({ type: 'error', message: error.message || 'Lỗi khi xử lý video.' });
+      setIsUploading(false);
+    }
+  };
+
+  const processVideo = async (file?: File) => {
+    if (!file) return;
+
+    // Mux supports up to 2GB for direct uploads by default; no hard limit enforced here
+    setIsUploading(true);
+    setMuxUploadState('uploading');
+    setMuxUploadProgress(0);
+    setStatus({ type: 'loading', message: 'Đang chuẩn bị tải video lên Mux...' });
+
+    try {
+      // Step 1: Get a one-time direct upload URL from our server (credentials stay server-side)
+      const urlRes = await fetch('/api/mux/upload-url', { method: 'POST' });
+      if (!urlRes.ok) throw new Error('Không thể tạo upload URL');
+      const { uploadUrl, uploadId } = await urlRes.json();
+      setMuxUploadId(uploadId);
+
+      // Step 2: PUT the file directly to Mux (bypasses our server — handles large files fine)
+      await new Promise<void>((resolve, reject) => {
+        const xhr = new XMLHttpRequest();
+        xhr.upload.addEventListener('progress', (e) => {
+          if (e.lengthComputable) {
+            setMuxUploadProgress(Math.round((e.loaded / e.total) * 100));
+          }
+        });
+        xhr.addEventListener('load', () => {
+          if (xhr.status >= 200 && xhr.status < 300) resolve();
+          else reject(new Error(`Upload thất bại: HTTP ${xhr.status}`));
+        });
+        xhr.addEventListener('error', () => reject(new Error('Lỗi mạng khi upload')));
+        xhr.open('PUT', uploadUrl);
+        xhr.send(file);
+      });
+
+      setMuxUploadProgress(100);
+      setMuxUploadState('processing');
+      setStatus({ type: 'loading', message: 'Video đã tải lên, đang xử lý...' });
+
+      // Step 3: Poll until the asset is ready
+      await pollMuxStatus(uploadId);
+    } catch (error: any) {
+      setMuxUploadState('error');
       setStatus({ type: 'error', message: error.message || 'Lỗi khi tải video lên.' });
-    } finally {
       setIsUploading(false);
     }
   };
@@ -322,6 +385,8 @@ export default function AdminPage() {
       fullDescription: formData.fullDescription,
       images: images,
       video: formData.video || undefined,
+      muxAssetId: muxAssetId || undefined,
+      muxPlaybackId: muxPlaybackId || undefined,
       teamMembers: formData.teamMembers || undefined,
       section: formData.section
     };
@@ -347,6 +412,11 @@ export default function AdminPage() {
       
       setFormData({ title: '', description: '', fullDescription: '', video: '', teamMembers: '', section: SECTIONS[0].name });
       setImages([]);
+      setMuxUploadState('idle');
+      setMuxUploadProgress(0);
+      setMuxUploadId('');
+      setMuxPlaybackId('');
+      setMuxAssetId('');
       
       // Chuyển hướng về trang chuyên mục tương ứng sau 1.5 giây
       // Sử dụng window.location.href để đảm bảo dữ liệu được tải lại mới nhất
@@ -574,11 +644,11 @@ export default function AdminPage() {
             </div>
 
             <div>
-              <label className="block text-lg font-bold text-[#2C1E16] mb-3 font-playfair">Video (Tùy chọn - Tải lên trực tiếp)</label>
-              
-              {!formData.video ? (
-                <div 
-                  className={`border-2 border-dashed rounded-lg p-8 text-center transition-colors ${
+              <label className="block text-lg font-bold text-[#2C1E16] mb-3 font-playfair">Video (Tùy chọn — Tải lên qua Mux)</label>
+
+              {muxUploadState === 'idle' && (
+                <div
+                  className={`border-2 border-dashed rounded-lg p-8 text-center transition-colors cursor-pointer ${
                     isVideoDragging ? 'border-[#B8860B] bg-[#E8D8B8]' : 'border-[#D4C4A8] hover:border-[#B8860B] bg-[#F4EBD0]'
                   }`}
                   onDragOver={handleVideoDragOver}
@@ -586,10 +656,10 @@ export default function AdminPage() {
                   onDrop={handleVideoDrop}
                   onClick={() => videoInputRef.current?.click()}
                 >
-                  <input 
-                    type="file" 
-                    accept="video/*" 
-                    className="hidden" 
+                  <input
+                    type="file"
+                    accept="video/*"
+                    className="hidden"
                     ref={videoInputRef}
                     onChange={handleVideoSelect}
                   />
@@ -597,23 +667,68 @@ export default function AdminPage() {
                   <p className="text-base text-[#5C4033] font-medium mb-1 font-playfair">
                     Kéo thả video vào đây, hoặc <span className="text-[#8B3A3A] cursor-pointer hover:underline font-bold">nhấn để chọn</span>
                   </p>
-                  <p className="text-sm text-[#5C4033]/70 italic">Hỗ trợ MP4, WebM, OGG (Tối đa 5GB)</p>
+                  <p className="text-sm text-[#5C4033]/70 italic">Hỗ trợ MP4, WebM, MOV — file lớn (1–2 GB) được chấp nhận</p>
                 </div>
-              ) : (
-                <div className="relative">
+              )}
+
+              {muxUploadState === 'uploading' && (
+                <div className="border-2 border-[#D4C4A8] rounded-lg p-8 bg-[#F4EBD0]">
+                  <p className="text-base font-bold text-[#2C1E16] mb-3 font-playfair text-center">Đang tải lên Mux...</p>
+                  <div className="w-full bg-[#D4C4A8] rounded-full h-3 mb-2">
+                    <div
+                      className="bg-[#B8860B] h-3 rounded-full transition-all duration-300"
+                      style={{ width: `${muxUploadProgress}%` }}
+                    />
+                  </div>
+                  <p className="text-sm text-[#5C4033] text-center font-playfair">{muxUploadProgress}%</p>
+                </div>
+              )}
+
+              {muxUploadState === 'processing' && (
+                <div className="border-2 border-[#D4C4A8] rounded-lg p-8 bg-[#F4EBD0] text-center">
+                  <svg className="animate-spin mx-auto h-10 w-10 text-[#B8860B] mb-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                  </svg>
+                  <p className="text-base font-bold text-[#2C1E16] font-playfair">Mux đang xử lý video...</p>
+                  <p className="text-sm text-[#5C4033] italic mt-1">Quá trình này có thể mất vài phút.</p>
+                </div>
+              )}
+
+              {muxUploadState === 'ready' && (
+                <div>
                   <div className="flex justify-between items-center mb-2">
-                    <p className="text-base font-bold text-[#2C1E16] font-playfair">Xem trước Video:</p>
+                    <p className="text-base font-bold text-[#2C1E16] font-playfair">Xem trước Video (Mux):</p>
                     <button
                       type="button"
-                      onClick={() => setFormData({ ...formData, video: '' })}
+                      onClick={() => {
+                        setMuxUploadState('idle');
+                        setMuxUploadProgress(0);
+                        setMuxUploadId('');
+                        setMuxPlaybackId('');
+                        setMuxAssetId('');
+                      }}
                       className="text-sm text-red-600 hover:text-red-800 font-bold transition-colors"
                     >
                       Xóa Video
                     </button>
                   </div>
                   <div className="rounded-lg overflow-hidden bg-black aspect-video relative border-4 border-[#2C1E16] shadow-xl">
-                    <VideoPlayer url={formData.video} />
+                    <MuxVideoPlayer playbackId={muxPlaybackId} />
                   </div>
+                </div>
+              )}
+
+              {muxUploadState === 'error' && (
+                <div className="border-2 border-red-300 rounded-lg p-6 bg-red-50 text-center">
+                  <p className="text-red-700 font-bold font-playfair mb-3">Tải video lên thất bại.</p>
+                  <button
+                    type="button"
+                    onClick={() => setMuxUploadState('idle')}
+                    className="px-4 py-2 bg-[#B8860B] text-white rounded-lg hover:bg-[#8B3A3A] transition-colors font-playfair font-bold text-sm"
+                  >
+                    Thử lại
+                  </button>
                 </div>
               )}
             </div>

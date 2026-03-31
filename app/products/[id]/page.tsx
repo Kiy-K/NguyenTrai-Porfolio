@@ -5,6 +5,7 @@ import Navigation from '@/components/Navigation';
 import SummarizeButton from '@/components/SummarizeButton';
 import ShareButton from '@/components/ShareButton';
 import VideoPlayer from '@/components/VideoPlayer';
+import MuxVideoPlayer from '@/components/MuxVideoPlayer';
 import BackButton from '@/components/BackButton';
 
 export const revalidate = 900; // Cache for 15 minutes
@@ -104,12 +105,16 @@ export default async function ProductDetail({ params }: { params: Promise<{ id: 
               </div>
             )}
 
-            {/* Video Section */}
-            {product.video && (
+            {/* Video Section — Mux takes priority; falls back to Cloudinary URL */}
+            {(product.muxPlaybackId || product.video) && (
               <div className="mb-12">
                 <h3 className="text-2xl font-bold text-[#2C1E16] mb-6 font-playfair border-b border-[#D4C4A8] pb-2">Video giới thiệu</h3>
                 <div className="rounded-sm overflow-hidden bg-black aspect-video relative border border-[#D4C4A8] shadow-lg">
-                  <VideoPlayer url={product.video} />
+                  {product.muxPlaybackId ? (
+                    <MuxVideoPlayer playbackId={product.muxPlaybackId} />
+                  ) : (
+                    <VideoPlayer url={product.video!} />
+                  )}
                 </div>
               </div>
             )}

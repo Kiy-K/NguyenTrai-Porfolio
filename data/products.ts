@@ -5,6 +5,8 @@ export interface Product {
   fullDescription?: string;
   images: string[];
   video?: string;
+  muxAssetId?: string;
+  muxPlaybackId?: string;
   tags?: string[];
   section?: string;
   createdAt?: string;
