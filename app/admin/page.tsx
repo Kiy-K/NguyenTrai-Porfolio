@@ -20,17 +20,6 @@ export default function AdminPage() {
     setIsClient(true);
   }, []);
 
-  // Warn user if they try to leave while an upload is in progress
-  useEffect(() => {
-    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
-      if (isUploading) {
-        e.preventDefault();
-        e.returnValue = '';
-      }
-    };
-    window.addEventListener('beforeunload', handleBeforeUnload);
-    return () => window.removeEventListener('beforeunload', handleBeforeUnload);
-  }, [isUploading]);
   const [formData, setFormData] = useState({
     title: '',
     description: '',
@@ -50,6 +39,18 @@ export default function AdminPage() {
   const [showClearConfirm, setShowClearConfirm] = useState(false);
   const [imageToRemove, setImageToRemove] = useState<number | null>(null);
   const [isUploading, setIsUploading] = useState(false);
+
+  // Warn user if they try to leave while an upload is in progress
+  useEffect(() => {
+    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+      if (isUploading) {
+        e.preventDefault();
+        e.returnValue = '';
+      }
+    };
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    return () => window.removeEventListener('beforeunload', handleBeforeUnload);
+  }, [isUploading]);
 
   // Mux video upload state
   const [muxUploadState, setMuxUploadState] = useState<'idle' | 'uploading' | 'processing' | 'ready' | 'error'>('idle');
