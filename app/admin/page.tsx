@@ -56,6 +56,13 @@ export default function AdminPage() {
     return () => window.removeEventListener('beforeunload', handleBeforeUnload);
   }, [isUploading]);
 
+  // Mux video upload state
+  const [muxUploadState, setMuxUploadState] = useState<'idle' | 'uploading' | 'processing' | 'ready' | 'error'>('idle');
+  const [muxUploadProgress, setMuxUploadProgress] = useState(0);
+  const [muxUploadId, setMuxUploadId] = useState('');
+  const [muxPlaybackId, setMuxPlaybackId] = useState('');
+  const [muxAssetId, setMuxAssetId] = useState('');
+
   // Resume polling immediately when user switches back to this tab
   useEffect(() => {
     const handleVisibilityChange = () => {
@@ -83,13 +90,6 @@ export default function AdminPage() {
     setIsUploading(false);
     setStatus({ type: null, message: '' });
   };
-
-  // Mux video upload state
-  const [muxUploadState, setMuxUploadState] = useState<'idle' | 'uploading' | 'processing' | 'ready' | 'error'>('idle');
-  const [muxUploadProgress, setMuxUploadProgress] = useState(0);
-  const [muxUploadId, setMuxUploadId] = useState('');
-  const [muxPlaybackId, setMuxPlaybackId] = useState('');
-  const [muxAssetId, setMuxAssetId] = useState('');
 
   const uploadToCloudinary = async (file: File, resourceType: 'image' | 'video' = 'image') => {
     const formData = new FormData();
