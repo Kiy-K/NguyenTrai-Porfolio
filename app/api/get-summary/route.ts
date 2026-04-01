@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { traceLLMCall } from '@/lib/braintrust';
 
 export async function POST(request: Request) {
   try {
@@ -13,62 +14,96 @@ export async function POST(request: Request) {
 
     // Use Gemini if key is available, otherwise fall back to Mistral
     if (geminiKey && geminiKey !== 'your_gemini_api_key_here') {
-      const response = await fetch(
-        `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${geminiKey}`,
-        {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            contents: [{
-              parts: [{
-                text: `Hãy tóm tắt đoạn văn sau thành 2-3 câu ngắn gọn bằng tiếng Việt, giữ nguyên ý nghĩa chính:\n\n${text}`
-              }]
-            }],
-            generationConfig: { temperature: 0.4, maxOutputTokens: 256 }
-          })
-        }
-      );
+      const { summary } = await traceLLMCall({
+        name: 'get-summary.gemini',
+        provider: 'gemini',
+        model: 'gemini-1.5-flash',
+        input: { text },
+        metadata: { route: '/api/get-summary' },
+        call: async () => {
+          const response = await fetch(
+            `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${geminiKey}`,
+            {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                contents: [{
+                  parts: [{
+                    text: `Hãy tóm tắt đoạn văn sau thành 2-3 câu ngắn gọn bằng tiếng Việt, giữ nguyên ý nghĩa chính:\n\n${text}`
+                  }]
+                }],
+                generationConfig: { temperature: 0.4, maxOutputTokens: 256 }
+              })
+            }
+          );
 
-      if (!response.ok) {
-        const err = await response.text();
-        throw new Error(`Gemini API returned ${response.status}: ${err}`);
-      }
+          if (!response.ok) {
+            const err = await response.text();
+            throw new Error(`Gemini API returned ${response.status}: ${err}`);
+          }
 
-      const data = await response.json();
-      const summary = data.candidates?.[0]?.content?.parts?.[0]?.text?.trim();
-      if (!summary) throw new Error('No content returned from Gemini');
+          const data = await response.json();
+          const summary = data.candidates?.[0]?.content?.parts?.[0]?.text?.trim();
+          if (!summary) throw new Error('No content returned from Gemini');
+          return { summary, usage: data.usageMetadata };
+        },
+        output: (result) => result.summary,
+        metrics: (result) => ({
+          prompt_tokens: result.usage?.promptTokenCount,
+          completion_tokens: result.usage?.candidatesTokenCount,
+          tokens: result.usage?.totalTokenCount,
+        }),
+      });
+
       return NextResponse.json({ summary });
     }
 
     if (mistralKey && mistralKey !== 'your_api_key_here') {
-      const response = await fetch('https://api.mistral.ai/v1/chat/completions', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${mistralKey}`
-        },
-        body: JSON.stringify({
-          model: 'mistral-small-latest',
-          messages: [
-            {
-              role: 'system',
-              content: 'Bạn là trợ lý AI. Hãy tóm tắt văn bản được cung cấp thành 2-3 câu ngắn gọn bằng tiếng Việt, giữ nguyên ý nghĩa chính. Chỉ trả về bản tóm tắt, không giải thích thêm.'
+      const { summary } = await traceLLMCall({
+        name: 'get-summary.mistral',
+        provider: 'mistral',
+        model: 'mistral-small-latest',
+        input: { text },
+        metadata: { route: '/api/get-summary' },
+        call: async () => {
+          const response = await fetch('https://api.mistral.ai/v1/chat/completions', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${mistralKey}`
             },
-            { role: 'user', content: text }
-          ],
-          temperature: 0.4,
-          max_tokens: 256
-        })
+            body: JSON.stringify({
+              model: 'mistral-small-latest',
+              messages: [
+                {
+                  role: 'system',
+                  content: 'Bạn là trợ lý AI. Hãy tóm tắt văn bản được cung cấp thành 2-3 câu ngắn gọn bằng tiếng Việt, giữ nguyên ý nghĩa chính. Chỉ trả về bản tóm tắt, không giải thích thêm.'
+                },
+                { role: 'user', content: text }
+              ],
+              temperature: 0.4,
+              max_tokens: 256
+            })
+          });
+
+          if (!response.ok) {
+            const err = await response.text();
+            throw new Error(`Mistral API returned ${response.status}: ${err}`);
+          }
+
+          const data = await response.json();
+          const summary = data.choices?.[0]?.message?.content?.trim();
+          if (!summary) throw new Error('No content returned from Mistral');
+          return { summary, usage: data.usage };
+        },
+        output: (result) => result.summary,
+        metrics: (result) => ({
+          prompt_tokens: result.usage?.prompt_tokens,
+          completion_tokens: result.usage?.completion_tokens,
+          tokens: result.usage?.total_tokens,
+        }),
       });
 
-      if (!response.ok) {
-        const err = await response.text();
-        throw new Error(`Mistral API returned ${response.status}: ${err}`);
-      }
-
-      const data = await response.json();
-      const summary = data.choices?.[0]?.message?.content?.trim();
-      if (!summary) throw new Error('No content returned from Mistral');
       return NextResponse.json({ summary });
     }
 

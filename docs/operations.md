@@ -110,6 +110,11 @@ If you need custom propagation targets, set:
 
 - `OTEL_PROPAGATE_CONTEXT_URLS` as comma-separated URL prefixes
 
+For Braintrust LLM traces, set:
+
+- `BRAINTRUST_API_KEY`
+- `BRAINTRUST_PROJECT_NAME` (optional)
+
 ## Known Constraints
 
 - No authentication on `/admin` or API routes (currently open).

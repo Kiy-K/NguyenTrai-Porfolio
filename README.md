@@ -25,6 +25,7 @@ A Next.js 16 App Router project that presents the life, works, and legacy of Ngu
 - Cloudinary (media upload + Cloudinary video fallback player)
 - Mux (direct video upload + playback)
 - Gemini and/or Mistral APIs (AI title suggestion, summarization, semantic search)
+- Braintrust SDK (LLM trace logging for Gemini and Mistral calls)
 - Vercel Analytics + Speed Insights + OpenTelemetry instrumentation
 
 ## Prerequisites
@@ -82,6 +83,8 @@ Used by `/api/upload` and Cloudinary video player fallback.
 
 ### Observability
 
+- `BRAINTRUST_API_KEY` (optional; enables Braintrust tracing for Gemini/Mistral route calls)
+- `BRAINTRUST_PROJECT_NAME` (optional; defaults to `nguyen-trai-portfolio`)
 - `OTEL_PROPAGATE_CONTEXT_URLS` (optional)
 
 ## Scripts

@@ -115,6 +115,7 @@ Generates a Vietnamese 2-3 sentence summary.
 - Uses Gemini when `GEMINI_API_KEY` is configured
 - Falls back to Mistral when Gemini key is unavailable
 - Returns `500` if neither provider is configured
+- If `BRAINTRUST_API_KEY` is set, logs LLM trace spans to Braintrust
 
 ### Success
 
@@ -144,6 +145,7 @@ Returns 3 Vietnamese title suggestions for a partially typed title.
 
 - Gemini first, then Mistral fallback
 - Attempts strict JSON parsing, then bracket extraction, then line fallback
+- If `BRAINTRUST_API_KEY` is set, logs LLM trace spans to Braintrust
 
 ### Success
 
@@ -181,6 +183,7 @@ Semantic ID matching over supplied project snippets.
 
 - Mistral only (`MISTRAL_API_KEY` required)
 - Model instructed to return JSON array of relevant IDs
+- If `BRAINTRUST_API_KEY` is set, logs LLM trace spans to Braintrust
 
 ### Success
 

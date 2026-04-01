@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { traceLLMCall } from '@/lib/braintrust';
 
 const SYSTEM_PROMPT = (section: string) =>
   `You are an AI assistant helping a user write a title for a literature project about the Vietnamese author Nguyễn Trãi.
@@ -42,62 +43,96 @@ export async function POST(request: Request) {
 
     // Use Gemini if key is available, otherwise fall back to Mistral
     if (geminiKey && geminiKey !== 'your_gemini_api_key_here') {
-      const response = await fetch(
-        `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${geminiKey}`,
-        {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            contents: [{
-              parts: [{
-                text: `${SYSTEM_PROMPT(section)}\n\nUser is typing: "${text}"\nCategory: "${section}"\n\nSuggestions:`
-              }]
-            }],
-            generationConfig: { temperature: 0.7, maxOutputTokens: 256 }
-          })
-        }
-      );
+      const { suggestions } = await traceLLMCall({
+        name: 'suggest-title.gemini',
+        provider: 'gemini',
+        model: 'gemini-1.5-flash',
+        input: { text, section },
+        metadata: { route: '/api/suggest-title' },
+        call: async () => {
+          const response = await fetch(
+            `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${geminiKey}`,
+            {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                contents: [{
+                  parts: [{
+                    text: `${SYSTEM_PROMPT(section)}\n\nUser is typing: "${text}"\nCategory: "${section}"\n\nSuggestions:`
+                  }]
+                }],
+                generationConfig: { temperature: 0.7, maxOutputTokens: 256 }
+              })
+            }
+          );
 
-      if (!response.ok) {
-        const err = await response.text();
-        throw new Error(`Gemini API returned ${response.status}: ${err}`);
-      }
+          if (!response.ok) {
+            const err = await response.text();
+            throw new Error(`Gemini API returned ${response.status}: ${err}`);
+          }
 
-      const data = await response.json();
-      const content = data.candidates?.[0]?.content?.parts?.[0]?.text;
-      if (!content) throw new Error('No content returned from Gemini');
-      const suggestions = parseSuggestions(content);
-      if (!suggestions) throw new Error('Could not parse suggestions from Gemini response');
+          const data = await response.json();
+          const content = data.candidates?.[0]?.content?.parts?.[0]?.text;
+          if (!content) throw new Error('No content returned from Gemini');
+          const suggestions = parseSuggestions(content);
+          if (!suggestions) throw new Error('Could not parse suggestions from Gemini response');
+          return { suggestions, usage: data.usageMetadata };
+        },
+        output: (result) => result.suggestions,
+        metrics: (result) => ({
+          prompt_tokens: result.usage?.promptTokenCount,
+          completion_tokens: result.usage?.candidatesTokenCount,
+          tokens: result.usage?.totalTokenCount,
+        }),
+      });
+
       return NextResponse.json({ suggestions });
     }
 
     if (mistralKey && mistralKey !== 'your_api_key_here') {
-      const response = await fetch('https://api.mistral.ai/v1/chat/completions', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${mistralKey}`
+      const { suggestions } = await traceLLMCall({
+        name: 'suggest-title.mistral',
+        provider: 'mistral',
+        model: 'mistral-small-latest',
+        input: { text, section },
+        metadata: { route: '/api/suggest-title' },
+        call: async () => {
+          const response = await fetch('https://api.mistral.ai/v1/chat/completions', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${mistralKey}`
+            },
+            body: JSON.stringify({
+              model: 'mistral-small-latest',
+              messages: [
+                { role: 'system', content: SYSTEM_PROMPT(section) },
+                { role: 'user', content: `User is typing: "${text}"\nCategory: "${section}"\n\nSuggestions:` }
+              ],
+              temperature: 0.7
+            })
+          });
+
+          if (!response.ok) {
+            const err = await response.text();
+            throw new Error(`Mistral API returned ${response.status}: ${err}`);
+          }
+
+          const data = await response.json();
+          const content = data.choices?.[0]?.message?.content;
+          if (!content) throw new Error('No content returned from Mistral');
+          const suggestions = parseSuggestions(content);
+          if (!suggestions) throw new Error('Could not parse suggestions from Mistral response');
+          return { suggestions, usage: data.usage };
         },
-        body: JSON.stringify({
-          model: 'mistral-small-latest',
-          messages: [
-            { role: 'system', content: SYSTEM_PROMPT(section) },
-            { role: 'user', content: `User is typing: "${text}"\nCategory: "${section}"\n\nSuggestions:` }
-          ],
-          temperature: 0.7
-        })
+        output: (result) => result.suggestions,
+        metrics: (result) => ({
+          prompt_tokens: result.usage?.prompt_tokens,
+          completion_tokens: result.usage?.completion_tokens,
+          tokens: result.usage?.total_tokens,
+        }),
       });
 
-      if (!response.ok) {
-        const err = await response.text();
-        throw new Error(`Mistral API returned ${response.status}: ${err}`);
-      }
-
-      const data = await response.json();
-      const content = data.choices?.[0]?.message?.content;
-      if (!content) throw new Error('No content returned from Mistral');
-      const suggestions = parseSuggestions(content);
-      if (!suggestions) throw new Error('Could not parse suggestions from Mistral response');
       return NextResponse.json({ suggestions });
     }
 

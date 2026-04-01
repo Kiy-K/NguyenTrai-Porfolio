@@ -43,6 +43,8 @@ Copy `.env.example` to `.env.local` and set values as needed.
 
 ### Observability
 
+- `BRAINTRUST_API_KEY` (optional, enables LLM tracing for Gemini/Mistral route calls)
+- `BRAINTRUST_PROJECT_NAME` (optional, defaults to `nguyen-trai-portfolio`)
 - `OTEL_PROPAGATE_CONTEXT_URLS` (optional)
 
 ## Architecture Overview
@@ -117,6 +119,12 @@ Player behavior in detail page:
 ## Observability
 
 `instrumentation.ts` enables Vercel OTel and propagates trace context for localhost, Mistral, and Gemini by default (overridable with `OTEL_PROPAGATE_CONTEXT_URLS`).
+
+`lib/braintrust.ts` provides optional Braintrust tracing wrappers used by:
+
+- `/api/get-summary`
+- `/api/suggest-title`
+- `/api/search-projects`
 
 ## Contributor Notes
 

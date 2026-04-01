@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { traceLLMCall } from '@/lib/braintrust';
 
 export async function POST(request: Request) {
   try {
@@ -17,36 +18,53 @@ export async function POST(request: Request) {
       );
     }
 
-    const response = await fetch('https://api.mistral.ai/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-        'Authorization': `Bearer ${apiKey}`
-      },
-      body: JSON.stringify({
-        model: 'mistral-small-latest',
-        messages: [
-          { 
-            role: 'system', 
-            content: `You are an AI search engine for a literature project database.\nGiven a user's search query and a list of projects (with id, title, and description), return a JSON array of project IDs that are RELEVANT to the query.\n- Consider synonyms, related terms, and semantic meaning in Vietnamese.\n- If the query is related to the project's topic, author, or content, include its ID.\n- Return ONLY a JSON array of strings (the IDs). Do not include any markdown formatting, code blocks, or explanations. Just the raw JSON array.\nExample output: ["project-1", "project-3"]` 
+    const { content } = await traceLLMCall({
+      name: 'search-projects.mistral',
+      provider: 'mistral',
+      model: 'mistral-small-latest',
+      input: { query, projectCount: projects?.length || 0 },
+      metadata: { route: '/api/search-projects' },
+      call: async () => {
+        const response = await fetch('https://api.mistral.ai/v1/chat/completions', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'Authorization': `Bearer ${apiKey}`
           },
-          { 
-            role: 'user', 
-            content: `Query: "${query}"\n\nProjects:\n${JSON.stringify(projects.map((p: any) => ({id: p.id, title: p.title, description: p.description})))}` 
-          }
-        ],
-        temperature: 0.1,
-      })
+          body: JSON.stringify({
+            model: 'mistral-small-latest',
+            messages: [
+              { 
+                role: 'system', 
+                content: `You are an AI search engine for a literature project database.\nGiven a user's search query and a list of projects (with id, title, and description), return a JSON array of project IDs that are RELEVANT to the query.\n- Consider synonyms, related terms, and semantic meaning in Vietnamese.\n- If the query is related to the project's topic, author, or content, include its ID.\n- Return ONLY a JSON array of strings (the IDs). Do not include any markdown formatting, code blocks, or explanations. Just the raw JSON array.\nExample output: ["project-1", "project-3"]` 
+              },
+              { 
+                role: 'user', 
+                content: `Query: "${query}"\n\nProjects:\n${JSON.stringify(projects.map((p: any) => ({id: p.id, title: p.title, description: p.description})))}` 
+              }
+            ],
+            temperature: 0.1,
+          })
+        });
+
+        if (!response.ok) {
+          const errorText = await response.text();
+          throw new Error(`Mistral API returned ${response.status}: ${errorText}`);
+        }
+
+        const data = await response.json();
+        const content = data.choices?.[0]?.message?.content;
+
+        return { content, usage: data.usage };
+      },
+      output: (result) => result.content,
+      metrics: (result) => ({
+        prompt_tokens: result.usage?.prompt_tokens,
+        completion_tokens: result.usage?.completion_tokens,
+        tokens: result.usage?.total_tokens,
+      }),
     });
-
-    if (!response.ok) {
-      const errorText = await response.text();
-      throw new Error(`Mistral API returned ${response.status}: ${errorText}`);
-    }
-
-    const data = await response.json();
-    const content = data.choices?.[0]?.message?.content;
     
     if (!content) {
       throw new Error('No content returned from Mistral API');

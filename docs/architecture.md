@@ -124,3 +124,11 @@ At render time, detail page prefers Mux playback, then falls back to Cloudinary 
 - `generativelanguage.googleapis.com`
 
 This can be overridden via `OTEL_PROPAGATE_CONTEXT_URLS`.
+
+`lib/braintrust.ts` adds optional LLM-level tracing spans for Gemini and Mistral calls in:
+
+- `/api/get-summary`
+- `/api/suggest-title`
+- `/api/search-projects`
+
+Enable it with `BRAINTRUST_API_KEY` (and optional `BRAINTRUST_PROJECT_NAME`).
