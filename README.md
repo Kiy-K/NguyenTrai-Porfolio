@@ -1,104 +1,182 @@
-# 📜 Nguyễn Trãi - Danh nhân văn hóa thế giới (World Cultural Celebrity)
+# Nguyen Trai Portfolio
 
-*(Bilingual README: English & Vietnamese)*
+A Next.js 16 App Router project that presents the life, works, and legacy of Nguyen Trai, with content management, AI-assisted writing/search, and media upload support.
 
-A beautifully designed, responsive Next.js application dedicated to showcasing the life, works, and legacy of Nguyễn Trãi - a prominent Vietnamese scholar, poet, and world cultural celebrity.
+## What This App Does
 
-Một ứng dụng Next.js giao diện đẹp mắt và tương thích mọi thiết bị, được thiết kế để trưng bày về cuộc đời, sự nghiệp và di sản của Nguyễn Trãi - danh nhân văn hóa thế giới, nhà tư tưởng, nhà thơ lớn của dân tộc Việt Nam.
+- Public site with:
+  - Home page and 9 themed section pages
+  - Product/article detail pages
+  - Search, sort, tag filtering, AI-assisted semantic search
+  - AI summarization per card and detail page
+- Admin page (`/admin`) to:
+  - Create entries
+  - Upload images to Cloudinary
+  - Upload videos directly to Mux (direct upload + polling)
+  - Clear all Redis data
+  - Get AI title suggestions while typing
 
----
+## Tech Stack
 
-## ✨ Features / Tính năng nổi bật
+- `next@16` (App Router)
+- `react@19`
+- Tailwind CSS v4
+- Upstash Redis (single JSON blob storage)
+- Cloudinary (media upload + Cloudinary video fallback player)
+- Mux (direct video upload + playback)
+- Gemini and/or Mistral APIs (AI title suggestion, summarization, semantic search)
+- Vercel Analytics + Speed Insights + OpenTelemetry instrumentation
 
-- **Elegant UI/UX**: Designed with a classic, elegant theme using the Playfair Display font and warm colors to reflect the historical significance. *(Giao diện thanh lịch, cổ điển với tông màu ấm và font chữ Playfair Display)*
-- **Smart Navigation**: Features a sticky, auto-hiding navigation bar that smoothly slides out of view when scrolling down to maximize reading space, and instantly reappears when scrolling up. *(Thanh điều hướng thông minh tự động ẩn khi cuộn xuống và hiện lại khi cuộn lên)*
-- **Smooth Scrolling**: Enjoy a seamless browsing experience with smooth anchor scrolling across the application. *(Trải nghiệm cuộn trang mượt mà)*
-- **Content Categories**: Organized sections for his biography, literary works, and historical contributions. *(Phân loại nội dung rõ ràng: tiểu sử, tác phẩm văn học, đóng góp lịch sử)*
-- **Admin Dashboard**: Built-in admin page (`/admin`) to manage content and entries. *(Trang quản trị tích hợp để quản lý nội dung)*
-- **AI Integration**: Built-in AI summarization to quickly digest long historical texts and descriptions. *(Tích hợp AI tóm tắt các văn bản lịch sử dài)*
-- **Responsive Design**: Flawless experience across mobile, tablet, and desktop devices. *(Tương thích hoàn hảo trên mọi thiết bị)*
+## Prerequisites
 
----
+- Node.js 20+
+- npm
+- Optional service accounts:
+  - Upstash Redis
+  - Cloudinary
+  - Mux
+  - Gemini and/or Mistral
 
-## 🛠 Tech Stack / Công nghệ sử dụng
+## Quick Start
 
-- **Framework**: [Next.js 15](https://nextjs.org/) (App Router)
-- **Styling**: [Tailwind CSS v4](https://tailwindcss.com/)
-- **Animations**: Tailwind animations (`animate-in`, `fade-in`, `slide-in`)
-- **Icons**: [Lucide React](https://lucide.dev/)
-- **Database**: [Upstash Redis](https://upstash.com/) (Serverless Redis) for content storage
-- **AI Integration**: [OpenAI Node.js SDK](https://github.com/openai/openai-node) (Compatible with OpenAI, Mistral, or Gemini)
-
----
-
-## 📁 Folder Structure / Cấu trúc thư mục
-
-```text
-/
-├── app/                  # Next.js App Router pages (Các trang chính)
-│   ├── page.tsx          # Homepage / Trang chủ
-│   ├── admin/            # Admin Dashboard / Trang quản trị
-│   ├── api/              # API Routes (Products, Summarize)
-│   └── products/[id]/    # Detail Pages for specific works/events / Trang chi tiết
-├── components/           # Reusable UI components (Các component dùng chung)
-│   ├── Navigation.tsx    # Thanh điều hướng thông minh (Sticky Auto-hide)
-│   ├── CategoryLayout.tsx# Bố cục theo danh mục
-│   ├── ProductCard.tsx   # Thẻ nội dung
-│   └── SummarizeButton.tsx # Nút tóm tắt AI
-├── lib/                  # Utility functions (Các hàm tiện ích)
-│   ├── ai.ts             # AI Client Configuration / Cấu hình AI
-│   ├── redis.ts          # Upstash Redis Connection / Kết nối Upstash Redis
-│   └── data.ts           # Data Fetching Logic / Logic lấy dữ liệu
-```
-
----
-
-## 🚀 Getting Started / Hướng dẫn cài đặt (Local)
-
-### 1. Clone the repository (Tải mã nguồn)
 ```bash
 git clone https://github.com/Kiy-K/NguyenTrai-Porfolio.git
 cd NguyenTrai-Porfolio
-```
-
-### 2. Install dependencies (Cài đặt thư viện)
-```bash
 npm install
-```
-
-### 3. Configure Environment Variables (Cấu hình biến môi trường)
-Copy the example environment file and add your API keys:
-*(Copy file `.env.example` thành `.env` và thêm API key của bạn)*
-```bash
-cp .env.example .env
-```
-Open `.env` and set your variables:
-- `UPSTASH_REDIS_REST_URL` & `UPSTASH_REDIS_REST_TOKEN`: Get these from your [Upstash Console](https://console.upstash.com/).
-- `OPENAI_API_KEY`: You can use OpenAI, Mistral, or Gemini's OpenAI-compatible endpoint.
-
-*(Lưu ý: Nếu bạn chưa cấu hình Upstash Redis, ứng dụng sẽ tự động sử dụng dữ liệu mẫu (mock data) để bạn vẫn có thể chạy thử giao diện).*
-
-### 4. Run the development server (Chạy server dev)
-```bash
+cp .env.example .env.local
 npm run dev
 ```
-Open [http://localhost:3000](http://localhost:3000) in your browser. *(Mở trình duyệt và truy cập link trên)*
 
----
+Open `http://localhost:3000`.
 
-## 🌐 Deployment / Hướng dẫn triển khai (Hosting)
+## Environment Variables
 
-### Vercel (Highly Recommended / Khuyên dùng)
-Vercel is the easiest way to deploy Next.js apps. *(Vercel là cách dễ nhất để deploy Next.js)*
+Set these in `.env.local`.
 
-1. Push your code to a GitHub repository. *(Đẩy code lên GitHub)*
-2. Go to [Vercel.com](https://vercel.com/) and sign in with GitHub. *(Đăng nhập Vercel bằng GitHub)*
-3. Click **Add New... -> Project**.
-4. Import your GitHub repository. *(Nhập repo GitHub của bạn)*
-5. In the **Environment Variables** section, add your `OPENAI_API_KEY` and Redis credentials. *(Thêm biến môi trường)*
-6. Click **Deploy**. Your site will be live in minutes! *(Bấm Deploy và đợi vài phút)*
+### Core
 
-*(Lưu ý: Không nên sử dụng GitHub Pages cho dự án này vì GitHub Pages không hỗ trợ các API routes của Next.js cần thiết cho tính năng AI và Redis).*
+- `UPSTASH_REDIS_REST_URL`
+- `UPSTASH_REDIS_REST_TOKEN`
 
----
-*Tự hào tôn vinh giá trị văn hóa và lịch sử Việt Nam.*
+If Redis is missing, read APIs return empty arrays and write APIs return errors.
+
+### Cloudinary
+
+- `CLOUDINARY_URL`
+- `NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME`
+
+Used by `/api/upload` and Cloudinary video player fallback.
+
+### Mux
+
+- `MUX_TOKEN_ID`
+- `MUX_TOKEN_SECRET`
+- `NEXT_PUBLIC_MUX_DATA_ENV_KEY`
+- `APP_URL` (optional but recommended; used as `cors_origin` when generating direct upload URLs)
+
+### AI Providers
+
+- `GEMINI_API_KEY` (used first if present for summary/title)
+- `MISTRAL_API_KEY` (fallback for summary/title; required for semantic search)
+- `AI_MODEL` (declared in env, not currently used by route handlers)
+
+### Observability
+
+- `OTEL_PROPAGATE_CONTEXT_URLS` (optional)
+
+## Scripts
+
+```bash
+npm run dev
+npm run build
+npm run start
+npm run lint
+npm run clean
+```
+
+No test framework is configured in this repository currently.
+
+## Data Model and Storage
+
+All content lives in Redis key `portfolio_data_v4`:
+
+```ts
+{ products: Product[] }
+```
+
+`Product` shape (`data/products.ts`):
+
+- `id: string | number`
+- `title: string`
+- `description: string`
+- `fullDescription?: string`
+- `images: string[]`
+- `video?: string`
+- `muxAssetId?: string`
+- `muxPlaybackId?: string`
+- `tags?: string[]`
+- `section?: string`
+- `createdAt?: string`
+- `status?: 'published' | 'draft' | 'archived'`
+- `teamMembers?: string`
+
+## Important Section Mapping Behavior
+
+`SECTIONS` has both `id` and `name`, but products are filtered in section pages by matching product `section` against section `name` (case-insensitive), not `id`.
+
+In admin, the `<select>` stores section names. Keep this behavior in mind if you migrate content.
+
+## Caching and Revalidation
+
+- `getProducts()` uses `unstable_cache` with a 30-minute TTL and tag `products`.
+- Main route pages set `revalidate = 1800`.
+- Product mutations trigger `revalidatePath('/', 'layout')`.
+- `AutoReloader` does a client-side `router.refresh()` every 30 minutes.
+
+## Routes
+
+### Pages
+
+- `/` home + category grid
+- `/sections/[id]` section listing
+- `/products/[id]` product detail
+- `/admin` content management UI
+
+### API
+
+- `GET /api/products` list all products
+- `POST /api/products` create product
+- `DELETE /api/products` clear all products
+- `GET /api/products/[id]` fetch one product
+- `POST /api/upload` upload file to Cloudinary
+- `POST /api/suggest-title` AI title suggestions
+- `POST /api/get-summary` AI summary
+- `POST /api/search-projects` Mistral semantic matching over visible products
+- `POST /api/mux/upload-url` create Mux direct upload URL
+- `GET /api/mux/asset/[uploadId]` poll Mux upload/asset status
+
+## Project Structure
+
+```text
+app/
+  admin/page.tsx
+  api/
+  products/[id]/page.tsx
+  sections/[id]/page.tsx
+  layout.tsx
+  page.tsx
+components/
+data/
+lib/
+```
+
+## Additional Docs
+
+- `docs/architecture.md`
+- `docs/api.md`
+- `docs/operations.md`
+- `CLAUDE.md` (agent/dev workflow notes)
+
+## Deployment Notes
+
+This app requires server runtime APIs (`/api/*`) and should be deployed on a Next.js-compatible platform (for example Vercel). Static-only hosting is not suitable.

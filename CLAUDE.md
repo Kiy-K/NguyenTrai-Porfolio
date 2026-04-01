@@ -1,83 +1,125 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+This file gives coding agents and contributors high-signal context for this repository.
 
 ## Commands
 
 ```bash
-npm run dev      # Start dev server (uses Turbopack)
+npm run dev      # Start dev server
 npm run build    # Production build
 npm run start    # Start production server
 npm run lint     # ESLint check
 npm run clean    # Clean Next.js build cache
 ```
 
-No test framework is configured in this project.
+No test framework is configured.
 
 ## Environment Variables
 
-Copy `.env.example` to `.env.local`. Required variables:
-- `UPSTASH_REDIS_REST_URL` + `UPSTASH_REDIS_REST_TOKEN` — database (all content stored in Redis key `portfolio_data_v4`)
-- `CLOUDINARY_URL` + `NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME` — image/video uploads
-- `GEMINI_API_KEY` — AI title suggestions and summarization
-- `MISTRAL_API_KEY` / `AI_MODEL` — alternative AI provider
-- `MUX_TOKEN_ID` + `MUX_TOKEN_SECRET` — video hosting (server-side only, never exposed to client)
+Copy `.env.example` to `.env.local` and set values as needed.
 
-## Architecture
+### Required for Redis-backed content
 
-### Data Flow
+- `UPSTASH_REDIS_REST_URL`
+- `UPSTASH_REDIS_REST_TOKEN`
 
-All content is stored in a single Redis JSON blob at key `portfolio_data_v4` with shape `{ products: Product[] }`. Reads go through `lib/data.ts` → `getProducts()`, which is wrapped in Next.js `unstable_cache` (15-minute TTL, tagged `products`). Writes go through `POST /api/products`, which appends to the array and calls `revalidatePath('/', 'layout')` to bust the cache.
+### Required for media upload
 
-### Content Model
+- `CLOUDINARY_URL`
+- `NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME`
 
-The `Product` interface (`data/products.ts`) is the single content type. The `section` field (a slug from `lib/constants.ts`) determines which of the 9 category pages a product appears on. Products without a section appear nowhere in category views.
+### Required for Mux direct video upload
 
-### Route Structure
+- `MUX_TOKEN_ID`
+- `MUX_TOKEN_SECRET`
+- `NEXT_PUBLIC_MUX_DATA_ENV_KEY`
+- `APP_URL` (recommended for Mux `cors_origin`)
 
-- `/` — hero + `CategoryLayout` (links to the 9 sections)
-- `/sections/[id]` — filters all products by `section === id`, renders `ProjectList`
-- `/products/[id]` — full product detail with optional video
-- `/admin` — single-page content management UI (create, upload, delete)
-- `/api/products` — GET (list), POST (create), DELETE (clear all)
-- `/api/products/[id]` — GET single product
-- `/api/upload` — Cloudinary upload handler
-- `/api/suggest-title` — AI title suggestion (called with 800ms debounce from admin form)
-- `/api/search-projects` — search/filter endpoint
+### AI providers
 
-### Mux Video Integration
+- `GEMINI_API_KEY` (primary for summary/title if present)
+- `MISTRAL_API_KEY` (fallback for summary/title and required for `/api/search-projects`)
+- `AI_MODEL` (present in env template, not consumed by route handlers currently)
 
-Videos are uploaded via **Mux Direct Upload** — the file goes straight from the browser to Mux, bypassing our server, making 1–2 GB uploads reliable.
+### Observability
 
-**Flow:**
-1. Admin picks a file → frontend calls `POST /api/mux/upload-url` (server creates a Mux Direct Upload, credentials never leave server)
-2. Frontend XHRs the file directly to the one-time Mux URL (PUT), tracking upload progress
-3. Frontend polls `GET /api/mux/asset/[uploadId]` (3 s interval) until `status === 'ready'`
-4. On ready: `muxPlaybackId` and `muxAssetId` are stored in Redis alongside the product
+- `OTEL_PROPAGATE_CONTEXT_URLS` (optional)
 
-**Rendering:** Product detail page checks `product.muxPlaybackId` first (renders `<MuxVideoPlayer>`), then falls back to `product.video` (Cloudinary URL via `<VideoPlayer>`) for older entries.
+## Architecture Overview
 
-**Key files:** `app/api/mux/upload-url/route.ts`, `app/api/mux/asset/[uploadId]/route.ts`, `components/MuxVideoPlayer.tsx`
+### Data storage
 
-### AI Features
+All content is stored in Redis key `portfolio_data_v4` as:
 
-Two AI features exist: title suggestions in the admin form (`/api/suggest-title`) and content summarization (`SummarizeButton` component → `/api/get-summary`). Both support Gemini and Mistral as providers, selected via env vars.
+```ts
+{ products: Product[] }
+```
 
-### Styling
+`Product` is defined in `data/products.ts`.
 
-Tailwind CSS v4 with a fixed historical/vintage palette defined as CSS variables in `globals.css`:
-- `--parchment`: `#F4EBD0`
-- `--ink`: `#2C1E16`
-- `--gold`: `#B8860B`
-- `--accent`: `#8B3A3A`
+### Read path
 
-Font: Playfair Display (Google Fonts, loaded in `app/layout.tsx`).
+- `lib/data.ts` exports `getProducts()` via `unstable_cache` (30 minutes, tag: `products`)
+- `getProduct(id)` reads from `getProducts()`
 
-### Image Handling
+### Write path
 
-All production images are hosted on Cloudinary. The `next.config.ts` remote patterns whitelist `res.cloudinary.com`, `upload.wikimedia.org`, `i.ytimg.com`, and `picsum.photos`. Use `next/image` for all images to get AVIF/WebP optimization.
+- `POST /api/products` appends one product
+- `DELETE /api/products` resets to empty array
+- Both call `revalidatePath('/', 'layout')`
 
-### Utility Scripts
+### Rendering routes
 
-- `clear-redis.ts` — standalone script to wipe the Redis `portfolio_data_v4` key
-- `replace-colors.js` / `replace-font.js` — project-wide search-replace scripts for theming
+- `/` home + categories
+- `/sections/[id]` section-specific listing
+- `/products/[id]` detail page
+- `/admin` admin UI for create/upload/clear
+
+### Section mapping detail (important)
+
+`SECTIONS` contains `id`, `name`, and `path`, but `/sections/[id]` filters products by comparing product `section` to `section.name` (case-insensitive), not `section.id`.
+
+Admin currently stores `section` as section name.
+
+## API Surface
+
+- `GET /api/products`
+- `POST /api/products`
+- `DELETE /api/products`
+- `GET /api/products/[id]`
+- `POST /api/upload` (Cloudinary)
+- `POST /api/suggest-title` (Gemini -> Mistral fallback)
+- `POST /api/get-summary` (Gemini -> Mistral fallback)
+- `POST /api/search-projects` (Mistral only)
+- `POST /api/mux/upload-url`
+- `GET /api/mux/asset/[uploadId]`
+
+## Media Flow
+
+### Images
+
+Admin uploads images via `/api/upload` -> Cloudinary `upload_stream`.
+
+### Video
+
+Primary flow is Mux direct upload:
+
+1. Admin requests one-time upload URL from `/api/mux/upload-url`
+2. Browser uploads file directly to Mux using XHR PUT
+3. UI polls `/api/mux/asset/[uploadId]` until ready
+4. `muxPlaybackId` and `muxAssetId` are persisted with product
+
+Player behavior in detail page:
+
+- If `muxPlaybackId` exists -> `MuxVideoPlayer`
+- Else if `video` exists -> `VideoPlayer` (Cloudinary)
+
+## Observability
+
+`instrumentation.ts` enables Vercel OTel and propagates trace context for localhost, Mistral, and Gemini by default (overridable with `OTEL_PROPAGATE_CONTEXT_URLS`).
+
+## Contributor Notes
+
+- Use `rg` for search and file discovery.
+- Do not introduce behavior changes when updating docs-only tasks.
+- Keep docs aligned with actual route and env behavior from code, not assumptions.
