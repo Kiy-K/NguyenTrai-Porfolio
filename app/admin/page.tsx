@@ -43,6 +43,7 @@ export default function AdminPage() {
   const [showClearConfirm, setShowClearConfirm] = useState(false);
   const [imageToRemove, setImageToRemove] = useState<number | null>(null);
   const [isUploading, setIsUploading] = useState(false);
+  const [isImageUploading, setIsImageUploading] = useState(false);
 
   // Warn user if they try to leave while an upload is in progress
   useEffect(() => {
@@ -203,10 +204,35 @@ export default function AdminPage() {
     }
   };
 
+  const uploadWithRetry = async (file: File, attempt = 1): Promise<string> => {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 30_000); // 30s per image
+    try {
+      const fd = new FormData();
+      fd.append('file', file);
+      fd.append('resourceType', 'image');
+      const res = await fetch('/api/upload', { method: 'POST', body: fd, signal: controller.signal });
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        throw new Error(err.error || `HTTP ${res.status}`);
+      }
+      const data = await res.json();
+      return data.secure_url;
+    } catch (err: any) {
+      if (attempt < 3 && err.name !== 'AbortError') {
+        await new Promise(r => setTimeout(r, 2000 * attempt)); // 2s, 4s backoff
+        return uploadWithRetry(file, attempt + 1);
+      }
+      throw err;
+    } finally {
+      clearTimeout(timeout);
+    }
+  };
+
   const processFiles = async (files: File[]) => {
     const validFiles = files.filter(file => {
-      if (file.size > 5 * 1024 * 1024) {
-        setStatus({ type: 'error', message: `File ${file.name} vượt quá dung lượng 5MB và sẽ bị bỏ qua.` });
+      if (file.size > 10 * 1024 * 1024) {
+        setStatus({ type: 'error', message: `File ${file.name} vượt quá dung lượng 10MB và sẽ bị bỏ qua.` });
         return false;
       }
       return true;
@@ -214,21 +240,32 @@ export default function AdminPage() {
 
     if (validFiles.length === 0) return;
 
-    setIsUploading(true);
-    setStatus({ type: 'loading', message: 'Đang tải ảnh lên Cloudinary...' });
+    setIsImageUploading(true);
+    const failed: string[] = [];
+    const uploaded: string[] = [];
 
-    try {
-      const uploadPromises = validFiles.map(file => uploadToCloudinary(file, 'image'));
-      const uploadedUrls = await Promise.all(uploadPromises);
-      
-      setImages(prev => [...prev, ...uploadedUrls]);
-      setStatus({ type: 'success', message: 'Tải ảnh lên thành công!' });
-      setTimeout(() => setStatus({ type: null, message: '' }), 3000);
-    } catch (error: any) {
-      setStatus({ type: 'error', message: error.message || 'Lỗi khi tải ảnh lên.' });
-    } finally {
-      setIsUploading(false);
+    for (let i = 0; i < validFiles.length; i++) {
+      const file = validFiles[i];
+      setStatus({ type: 'loading', message: `Đang tải ảnh ${i + 1}/${validFiles.length}: ${file.name}` });
+      try {
+        const url = await uploadWithRetry(file);
+        uploaded.push(url);
+        setImages(prev => [...prev, url]); // add each image as it finishes
+      } catch {
+        failed.push(file.name);
+      }
     }
+
+    setIsImageUploading(false);
+
+    if (failed.length === 0) {
+      setStatus({ type: 'success', message: `Tải lên thành công ${uploaded.length} ảnh!` });
+    } else if (uploaded.length > 0) {
+      setStatus({ type: 'error', message: `Tải lên ${uploaded.length} ảnh thành công. Thất bại: ${failed.join(', ')}` });
+    } else {
+      setStatus({ type: 'error', message: `Tải ảnh lên thất bại: ${failed.join(', ')}` });
+    }
+    setTimeout(() => setStatus({ type: null, message: '' }), 4000);
   };
 
   const handleVideoDragOver = (e: React.DragEvent) => {
@@ -824,18 +861,18 @@ export default function AdminPage() {
             </div>
 
             <div className="pt-6">
-              <button 
-                type="submit" 
-                disabled={status.type === 'loading' || isUploading} 
-                className={`w-full bg-[#B8860B] text-[#FFFDF5] font-bold text-xl py-4 px-6 rounded-lg border-2 border-[#8B3A3A] transition-all duration-300 shadow-lg font-playfair flex justify-center items-center uppercase tracking-widest ${status.type === 'loading' || isUploading ? 'opacity-70 cursor-not-allowed' : 'hover:bg-[#8B3A3A] hover:text-[#FFFDF5] hover:border-[#B8860B]'}`}
+              <button
+                type="submit"
+                disabled={status.type === 'loading' || isUploading || isImageUploading}
+                className={`w-full bg-[#B8860B] text-[#FFFDF5] font-bold text-xl py-4 px-6 rounded-lg border-2 border-[#8B3A3A] transition-all duration-300 shadow-lg font-playfair flex justify-center items-center uppercase tracking-widest ${status.type === 'loading' || isUploading || isImageUploading ? 'opacity-70 cursor-not-allowed' : 'hover:bg-[#8B3A3A] hover:text-[#FFFDF5] hover:border-[#B8860B]'}`}
               >
-                {status.type === 'loading' || isUploading ? (
+                {status.type === 'loading' || isUploading || isImageUploading ? (
                   <span className="flex items-center">
                     <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                       <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                       <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                     </svg>
-                    {isUploading ? 'Đang tải file lên...' : 'Đang xử lý...'}
+                    {isImageUploading ? 'Đang tải ảnh lên...' : isUploading ? 'Đang tải video lên...' : 'Đang xử lý...'}
                   </span>
                 ) : 'Thêm Bài Viết'}
               </button>
