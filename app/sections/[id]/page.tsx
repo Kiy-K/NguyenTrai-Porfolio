@@ -6,7 +6,7 @@ import Footer from '@/components/Footer';
 import ProjectList from '@/components/ProjectList';
 import BackButton from '@/components/BackButton';
 
-export const revalidate = 900; // Cache for 15 minutes
+export const revalidate = 1800; // Cache for 30 minutes
 
 export default async function SectionPage({ params }: { params: Promise<{ id: string }> }) {
   const resolvedParams = await params;

@@ -8,7 +8,7 @@ import VideoPlayer from '@/components/VideoPlayer';
 import MuxVideoPlayer from '@/components/MuxVideoPlayer';
 import BackButton from '@/components/BackButton';
 
-export const revalidate = 900; // Cache for 15 minutes
+export const revalidate = 1800; // Cache for 30 minutes
 
 export default async function ProductDetail({ params }: { params: Promise<{ id: string }> }) {
   const resolvedParams = await params;

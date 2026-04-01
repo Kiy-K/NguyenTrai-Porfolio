@@ -23,7 +23,7 @@ export const getProducts = unstable_cache(
     }
   },
   ['products-cache'],
-  { revalidate: 900, tags: ['products'] }
+  { revalidate: 1800, tags: ['products'] }
 );
 
 // Hàm lấy chi tiết một sản phẩm

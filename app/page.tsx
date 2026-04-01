@@ -4,7 +4,7 @@ import CategoryLayout from '@/components/CategoryLayout';
 import HeroImage from '@/components/HeroImage';
 import { Suspense } from 'react';
 
-export const revalidate = 900; // Cache for 15 minutes
+export const revalidate = 1800; // Cache for 30 minutes
 
 export default async function Home() {
   return (
