@@ -63,14 +63,11 @@ export default function HomeProjectOverviewFeedback({ mode = 'both' }: HomeProje
             <article className="rounded-2xl border border-[#D4C4A8] bg-[#FFFDF8] p-6">
             <h3 className="text-2xl font-bold text-[#2C1E16] mb-4 font-playfair">Tổng quan dự án</h3>
             <div className="w-16 h-[2px] bg-[#B8860B] mb-5" />
-            <p className="text-[#5C4033] leading-relaxed text-lg mb-4 font-playfair">
-              Dự án được xây dựng nhằm tôn vinh giá trị văn hóa, lịch sử và tư tưởng nhân nghĩa của Nguyễn Trãi
-              thông qua trải nghiệm số hiện đại nhưng vẫn giữ tinh thần cổ điển.
-            </p>
-            <p className="text-[#5C4033] leading-relaxed text-lg font-playfair">
-              Hệ thống cho phép phân loại nội dung theo chuyên mục, trình bày tác phẩm đa phương tiện và tích hợp AI
-              để hỗ trợ tóm tắt, gợi ý tiêu đề, giúp người học và người xem tiếp cận nội dung nhanh và sâu hơn.
-            </p>
+            <ul className="space-y-3 text-[#5C4033] text-lg leading-relaxed font-playfair">
+              <li>Phần 1: Tiếng vọng từ tình yêu thiên nhiên</li>
+              <li>Phần 2: Tiếng vọng từ tư tưởng nhân nghĩa</li>
+              <li>Phần 3: Tiếng vọng ngàn năm</li>
+            </ul>
             </article>
           )}
 
