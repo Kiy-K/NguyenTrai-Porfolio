@@ -2,6 +2,7 @@ import Navigation from '@/components/Navigation';
 import Footer from '@/components/Footer';
 import CategoryLayout from '@/components/CategoryLayout';
 import HeroImage from '@/components/HeroImage';
+import HomeProjectOverviewFeedback from '@/components/HomeProjectOverviewFeedback';
 import { Suspense } from 'react';
 
 export const revalidate = 1800; // Cache for 30 minutes
@@ -30,10 +31,20 @@ export default async function Home() {
           </div>
         </div>
 
+        {/* Project Overview Section */}
+        <div className="animate-in fade-in slide-in-from-bottom-6 duration-[1200ms] ease-out delay-200 fill-mode-both">
+          <HomeProjectOverviewFeedback mode="overview" />
+        </div>
+
         {/* Category Layout */}
         <Suspense fallback={<div className="text-center py-12 text-[#8B3A3A]">Đang tải...</div>}>
           <CategoryLayout />
         </Suspense>
+
+        {/* Feedback Section */}
+        <div className="animate-in fade-in slide-in-from-bottom-6 duration-[1200ms] ease-out delay-300 fill-mode-both">
+          <HomeProjectOverviewFeedback mode="feedback" />
+        </div>
       </main>
 
       <Footer />
