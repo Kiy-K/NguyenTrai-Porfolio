@@ -39,6 +39,12 @@ DELETE /api/products
 This resets Redis key `portfolio_data_v4` to an empty list.
 This operation now requires a valid admin session.
 
+### Multi-video content writes
+
+- In `/admin`, you can upload and attach multiple Mux videos before submitting a product.
+- Product payload can persist these entries in `videos[]`.
+- Legacy single-video fields are still accepted to keep old content playable.
+
 ## Admin Access Flow
 
 1. Bootstrap once via `/admin/login` (`POST /api/admin/auth/bootstrap`) to get a generated password.
@@ -108,6 +114,7 @@ Checks:
 - Confirm `MUX_TOKEN_ID` + `MUX_TOKEN_SECRET`
 - Verify `APP_URL` is valid for your deployment origin
 - Confirm `NEXT_PUBLIC_MUX_DATA_ENV_KEY` is set for player telemetry context
+- If uploading many videos for one product, verify each upload reaches `ready` in admin before submitting.
 
 ### AI errors (summary/title/search)
 
@@ -142,3 +149,4 @@ For Braintrust LLM traces, set:
 - No automated test suite configured.
 - Section matching uses section names, not IDs.
 - Product IDs are time-based strings when omitted.
+- Product media may use either `videos[]` (multi-video) or legacy single-video fields.

@@ -91,6 +91,11 @@ Resets `portfolio_data_v4` to `{ products: [] }`.
 
 Returns one product by stringified ID comparison.
 
+Notes:
+
+- Returned `product` may include `videos[]` (multi-video format).
+- Legacy fields (`video`, `muxAssetId`, `muxPlaybackId`) may also be present for backward compatibility.
+
 ### Success
 
 ```json

@@ -127,6 +127,13 @@ All content lives in Redis key `portfolio_data_v4`:
 - `status?: 'published' | 'draft' | 'archived'`
 - `teamMembers?: string`
 
+## Video Behavior
+
+- Admin can upload multiple videos per product via Mux.
+- `videos[]` is the primary multi-video field.
+- Legacy single-video fields (`video`, `muxAssetId`, `muxPlaybackId`) are still supported for older records.
+- Product detail renders all available videos and prefers Mux playback when `muxPlaybackId` exists.
+
 ## Important Section Mapping Behavior
 
 `SECTIONS` has both `id` and `name`, but products are filtered in section pages by matching product `section` against section `name` (case-insensitive), not `id`.

@@ -51,6 +51,7 @@ Important behavior:
 
 - Section pages filter by section **name** (case-insensitive), not section id.
 - Admin writes section values as human-readable section names.
+- Products can include multiple videos through `videos[]`; legacy single-video fields remain supported.
 
 ## Route Map
 
@@ -110,8 +111,8 @@ Video flow:
 - Admin requests URL from `POST /api/mux/upload-url`
 - Browser uploads directly to Mux
 - Client polls `GET /api/mux/asset/[uploadId]` until ready
-- Persist `muxPlaybackId`/`muxAssetId`
-- Product page prefers Mux player, falls back to Cloudinary `video` URL
+- Persist each successful upload as an entry in `videos[]`
+- Product page renders multiple videos, preferring Mux player per entry and falling back to Cloudinary `video` URL for legacy records
 
 AI providers:
 

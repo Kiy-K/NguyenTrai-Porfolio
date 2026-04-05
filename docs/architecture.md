@@ -8,7 +8,7 @@ This project is a Next.js App Router application with a server-backed content st
 - Feedback records in Redis hash keys (`feedback:{uuid}`)
 - Admin credentials/sessions in Redis (`admin:*`)
 - Images in Cloudinary
-- Videos in Mux (preferred) with Cloudinary URL fallback
+- Multiple videos per product via Mux (preferred) with Cloudinary URL fallback
 - AI features powered by Gemini and/or Mistral
 
 ## Data Storage

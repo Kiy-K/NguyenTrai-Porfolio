@@ -69,6 +69,7 @@ All content is stored in Redis key `portfolio_data_v4` as:
 - `POST /api/products` appends one product
 - `DELETE /api/products` resets to empty array
 - Both call `revalidatePath('/', 'layout')`
+- Product writes may include `videos[]` for multiple videos; legacy single-video fields are still accepted.
 
 ### Rendering routes
 
@@ -109,12 +110,13 @@ Primary flow is Mux direct upload:
 1. Admin requests one-time upload URL from `/api/mux/upload-url`
 2. Browser uploads file directly to Mux using XHR PUT
 3. UI polls `/api/mux/asset/[uploadId]` until ready
-4. `muxPlaybackId` and `muxAssetId` are persisted with product
+4. Each successful upload can be persisted as one entry in `videos[]`
 
 Player behavior in detail page:
 
-- If `muxPlaybackId` exists -> `MuxVideoPlayer`
-- Else if `video` exists -> `VideoPlayer` (Cloudinary)
+- Render all available videos
+- Prefer `MuxVideoPlayer` for entries with `muxPlaybackId`
+- Fallback to `VideoPlayer` when only `video` URL is available
 
 ## Observability
 
