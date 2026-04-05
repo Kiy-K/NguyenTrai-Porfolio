@@ -299,7 +299,7 @@ Maps Mux upload/asset lifecycle to frontend-friendly statuses.
 
 ## `POST /api/feedback`
 
-Creates a new feedback record as a Redis hash.
+Creates a new feedback record as a Redis hash and indexes it with RediSearch schema.
 
 ### Request body
 
@@ -319,7 +319,8 @@ Creates a new feedback record as a Redis hash.
 - `name`, `class`, and `email` are keyed HMAC-SHA256 hashed before storage.
 - Raw PII values are never written to Redis.
 - Feedback text is sanitized to redact obvious email/phone patterns.
-- Stored key format: `feedback:{uuid}` (Redis Hash).
+- Stored key format: `feedback:record:{uuid}` (Redis Hash).
+- Route ensures feedback RediSearch index schema (`feedback_idx_v1`) exists before write.
 - Timestamp fields are stored as `createdAt` and `createdAtUnix`.
 - Deduplication key with `SET NX EX` blocks rapid spam retries in a short window.
 

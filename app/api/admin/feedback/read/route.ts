@@ -7,6 +7,7 @@ import {
 import { redis } from '@/lib/redis';
 import { consumeRateLimit } from '@/lib/rate-limit';
 import { enforceSameOrigin } from '@/lib/request-security';
+import { FEEDBACK_KEY_PREFIX, searchFeedbackByNewest } from '@/lib/feedback-search';
 
 interface ReadFeedbackPayload {
   password: string;
@@ -25,8 +26,60 @@ interface FeedbackHashRecord {
   createdAtUnix: number;
 }
 
-const FEEDBACK_KEY_PREFIX = 'feedback:';
 const DEDUPE_KEY_PREFIX = 'feedback:dedupe:';
+
+function toFeedbackRecord(row: Record<string, string>): FeedbackHashRecord | null {
+  if (!row.id) return null;
+  const ratingValue = row.rating ? Number(row.rating) : NaN;
+
+  return {
+    id: row.id,
+    nameHash: row.nameHash || '',
+    classHash: row.classHash || '',
+    emailHash: row.emailHash || '',
+    text: row.text || '',
+    rating: Number.isFinite(ratingValue) ? ratingValue : null,
+    videoId: row.videoId || null,
+    createdAt: row.createdAt || '',
+    createdAtUnix: Number(row.createdAtUnix || 0),
+  };
+}
+
+async function readFeedbackHashesByKeys(keys: string[], limit: number): Promise<FeedbackHashRecord[]> {
+  if (keys.length === 0) return [];
+
+  const rows = await Promise.all(
+    keys.map(async (key) => {
+      const record = await redis.hgetall<Record<string, string>>(key);
+      return record || null;
+    })
+  );
+
+  return rows
+    .filter((row): row is Record<string, string> => Boolean(row?.id))
+    .map((row) => toFeedbackRecord(row))
+    .filter((row): row is FeedbackHashRecord => Boolean(row))
+    .sort((a, b) => b.createdAtUnix - a.createdAtUnix)
+    .slice(0, limit);
+}
+
+async function readLegacyFeedback(limit: number): Promise<FeedbackHashRecord[]> {
+  const keys = ((await redis.keys('feedback:*')) as string[]) || [];
+  const feedbackKeys = keys.filter(
+    (key) =>
+      key.startsWith('feedback:') &&
+      !key.startsWith(DEDUPE_KEY_PREFIX) &&
+      key.startsWith(FEEDBACK_KEY_PREFIX) === false &&
+      key.split(':').length === 2
+  );
+
+  return readFeedbackHashesByKeys(feedbackKeys, limit);
+}
+
+async function readFeedbackBySearchPrefix(limit: number): Promise<FeedbackHashRecord[]> {
+  const keys = ((await redis.keys(`${FEEDBACK_KEY_PREFIX}*`)) as string[]) || [];
+  return readFeedbackHashesByKeys(keys, limit);
+}
 
 export async function POST(request: Request) {
   try {
@@ -62,36 +115,37 @@ export async function POST(request: Request) {
     }
 
     const safeLimit = Math.min(Math.max(Number(limit) || 50, 1), 200);
-    const keys = ((await redis.keys(`${FEEDBACK_KEY_PREFIX}*`)) as string[]) || [];
-    const feedbackKeys = keys.filter(
-      (key) =>
-        key.startsWith(FEEDBACK_KEY_PREFIX) &&
-        !key.startsWith(DEDUPE_KEY_PREFIX) &&
-        key.split(':').length === 2
-    );
+    let feedback: FeedbackHashRecord[] = [];
+    try {
+      const indexedRows = await searchFeedbackByNewest(safeLimit);
+      feedback = indexedRows
+        .map((row) => toFeedbackRecord(row))
+        .filter((row): row is FeedbackHashRecord => Boolean(row))
+        .slice(0, safeLimit);
+    } catch (searchError) {
+      console.error('Error querying RediSearch feedback index. Falling back to legacy scan.', searchError);
+      const [indexedPrefixFallback, legacyFallback] = await Promise.all([
+        readFeedbackBySearchPrefix(safeLimit),
+        readLegacyFeedback(safeLimit),
+      ]);
+      feedback = [...indexedPrefixFallback, ...legacyFallback]
+        .sort((a, b) => b.createdAtUnix - a.createdAtUnix)
+        .slice(0, safeLimit);
+    }
 
-    const rows = await Promise.all(
-      feedbackKeys.map(async (key) => {
-        const record = await redis.hgetall<Record<string, string>>(key);
-        return record || null;
-      })
-    );
+    // Include legacy feedback keys if indexed results are fewer than requested limit.
+    if (feedback.length < safeLimit) {
+      const legacyRows = await readLegacyFeedback(safeLimit);
+      const seen = new Set(feedback.map((item) => item.id));
+      for (const item of legacyRows) {
+        if (seen.has(item.id)) continue;
+        feedback.push(item);
+        seen.add(item.id);
+        if (feedback.length >= safeLimit) break;
+      }
+    }
 
-    const feedback: FeedbackHashRecord[] = rows
-      .filter((row): row is Record<string, string> => Boolean(row?.id))
-      .map((row) => ({
-        id: row.id,
-        nameHash: row.nameHash || '',
-        classHash: row.classHash || '',
-        emailHash: row.emailHash || '',
-        text: row.text || '',
-        rating: row.rating ? Number(row.rating) : null,
-        videoId: row.videoId || null,
-        createdAt: row.createdAt || '',
-        createdAtUnix: Number(row.createdAtUnix || 0),
-      }))
-      .sort((a, b) => b.createdAtUnix - a.createdAtUnix)
-      .slice(0, safeLimit);
+    feedback.sort((a, b) => b.createdAtUnix - a.createdAtUnix);
 
     return NextResponse.json(
       {

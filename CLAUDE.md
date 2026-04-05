@@ -59,6 +59,8 @@ All content is stored in Redis key `portfolio_data_v4` as:
 
 `Product` is defined in `data/products.ts`.
 
+Feedback is stored as Redis hashes under `feedback:record:{uuid}` and queried via RediSearch index `feedback_idx_v1`.
+
 ### Read path
 
 - `lib/data.ts` exports `getProducts()` via `unstable_cache` (30 minutes, tag: `products`)

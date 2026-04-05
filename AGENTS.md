@@ -9,6 +9,7 @@ Core stack:
 - Next.js 16 + React 19 + TypeScript
 - Tailwind CSS v4
 - Upstash Redis for content storage (`portfolio_data_v4`)
+- Upstash RediSearch schema/index for feedback reads
 - Cloudinary for image upload and video fallback
 - Mux for direct video uploads and playback
 - Gemini and/or Mistral for AI title suggestion, summarization, and semantic search
@@ -126,6 +127,7 @@ AI providers:
 - Admin mutation routes and admin feedback read route validate Redis-backed session + IP hash.
 - Admin sessions expire after 3 hours.
 - Feedback route hashes `name`, `class`, and `email` via SHA-256; do not introduce raw-PII storage.
+- Feedback records are written as Redis hashes (`feedback:record:{uuid}`) and queried through RediSearch index `feedback_idx_v1`.
 - Sensitive admin mutation/auth routes enforce same-origin `Origin` checks.
 - Redis-backed rate limiting is active on admin auth/mutations and feedback submit/read routes.
 - Avoid committing secrets from `.env.local`.

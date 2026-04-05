@@ -15,7 +15,7 @@ A Next.js 16 App Router project that presents the life, works, and legacy of Ngu
   - Upload multiple videos directly to Mux (direct upload + polling)
   - Clear all Redis data
   - Get AI title suggestions while typing
-  - Read hashed feedback records from Redis with admin password re-check
+  - Read hashed feedback records via RediSearch index with admin password re-check
 
 ## Tech Stack
 
@@ -23,6 +23,7 @@ A Next.js 16 App Router project that presents the life, works, and legacy of Ngu
 - `react@19`
 - Tailwind CSS v4
 - Upstash Redis (product JSON plus feedback/admin/session hashes)
+- Upstash RediSearch schema/index for feedback querying
 - Cloudinary (media upload + Cloudinary video fallback player)
 - Mux (direct video upload + playback)
 - Gemini and/or Mistral APIs (AI title suggestion, summarization, semantic search)
@@ -134,6 +135,12 @@ All content lives in Redis key `portfolio_data_v4`:
 - Legacy single-video fields (`video`, `muxAssetId`, `muxPlaybackId`) are still supported for older records.
 - Product detail renders all available videos and prefers Mux playback when `muxPlaybackId` exists.
 
+## Feedback Search Behavior
+
+- Feedback records are written as Redis hashes under `feedback:record:{uuid}`.
+- A RediSearch index schema (`feedback_idx_v1`) is used for feedback query/read paths.
+- Admin feedback read uses RediSearch query ordering by `createdAtUnix` (newest first) with legacy fallback for older keys.
+
 ## Important Section Mapping Behavior
 
 `SECTIONS` has both `id` and `name`, but products are filtered in section pages by matching product `section` against section `name` (case-insensitive), not `id`.
@@ -208,7 +215,7 @@ This app requires server runtime APIs (`/api/*`) and should be deployed on a Nex
 - Admin credentials are stored as salted `PBKDF2-SHA256` hashes.
 - Admin sessions use an `httpOnly` cookie (`SameSite=Strict`), are bound to HMAC-hashed client IP, and expire after 3 hours.
 - Feedback storage never persists raw `name`, `class`, or `email`; only keyed HMAC hashes are stored.
-- Feedback entries are stored as Redis hashes under keys `feedback:{uuid}` with timestamp fields.
+- Feedback entries are stored as Redis hashes under keys `feedback:record:{uuid}` with timestamp fields and indexed through RediSearch schema.
 - Feedback text is sanitized for obvious email/phone patterns before storage.
 - Sensitive admin mutation endpoints enforce same-origin `Origin` checks (basic CSRF mitigation).
 - Redis-backed rate limiting is enabled for admin auth/mutation routes and feedback submission.

@@ -57,7 +57,8 @@ This operation now requires a valid admin session.
 
 - Public submit route: `POST /api/feedback`
 - PII fields (`name`, `class`, `email`) are keyed HMAC-SHA256 hashed before write.
-- Stored as Redis hashes keyed by `feedback:{uuid}` with `createdAt` and `createdAtUnix`.
+- Stored as Redis hashes keyed by `feedback:record:{uuid}` with `createdAt` and `createdAtUnix`.
+- Feedback read/query is backed by RediSearch index schema `feedback_idx_v1`.
 - Feedback text is sanitized to redact obvious email/phone patterns before write.
 - Duplicate bursts are throttled with short-lived Redis dedupe keys.
 - IP-based rate limits are also enforced on feedback submission.

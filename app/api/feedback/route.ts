@@ -3,6 +3,7 @@ import { createHmac, randomUUID } from 'crypto';
 import { redis } from '@/lib/redis';
 import { consumeRateLimit } from '@/lib/rate-limit';
 import { getClientIpFromHeaders } from '@/lib/admin-auth';
+import { FEEDBACK_KEY_PREFIX, ensureFeedbackSearchIndex } from '@/lib/feedback-search';
 
 interface FeedbackPayload {
   name: string;
@@ -36,6 +37,8 @@ export async function POST(request: Request) {
     if (!process.env.UPSTASH_REDIS_REST_URL) {
       return NextResponse.json({ error: 'Chưa cấu hình Redis' }, { status: 500 });
     }
+
+    await ensureFeedbackSearchIndex();
 
     const ip = getClientIpFromHeaders(request.headers);
     const ipRateLimit = await consumeRateLimit({
@@ -115,19 +118,26 @@ export async function POST(request: Request) {
     const id = randomUUID();
     const createdAtUnix = Date.now();
     const createdAt = new Date(createdAtUnix).toISOString();
-    const key = `feedback:${id}`;
+    const key = `${FEEDBACK_KEY_PREFIX}${id}`;
 
-    await redis.hset(key, {
+    const payload: Record<string, string> = {
       id,
       nameHash,
       classHash,
       emailHash,
       text: sanitizedText,
-      rating: rating !== undefined ? String(Number(rating)) : '',
-      videoId: videoId?.trim() || '',
       createdAt,
       createdAtUnix: String(createdAtUnix),
-    });
+    };
+    if (rating !== undefined) {
+      payload.rating = String(Number(rating));
+    }
+    const normalizedVideoId = videoId?.trim();
+    if (normalizedVideoId) {
+      payload.videoId = normalizedVideoId;
+    }
+
+    await redis.hset(key, payload);
 
     return NextResponse.json({ success: true, uuid: id, id, createdAt }, { status: 201 });
   } catch (error) {

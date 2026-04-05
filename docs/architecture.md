@@ -5,7 +5,7 @@
 This project is a Next.js App Router application with a server-backed content store and media integrations:
 
 - Content metadata in Upstash Redis (`portfolio_data_v4`)
-- Feedback records in Redis hash keys (`feedback:{uuid}`)
+- Feedback records in Redis hash keys (`feedback:record:{uuid}`) indexed by RediSearch schema
 - Admin credentials/sessions in Redis (`admin:*`)
 - Images in Cloudinary
 - Multiple videos per product via Mux (preferred) with Cloudinary URL fallback
@@ -23,8 +23,9 @@ This project is a Next.js App Router application with a server-backed content st
 
 Feedback storage uses separate Redis hashes:
 
-- `feedback:{uuid}` with fields: `id`, `nameHash`, `classHash`, `emailHash`, `text`, `rating`, `videoId`, `createdAt`, `createdAtUnix`
+- `feedback:record:{uuid}` with fields: `id`, `nameHash`, `classHash`, `emailHash`, `text`, `rating`, `videoId`, `createdAt`, `createdAtUnix`
 - No raw `name`, `class`, or `email` values are persisted
+- Query/read path uses RediSearch index `feedback_idx_v1` (`SEARCH.CREATE` + `SEARCH.QUERY`)
 
 ### Read strategy
 
