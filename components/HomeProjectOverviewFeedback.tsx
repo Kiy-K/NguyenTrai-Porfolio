@@ -12,14 +12,16 @@ export default function HomeProjectOverviewFeedback({ mode = 'both' }: HomeProje
   const showOverview = mode === 'overview' || mode === 'both';
   const showFeedback = mode === 'feedback' || mode === 'both';
   const [name, setName] = useState('');
-  const [message, setMessage] = useState('');
+  const [studentClass, setStudentClass] = useState('');
+  const [email, setEmail] = useState('');
+  const [text, setText] = useState('');
   const [submitState, setSubmitState] = useState<SubmitState>('idle');
   const [statusMessage, setStatusMessage] = useState('');
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    if (!name.trim() || !message.trim()) {
+    if (!name.trim() || !text.trim()) {
       setSubmitState('error');
       setStatusMessage('Vui lòng nhập đầy đủ họ tên và nội dung góp ý.');
       return;
@@ -32,22 +34,34 @@ export default function HomeProjectOverviewFeedback({ mode = 'both' }: HomeProje
       const response = await fetch('/api/feedback', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name: name.trim(), message: message.trim() }),
+        body: JSON.stringify({
+          name: name.trim(),
+          class: studentClass.trim() || undefined,
+          email: email.trim() || undefined,
+          text: text.trim(),
+        }),
       });
 
-      const data = await response.json().catch(() => ({}));
+      const data = await response
+        .json()
+        .catch(() => ({} as { error?: string; id?: string; uuid?: string; createdAt?: string }));
 
       if (!response.ok) {
         throw new Error(data?.error || 'Không thể gửi góp ý lúc này.');
       }
 
       setSubmitState('success');
-      setStatusMessage('Cảm ơn bạn! Góp ý đã được lưu thành công.');
+      setStatusMessage(
+        `Cảm ơn bạn! Góp ý đã được lưu lúc ${new Date(data.createdAt || Date.now()).toLocaleString('vi-VN')} (Mã: ${data.uuid || data.id || 'N/A'}).`
+      );
       setName('');
-      setMessage('');
-    } catch (error: any) {
+      setStudentClass('');
+      setEmail('');
+      setText('');
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : 'Có lỗi xảy ra khi gửi góp ý.';
       setSubmitState('error');
-      setStatusMessage(error.message || 'Có lỗi xảy ra khi gửi góp ý.');
+      setStatusMessage(message);
     }
   };
 
@@ -94,15 +108,45 @@ export default function HomeProjectOverviewFeedback({ mode = 'both' }: HomeProje
               </div>
 
               <div>
+                <label htmlFor="feedback-email" className="block text-[#2C1E16] font-semibold mb-2 font-playfair">
+                  Email
+                </label>
+                <input
+                  id="feedback-email"
+                  name="email"
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="email@example.com"
+                  className="w-full px-4 py-3 border border-[#D4C4A8] rounded-lg bg-white text-[#2C1E16] placeholder-[#8B3A3A]/50 focus:outline-none focus:ring-2 focus:ring-[#B8860B] focus:border-[#B8860B] transition-all font-playfair"
+                />
+              </div>
+
+              <div>
+                <label htmlFor="feedback-class" className="block text-[#2C1E16] font-semibold mb-2 font-playfair">
+                  Lớp (tùy chọn)
+                </label>
+                <input
+                  id="feedback-class"
+                  name="class"
+                  type="text"
+                  value={studentClass}
+                  onChange={(e) => setStudentClass(e.target.value)}
+                  placeholder="Ví dụ: 12A1 (optional)"
+                  className="w-full px-4 py-3 border border-[#D4C4A8] rounded-lg bg-white text-[#2C1E16] placeholder-[#8B3A3A]/50 focus:outline-none focus:ring-2 focus:ring-[#B8860B] focus:border-[#B8860B] transition-all font-playfair"
+                />
+              </div>
+
+              <div>
                 <label htmlFor="feedback-message" className="block text-[#2C1E16] font-semibold mb-2 font-playfair">
                   Nội dung góp ý
                 </label>
                 <textarea
                   id="feedback-message"
-                  name="message"
+                  name="text"
                   rows={5}
-                  value={message}
-                  onChange={(e) => setMessage(e.target.value)}
+                  value={text}
+                  onChange={(e) => setText(e.target.value)}
                   placeholder="Nhập góp ý hoặc đề xuất của bạn"
                   className="w-full px-4 py-3 border border-[#D4C4A8] rounded-lg bg-white text-[#2C1E16] placeholder-[#8B3A3A]/50 focus:outline-none focus:ring-2 focus:ring-[#B8860B] focus:border-[#B8860B] transition-all font-playfair resize-none"
                   required

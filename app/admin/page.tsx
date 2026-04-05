@@ -5,20 +5,60 @@ import Navigation from '@/components/Navigation';
 import { SECTIONS } from '@/lib/constants';
 import Footer from '@/components/Footer';
 import { useRouter } from 'next/navigation';
-import { UploadCloud, X, ArrowLeft, Users } from 'lucide-react';
+import { UploadCloud, X, LogOut, ShieldCheck } from 'lucide-react';
 import Image from 'next/image';
-import VideoPlayer from '@/components/VideoPlayer';
 import MuxVideoPlayer from '@/components/MuxVideoPlayer';
 import BackButton from '@/components/BackButton';
+
+interface AdminFeedbackRecord {
+  id: string;
+  nameHash: string;
+  classHash: string;
+  emailHash: string;
+  text: string;
+  rating: number | null;
+  videoId: string | null;
+  createdAt: string;
+}
 
 export default function AdminPage() {
   const router = useRouter();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isClient, setIsClient] = useState(false);
+  const [isAuthChecking, setIsAuthChecking] = useState(true);
   
   useEffect(() => {
     setIsClient(true);
   }, []);
+
+  useEffect(() => {
+    if (!isClient) return;
+
+    let isMounted = true;
+
+    const checkAdminSession = async () => {
+      try {
+        const res = await fetch('/api/admin/auth/status', { cache: 'no-store' });
+        if (!res.ok) {
+          router.replace('/admin/login');
+          return;
+        }
+      } catch {
+        router.replace('/admin/login');
+        return;
+      } finally {
+        if (isMounted) {
+          setIsAuthChecking(false);
+        }
+      }
+    };
+
+    checkAdminSession();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [isClient, router]);
 
   const [formData, setFormData] = useState({
     title: '',
@@ -44,6 +84,14 @@ export default function AdminPage() {
   const [imageToRemove, setImageToRemove] = useState<number | null>(null);
   const [isUploading, setIsUploading] = useState(false);
   const [isImageUploading, setIsImageUploading] = useState(false);
+  const [feedbackAdminPassword, setFeedbackAdminPassword] = useState('');
+  const [feedbackLimit, setFeedbackLimit] = useState(50);
+  const [isFeedbackLoading, setIsFeedbackLoading] = useState(false);
+  const [feedbackRecords, setFeedbackRecords] = useState<AdminFeedbackRecord[]>([]);
+  const [feedbackStatus, setFeedbackStatus] = useState<{
+    type: 'success' | 'error' | null;
+    message: string;
+  }>({ type: null, message: '' });
 
   // Warn user if they try to leave while an upload is in progress
   useEffect(() => {
@@ -547,6 +595,59 @@ export default function AdminPage() {
     }
   };
 
+  const handleLogout = async () => {
+    try {
+      await fetch('/api/admin/auth/logout', { method: 'POST' });
+    } finally {
+      router.replace('/admin/login');
+    }
+  };
+
+  const handleReadFeedback = async () => {
+    const normalizedPassword = feedbackAdminPassword.trim();
+    if (!normalizedPassword) {
+      setFeedbackStatus({ type: 'error', message: 'Vui lòng nhập mật khẩu admin để đọc feedback.' });
+      return;
+    }
+
+    setIsFeedbackLoading(true);
+    setFeedbackStatus({ type: null, message: '' });
+
+    try {
+      const res = await fetch('/api/admin/feedback/read', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ password: normalizedPassword, limit: feedbackLimit }),
+      });
+
+      const data = await res.json();
+      if (!res.ok) {
+        throw new Error(data.error || 'Không thể tải feedback.');
+      }
+
+      const feedback = Array.isArray(data.feedback) ? (data.feedback as AdminFeedbackRecord[]) : [];
+      setFeedbackRecords(feedback);
+      setFeedbackStatus({
+        type: 'success',
+        message: `Đã tải ${feedback.length} feedback (dữ liệu hash).`,
+      });
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : 'Không thể tải feedback.';
+      setFeedbackStatus({ type: 'error', message });
+      setFeedbackRecords([]);
+    } finally {
+      setIsFeedbackLoading(false);
+    }
+  };
+
+  if (!isClient || isAuthChecking) {
+    return (
+      <div className="min-h-screen bg-[#F4EBD0] flex items-center justify-center">
+        <p className="text-[#5C4033] font-playfair">Đang xác thực quản trị...</p>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-[#F4EBD0] font-playfair">
       <Navigation />
@@ -554,14 +655,124 @@ export default function AdminPage() {
       <main className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="mb-8 flex justify-between items-center animate-in fade-in slide-in-from-left-4 duration-500">
           <BackButton fallbackUrl="/" />
-          <button
-            type="button"
-            onClick={handleClearDatabase}
-            className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors font-medium text-sm shadow-sm"
-          >
-            Xóa toàn bộ dữ liệu (Clear DB)
-          </button>
+          <div className="flex items-center gap-3">
+            <button
+              type="button"
+              onClick={handleClearDatabase}
+              className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors font-medium text-sm shadow-sm"
+            >
+              Xóa toàn bộ dữ liệu (Clear DB)
+            </button>
+            <button
+              type="button"
+              onClick={handleLogout}
+              className="inline-flex items-center gap-2 px-4 py-2 bg-[#5C4033] text-white rounded-md hover:bg-[#2C1E16] transition-colors font-medium text-sm shadow-sm"
+            >
+              <LogOut className="w-4 h-4" />
+              Đăng xuất
+            </button>
+          </div>
         </div>
+
+        <section className="bg-white rounded-sm shadow-sm border border-[#D4C4A8] overflow-hidden p-6 mb-8 animate-in fade-in slide-in-from-bottom-8 duration-700">
+          <div className="flex items-center gap-2 mb-4">
+            <ShieldCheck className="w-5 h-5 text-[#8B3A3A]" />
+            <h2 className="text-xl font-bold text-[#2C1E16] font-playfair">Feedback Hashes (Admin)</h2>
+          </div>
+
+          <p className="text-sm text-[#5C4033] mb-4">
+            Dữ liệu hiển thị chỉ gồm hash và nội dung feedback, không chứa PII thô.
+          </p>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mb-4">
+            <div className="md:col-span-2">
+              <label className="block text-sm font-bold text-[#2C1E16] mb-2 font-playfair">
+                Mật khẩu admin
+              </label>
+              <input
+                type="password"
+                value={feedbackAdminPassword}
+                onChange={(e) => setFeedbackAdminPassword(e.target.value)}
+                placeholder="Nhập lại mật khẩu admin để đọc feedback"
+                className="w-full px-4 py-3 border-2 border-[#D4C4A8] rounded-lg focus:ring-2 focus:ring-[#B8860B] focus:border-[#B8860B] outline-none transition-all bg-[#F4EBD0] text-[#2C1E16] font-playfair"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-bold text-[#2C1E16] mb-2 font-playfair">Giới hạn</label>
+              <input
+                type="number"
+                min={1}
+                max={200}
+                value={feedbackLimit}
+                onChange={(e) => {
+                  const next = Number(e.target.value);
+                  if (!Number.isFinite(next)) return;
+                  setFeedbackLimit(Math.min(Math.max(next, 1), 200));
+                }}
+                className="w-full px-4 py-3 border-2 border-[#D4C4A8] rounded-lg focus:ring-2 focus:ring-[#B8860B] focus:border-[#B8860B] outline-none transition-all bg-[#F4EBD0] text-[#2C1E16] font-playfair"
+              />
+            </div>
+          </div>
+
+          <div className="flex items-center gap-3 mb-4">
+            <button
+              type="button"
+              onClick={handleReadFeedback}
+              disabled={isFeedbackLoading}
+              className={`px-4 py-2 rounded-md text-white font-medium text-sm transition-colors ${
+                isFeedbackLoading ? 'bg-[#8B3A3A]/70 cursor-not-allowed' : 'bg-[#8B3A3A] hover:bg-[#6D2D2D]'
+              }`}
+            >
+              {isFeedbackLoading ? 'Đang tải...' : 'Tải feedback đã hash'}
+            </button>
+            <span className="text-sm text-[#5C4033]">Số bản ghi hiện có: {feedbackRecords.length}</span>
+          </div>
+
+          {feedbackStatus.type && (
+            <div
+              className={`p-3 mb-4 rounded-lg text-sm ${
+                feedbackStatus.type === 'success'
+                  ? 'bg-green-50 text-green-800 border border-green-200'
+                  : 'bg-red-50 text-red-800 border border-red-200'
+              }`}
+            >
+              {feedbackStatus.message}
+            </div>
+          )}
+
+          {feedbackRecords.length > 0 && (
+            <div className="overflow-x-auto border border-[#D4C4A8] rounded-lg">
+              <table className="w-full text-sm">
+                <thead className="bg-[#F4EBD0] text-[#2C1E16]">
+                  <tr>
+                    <th className="text-left p-3 font-bold">UUID</th>
+                    <th className="text-left p-3 font-bold">Name Hash</th>
+                    <th className="text-left p-3 font-bold">Class Hash</th>
+                    <th className="text-left p-3 font-bold">Email Hash</th>
+                    <th className="text-left p-3 font-bold">Text</th>
+                    <th className="text-left p-3 font-bold">Rating</th>
+                    <th className="text-left p-3 font-bold">Video ID</th>
+                    <th className="text-left p-3 font-bold">Created At</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {feedbackRecords.map((record) => (
+                    <tr key={record.id} className="border-t border-[#D4C4A8] align-top">
+                      <td className="p-3 font-mono text-xs text-[#2C1E16]">{record.id}</td>
+                      <td className="p-3 font-mono text-xs text-[#5C4033]">{record.nameHash}</td>
+                      <td className="p-3 font-mono text-xs text-[#5C4033]">{record.classHash || '-'}</td>
+                      <td className="p-3 font-mono text-xs text-[#5C4033]">{record.emailHash}</td>
+                      <td className="p-3 text-[#2C1E16] min-w-[280px]">{record.text}</td>
+                      <td className="p-3 text-[#2C1E16]">{record.rating ?? '-'}</td>
+                      <td className="p-3 font-mono text-xs text-[#5C4033]">{record.videoId || '-'}</td>
+                      <td className="p-3 text-[#2C1E16] whitespace-nowrap">{record.createdAt || '-'}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </section>
 
         <div className="bg-white rounded-sm shadow-sm border border-[#D4C4A8] overflow-hidden p-8 sm:p-12 relative animate-in fade-in slide-in-from-bottom-8 duration-700">
           <div className="mb-10 text-center">

@@ -2,6 +2,9 @@ import { NextResponse } from 'next/server';
 import { getProducts } from '@/lib/data';
 import { redis } from '@/lib/redis';
 import { revalidatePath } from 'next/cache';
+import { getActiveAdminSession, getClientIpFromHeaders } from '@/lib/admin-auth';
+import { enforceSameOrigin } from '@/lib/request-security';
+import { consumeRateLimit } from '@/lib/rate-limit';
 
 // GET /api/products - Lấy danh sách tất cả sản phẩm
 export async function GET() {
@@ -14,10 +17,31 @@ export async function GET() {
 }
 
 // DELETE /api/products - Xóa toàn bộ sản phẩm (Clear database)
-export async function DELETE() {
+export async function DELETE(request: Request) {
   try {
+    const originError = enforceSameOrigin(request);
+    if (originError) return originError;
+
     if (!process.env.UPSTASH_REDIS_REST_URL) {
       return NextResponse.json({ error: 'Chưa cấu hình Redis' }, { status: 500 });
+    }
+
+    const ip = getClientIpFromHeaders(request.headers);
+    const session = await getActiveAdminSession(ip);
+    if (!session) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
+    const rateLimit = await consumeRateLimit({
+      key: `admin:products:delete:${ip}`,
+      limit: 20,
+      windowSeconds: 15 * 60,
+    });
+    if (!rateLimit.allowed) {
+      return NextResponse.json(
+        { error: 'Bạn thao tác quá nhanh. Vui lòng thử lại sau.' },
+        { status: 429, headers: { 'Retry-After': String(rateLimit.retryAfterSeconds) } }
+      );
     }
 
     // Reset the portfolio_data_v4 key to an empty array
@@ -34,8 +58,29 @@ export async function DELETE() {
 }
 export async function POST(request: Request) {
   try {
+    const originError = enforceSameOrigin(request);
+    if (originError) return originError;
+
     if (!process.env.UPSTASH_REDIS_REST_URL) {
       return NextResponse.json({ error: 'Chưa cấu hình Redis' }, { status: 500 });
+    }
+
+    const ip = getClientIpFromHeaders(request.headers);
+    const session = await getActiveAdminSession(ip);
+    if (!session) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
+    const rateLimit = await consumeRateLimit({
+      key: `admin:products:create:${ip}`,
+      limit: 120,
+      windowSeconds: 15 * 60,
+    });
+    if (!rateLimit.allowed) {
+      return NextResponse.json(
+        { error: 'Bạn thao tác quá nhanh. Vui lòng thử lại sau.' },
+        { status: 429, headers: { 'Retry-After': String(rateLimit.retryAfterSeconds) } }
+      );
     }
 
     const newProduct = await request.json();

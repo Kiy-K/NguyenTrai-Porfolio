@@ -15,13 +15,14 @@ A Next.js 16 App Router project that presents the life, works, and legacy of Ngu
   - Upload videos directly to Mux (direct upload + polling)
   - Clear all Redis data
   - Get AI title suggestions while typing
+  - Read hashed feedback records from Redis with admin password re-check
 
 ## Tech Stack
 
 - `next@16` (App Router)
 - `react@19`
 - Tailwind CSS v4
-- Upstash Redis (single JSON blob storage)
+- Upstash Redis (product JSON plus feedback/admin/session hashes)
 - Cloudinary (media upload + Cloudinary video fallback player)
 - Mux (direct video upload + playback)
 - Gemini and/or Mistral APIs (AI title suggestion, summarization, semantic search)
@@ -144,6 +145,7 @@ In admin, the `<select>` stores section names. Keep this behavior in mind if you
 - `/sections/[id]` section listing
 - `/products/[id]` product detail
 - `/admin` content management UI
+- `/admin/login` admin login + bootstrap password
 
 ### API
 
@@ -151,12 +153,18 @@ In admin, the `<select>` stores section names. Keep this behavior in mind if you
 - `POST /api/products` create product
 - `DELETE /api/products` clear all products
 - `GET /api/products/[id]` fetch one product
+- `POST /api/feedback` submit feedback (PII hashed via SHA-256 before storage)
 - `POST /api/upload` upload file to Cloudinary
 - `POST /api/suggest-title` AI title suggestions
 - `POST /api/get-summary` AI summary
 - `POST /api/search-projects` Mistral semantic matching over visible products
 - `POST /api/mux/upload-url` create Mux direct upload URL
 - `GET /api/mux/asset/[uploadId]` poll Mux upload/asset status
+- `POST /api/admin/auth/bootstrap` one-time admin password generation
+- `POST /api/admin/auth/login` admin login (3-hour session, IP-bound)
+- `GET /api/admin/auth/status` validate admin session
+- `POST /api/admin/auth/logout` invalidate admin session
+- `POST /api/admin/feedback/read` read hashed feedback (requires active session + password)
 
 ## Project Structure
 
@@ -183,3 +191,13 @@ lib/
 ## Deployment Notes
 
 This app requires server runtime APIs (`/api/*`) and should be deployed on a Next.js-compatible platform (for example Vercel). Static-only hosting is not suitable.
+
+## Security Notes
+
+- Admin mutation endpoints require an active admin session.
+- Admin sessions use an `httpOnly` cookie, are bound to client IP hash, and expire after 3 hours.
+- Feedback storage never persists raw `name`, `class`, or `email`; only SHA-256 hashes are stored.
+- Feedback entries are stored as Redis hashes under keys `feedback:{uuid}` with timestamp fields.
+- Sensitive admin mutation endpoints enforce same-origin `Origin` checks (basic CSRF mitigation).
+- Redis-backed rate limiting is enabled for admin auth/mutation routes and feedback submission.
+- Standard HTTP security headers are applied globally in `next.config.ts` (`nosniff`, frame deny, referrer policy, permissions policy, HSTS).
