@@ -1,13 +1,76 @@
-import { createHash, randomBytes, randomUUID, timingSafeEqual } from 'crypto';
+import { createHash, createHmac, pbkdf2 as pbkdf2Callback, randomBytes, randomUUID, timingSafeEqual } from 'crypto';
 import { cookies } from 'next/headers';
+import { promisify } from 'util';
 import { redis } from '@/lib/redis';
 
 export const ADMIN_SESSION_COOKIE = 'admin_session';
 export const ADMIN_SESSION_TTL_SECONDS = 60 * 60 * 3;
 
 const ADMIN_CREDENTIALS_KEY = 'admin:credentials:v1';
+const PASSWORD_SCHEME = 'pbkdf2-v1';
+const LEGACY_PASSWORD_SCHEME = 'sha256-v0';
+const pbkdf2 = promisify(pbkdf2Callback);
+const SECURITY_ENV_WARN_KEY = '__nguyentrai_security_env_warned__';
 
 const sha256 = (value: string) => createHash('sha256').update(value).digest('hex');
+const isHex = (value: string) => /^[a-f0-9]+$/i.test(value);
+
+const getSecret = (primary: string, fallback = ''): string => {
+  const normalizedPrimary = primary.trim();
+  if (normalizedPrimary) return normalizedPrimary;
+  const normalizedFallback = fallback.trim();
+  if (normalizedFallback) return normalizedFallback;
+  return 'dev-only-insecure-secret-change-me';
+};
+
+function warnIfSecuritySecretsMissing() {
+  if (process.env.NODE_ENV !== 'production') return;
+
+  const globalWithFlag = globalThis as typeof globalThis & {
+    [SECURITY_ENV_WARN_KEY]?: boolean;
+  };
+  if (globalWithFlag[SECURITY_ENV_WARN_KEY]) return;
+
+  const missingSecrets: string[] = [];
+  if (!process.env.ADMIN_AUTH_PEPPER?.trim()) missingSecrets.push('ADMIN_AUTH_PEPPER');
+  if (!process.env.FEEDBACK_HASH_PEPPER?.trim()) missingSecrets.push('FEEDBACK_HASH_PEPPER');
+
+  if (missingSecrets.length > 0) {
+    console.warn(
+      `[security] Missing production secret(s): ${missingSecrets.join(
+        ', '
+      )}. Set strong random values in environment variables.`
+    );
+  }
+
+  globalWithFlag[SECURITY_ENV_WARN_KEY] = true;
+}
+
+warnIfSecuritySecretsMissing();
+
+const getAdminPepper = (): string =>
+  getSecret(process.env.ADMIN_AUTH_PEPPER || '', process.env.UPSTASH_REDIS_REST_TOKEN || '');
+
+const hmacSha256 = (value: string, secret: string) =>
+  createHmac('sha256', secret).update(value).digest('hex');
+
+const derivePasswordHash = async (password: string, salt: string): Promise<string> => {
+  const derivedKey = (await pbkdf2(password, salt, 210_000, 64, 'sha256')) as Buffer;
+  return derivedKey.toString('hex');
+};
+
+const hashPasswordWithSalt = async (password: string) => {
+  const salt = randomBytes(16).toString('hex');
+  const passwordHash = await derivePasswordHash(password, salt);
+  return { passwordHash, passwordSalt: salt, passwordScheme: PASSWORD_SCHEME };
+};
+
+const safeCompare = (submitted: string, stored: string): boolean => {
+  if (!submitted || !stored || submitted.length !== stored.length) return false;
+  const submittedBuffer = Buffer.from(submitted, 'utf8');
+  const storedBuffer = Buffer.from(stored, 'utf8');
+  return timingSafeEqual(submittedBuffer, storedBuffer);
+};
 
 export const getClientIpFromHeaders = (headers: Headers): string => {
   const forwardedFor = headers.get('x-forwarded-for');
@@ -16,7 +79,7 @@ export const getClientIpFromHeaders = (headers: Headers): string => {
   return fromForwarded || realIp?.trim() || 'unknown';
 };
 
-export const hashIp = (ip: string): string => sha256(ip);
+export const hashIp = (ip: string): string => hmacSha256(ip, getAdminPepper());
 
 export const getAdminCredentials = async () => {
   const existing = await redis.hgetall<Record<string, string>>(ADMIN_CREDENTIALS_KEY);
@@ -26,6 +89,8 @@ export const getAdminCredentials = async () => {
 
   return {
     passwordHash: existing.passwordHash,
+    passwordSalt: existing.passwordSalt || '',
+    passwordScheme: existing.passwordScheme || LEGACY_PASSWORD_SCHEME,
     createdAt: existing.createdAt || '',
   };
 };
@@ -37,10 +102,12 @@ export const bootstrapAdminCredentials = async () => {
   }
 
   const password = randomBytes(18).toString('base64url');
-  const passwordHash = sha256(password);
+  const securedCredentials = await hashPasswordWithSalt(password);
 
   await redis.hset(ADMIN_CREDENTIALS_KEY, {
-    passwordHash,
+    passwordHash: securedCredentials.passwordHash,
+    passwordSalt: securedCredentials.passwordSalt,
+    passwordScheme: securedCredentials.passwordScheme,
     createdAt: new Date().toISOString(),
   });
 
@@ -79,6 +146,7 @@ export const getActiveAdminSession = async (ip: string) => {
   const sessionId = cookieStore.get(ADMIN_SESSION_COOKIE)?.value;
 
   if (!sessionId) return null;
+  if (!/^[a-f0-9-]{36}$/i.test(sessionId)) return null;
 
   const session = await redis.hgetall<Record<string, string>>(`admin:session:${sessionId}`);
   if (!session?.sessionId || !session?.ipHash) {
@@ -112,13 +180,25 @@ export const verifyAdminPassword = async (password: string): Promise<boolean> =>
   const creds = await getAdminCredentials();
   if (!creds?.passwordHash) return false;
 
-  const submittedHash = hashPassword(normalized);
-  const submittedBuffer = Buffer.from(submittedHash, 'utf8');
-  const storedBuffer = Buffer.from(creds.passwordHash, 'utf8');
+  if (creds.passwordScheme === PASSWORD_SCHEME && creds.passwordSalt && isHex(creds.passwordHash)) {
+    const submittedHash = await derivePasswordHash(normalized, creds.passwordSalt);
+    return safeCompare(submittedHash, creds.passwordHash);
+  }
 
-  if (submittedBuffer.length !== storedBuffer.length) {
+  const submittedLegacyHash = hashPassword(normalized);
+  const isLegacyMatch = safeCompare(submittedLegacyHash, creds.passwordHash);
+  if (!isLegacyMatch) {
     return false;
   }
 
-  return timingSafeEqual(submittedBuffer, storedBuffer);
+  // Silent credential upgrade path from legacy SHA-256 to salted PBKDF2.
+  const upgradedCredentials = await hashPasswordWithSalt(normalized);
+  await redis.hset(ADMIN_CREDENTIALS_KEY, {
+    passwordHash: upgradedCredentials.passwordHash,
+    passwordSalt: upgradedCredentials.passwordSalt,
+    passwordScheme: upgradedCredentials.passwordScheme,
+    createdAt: creds.createdAt || new Date().toISOString(),
+  });
+
+  return true;
 };

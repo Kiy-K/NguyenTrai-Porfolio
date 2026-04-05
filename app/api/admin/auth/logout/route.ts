@@ -16,13 +16,16 @@ export async function POST(request: Request) {
       await redis.del(`admin:session:${sessionId}`);
     }
 
-    const response = NextResponse.json({ success: true }, { status: 200 });
+    const response = NextResponse.json(
+      { success: true },
+      { status: 200, headers: { 'Cache-Control': 'no-store' } }
+    );
     response.cookies.set({
       name: ADMIN_SESSION_COOKIE,
       value: '',
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
+      sameSite: 'strict',
       path: '/',
       maxAge: 0,
     });

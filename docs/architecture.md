@@ -134,8 +134,9 @@ At render time, detail page prefers Mux playback, then falls back to Cloudinary 
 ## Security Model
 
 - `/admin/*` is guarded by `proxy.ts` checking `admin_session` cookie presence.
-- Server-side admin route handlers validate full session state against Redis and client IP hash.
+- Server-side admin route handlers validate full session state against Redis and HMAC-hashed client IP.
 - Admin sessions expire after 3 hours.
+- Admin credentials are stored with salted `PBKDF2-SHA256` hashing.
 - Mutation endpoints (`/api/products` POST/DELETE, `/api/upload`, `/api/mux/upload-url`) require a valid admin session.
 - Reading feedback hashes from admin requires both an active session and password re-verification.
 - Sensitive admin mutation routes enforce same-origin `Origin` checks.

@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { createHash, randomUUID } from 'crypto';
+import { createHmac, randomUUID } from 'crypto';
 import { redis } from '@/lib/redis';
 import { consumeRateLimit } from '@/lib/rate-limit';
 import { getClientIpFromHeaders } from '@/lib/admin-auth';
@@ -13,8 +13,23 @@ interface FeedbackPayload {
   videoId?: string;
 }
 
-const sha256 = (value: string) => createHash('sha256').update(value).digest('hex');
 const FEEDBACK_DEDUPE_TTL_SECONDS = 300;
+const DEFAULT_DEV_PEPPER = 'dev-only-insecure-feedback-pepper-change-me';
+
+const getFeedbackPepper = () =>
+  (process.env.FEEDBACK_HASH_PEPPER ||
+    process.env.ADMIN_AUTH_PEPPER ||
+    process.env.UPSTASH_REDIS_REST_TOKEN ||
+    DEFAULT_DEV_PEPPER)
+    .trim();
+
+const hashSensitiveValue = (value: string) =>
+  createHmac('sha256', getFeedbackPepper()).update(value).digest('hex');
+
+const sanitizeFeedbackText = (value: string): string =>
+  value
+    .replace(/[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/gi, '[redacted-email]')
+    .replace(/(?:\+?\d[\d .-]{7,}\d)/g, '[redacted-phone]');
 
 export async function POST(request: Request) {
   try {
@@ -77,13 +92,14 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Nội dung góp ý quá dài.' }, { status: 400 });
     }
 
-    const nameHash = sha256(trimmedName);
-    const classHash = sha256(normalizedClass.toLowerCase());
-    const emailHash = sha256(normalizedEmail);
+    const nameHash = hashSensitiveValue(trimmedName);
+    const classHash = hashSensitiveValue(normalizedClass.toLowerCase());
+    const emailHash = hashSensitiveValue(normalizedEmail);
+    const sanitizedText = sanitizeFeedbackText(trimmedText);
 
     // Anti-duplication window: same identity in a short time bucket is considered spam.
     const bucket = Math.floor(Date.now() / 1000 / FEEDBACK_DEDUPE_TTL_SECONDS);
-    const dedupeKey = `feedback:dedupe:${sha256(`${nameHash}:${emailHash}:${bucket}`)}`;
+    const dedupeKey = `feedback:dedupe:${hashSensitiveValue(`${nameHash}:${emailHash}:${bucket}`)}`;
     const dedupeResult = await redis.set(dedupeKey, '1', {
       nx: true,
       ex: FEEDBACK_DEDUPE_TTL_SECONDS,
@@ -106,7 +122,7 @@ export async function POST(request: Request) {
       nameHash,
       classHash,
       emailHash,
-      text: trimmedText,
+      text: sanitizedText,
       rating: rating !== undefined ? String(Number(rating)) : '',
       videoId: videoId?.trim() || '',
       createdAt,

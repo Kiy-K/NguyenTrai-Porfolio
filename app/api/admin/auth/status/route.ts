@@ -7,7 +7,10 @@ export async function GET(request: Request) {
     const session = await getActiveAdminSession(ip);
 
     if (!session) {
-      return NextResponse.json({ authenticated: false }, { status: 401 });
+      return NextResponse.json(
+        { authenticated: false },
+        { status: 401, headers: { 'Cache-Control': 'no-store' } }
+      );
     }
 
     return NextResponse.json(
@@ -15,10 +18,13 @@ export async function GET(request: Request) {
         authenticated: true,
         expiresAtUnix: session.expiresAtUnix,
       },
-      { status: 200 }
+      { status: 200, headers: { 'Cache-Control': 'no-store' } }
     );
   } catch (error) {
     console.error('Error checking admin status:', error);
-    return NextResponse.json({ authenticated: false }, { status: 401 });
+    return NextResponse.json(
+      { authenticated: false },
+      { status: 401, headers: { 'Cache-Control': 'no-store' } }
+    );
   }
 }

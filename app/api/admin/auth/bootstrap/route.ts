@@ -46,7 +46,7 @@ export async function POST(request: Request) {
         password: result.password,
         wasCreated: true,
       },
-      { status: 200 }
+      { status: 200, headers: { 'Cache-Control': 'no-store' } }
     );
   } catch (error) {
     console.error('Error bootstrapping admin credentials:', error);

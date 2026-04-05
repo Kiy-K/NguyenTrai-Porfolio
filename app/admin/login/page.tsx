@@ -125,10 +125,17 @@ export default function AdminLoginPage() {
           Tạo/Lấy mật khẩu ngẫu nhiên
         </button>
 
+        <p className="mt-3 text-xs text-[#8B3A3A]">
+          Lưu ý bảo mật: mật khẩu chỉ hiển thị một lần sau khi khởi tạo. Hãy lưu vào nơi an toàn (password manager) trước khi rời trang.
+        </p>
+
         {generatedPassword && (
           <div className="mt-4 p-3 rounded-lg bg-[#FFF4D8] border border-[#D4C4A8]">
             <p className="text-sm font-semibold">Mật khẩu admin:</p>
             <p className="font-mono break-all text-sm">{generatedPassword}</p>
+            <p className="mt-2 text-xs text-[#8B3A3A]">
+              Mật khẩu này sẽ không được hiển thị lại qua hệ thống vì lý do bảo mật.
+            </p>
           </div>
         )}
 

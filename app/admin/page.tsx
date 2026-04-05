@@ -929,7 +929,7 @@ export default function AdminPage() {
                 <p className="text-base text-[#5C4033] font-medium mb-1 font-playfair">
                   Kéo thả hình ảnh vào đây, hoặc <span className="text-[#8B3A3A] cursor-pointer hover:underline font-bold">nhấn để chọn</span>
                 </p>
-                <p className="text-sm text-[#5C4033]/70 italic">Hỗ trợ JPG, PNG, GIF (Tối đa 5MB/ảnh)</p>
+                <p className="text-sm text-[#5C4033]/70 italic">Hỗ trợ JPG, PNG, GIF (Tối đa 10MB/ảnh)</p>
               </div>
 
               {/* Image Preview Grid */}

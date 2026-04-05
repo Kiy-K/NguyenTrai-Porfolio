@@ -302,8 +302,9 @@ Creates a new feedback record as a Redis hash.
 
 ### Behavior
 
-- `name`, `class`, and `email` are SHA-256 hashed before storage.
+- `name`, `class`, and `email` are keyed HMAC-SHA256 hashed before storage.
 - Raw PII values are never written to Redis.
+- Feedback text is sanitized to redact obvious email/phone patterns.
 - Stored key format: `feedback:{uuid}` (Redis Hash).
 - Timestamp fields are stored as `createdAt` and `createdAtUnix`.
 - Deduplication key with `SET NX EX` blocks rapid spam retries in a short window.
@@ -333,7 +334,7 @@ One-time admin credential bootstrap.
 ### Behavior
 
 - Generates random password server-side.
-- Stores only password hash in Redis.
+- Stores only salted `PBKDF2-SHA256` password hash in Redis.
 - Returns plaintext password only on initial bootstrap.
 
 ### Errors
@@ -356,7 +357,7 @@ Authenticates admin with password and creates a 3-hour IP-bound session.
 
 ### Success
 
-- `200` with `{ success: true, expiresAt }` and sets `admin_session` httpOnly cookie.
+- `200` with `{ success: true, expiresAt }` and sets `admin_session` httpOnly cookie (`SameSite=Strict`).
 
 ### Errors
 

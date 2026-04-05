@@ -59,6 +59,8 @@ Set these in `.env.local`.
 
 - `UPSTASH_REDIS_REST_URL`
 - `UPSTASH_REDIS_REST_TOKEN`
+- `ADMIN_AUTH_PEPPER` (optional but recommended; extra secret for admin/session HMAC hashing)
+- `FEEDBACK_HASH_PEPPER` (optional but recommended; dedicated secret for feedback identity hashing)
 
 If Redis is missing, read APIs return empty arrays and write APIs return errors.
 
@@ -153,7 +155,7 @@ In admin, the `<select>` stores section names. Keep this behavior in mind if you
 - `POST /api/products` create product
 - `DELETE /api/products` clear all products
 - `GET /api/products/[id]` fetch one product
-- `POST /api/feedback` submit feedback (PII hashed via SHA-256 before storage)
+- `POST /api/feedback` submit feedback (PII HMAC-hashed before storage)
 - `POST /api/upload` upload file to Cloudinary
 - `POST /api/suggest-title` AI title suggestions
 - `POST /api/get-summary` AI summary
@@ -195,9 +197,11 @@ This app requires server runtime APIs (`/api/*`) and should be deployed on a Nex
 ## Security Notes
 
 - Admin mutation endpoints require an active admin session.
-- Admin sessions use an `httpOnly` cookie, are bound to client IP hash, and expire after 3 hours.
-- Feedback storage never persists raw `name`, `class`, or `email`; only SHA-256 hashes are stored.
+- Admin credentials are stored as salted `PBKDF2-SHA256` hashes.
+- Admin sessions use an `httpOnly` cookie (`SameSite=Strict`), are bound to HMAC-hashed client IP, and expire after 3 hours.
+- Feedback storage never persists raw `name`, `class`, or `email`; only keyed HMAC hashes are stored.
 - Feedback entries are stored as Redis hashes under keys `feedback:{uuid}` with timestamp fields.
+- Feedback text is sanitized for obvious email/phone patterns before storage.
 - Sensitive admin mutation endpoints enforce same-origin `Origin` checks (basic CSRF mitigation).
 - Redis-backed rate limiting is enabled for admin auth/mutation routes and feedback submission.
 - Standard HTTP security headers are applied globally in `next.config.ts` (`nosniff`, frame deny, referrer policy, permissions policy, HSTS).

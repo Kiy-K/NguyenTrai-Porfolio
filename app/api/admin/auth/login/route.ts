@@ -64,7 +64,12 @@ export async function POST(request: Request) {
         success: true,
         expiresAt: session.expiresAt,
       },
-      { status: 200 }
+      {
+        status: 200,
+        headers: {
+          'Cache-Control': 'no-store',
+        },
+      }
     );
 
     response.cookies.set({
@@ -72,7 +77,7 @@ export async function POST(request: Request) {
       value: session.sessionId,
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
+      sameSite: 'strict',
       path: '/',
       maxAge: ADMIN_SESSION_TTL_SECONDS,
     });

@@ -41,9 +41,9 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'No file provided' }, { status: 400 });
     }
 
-    const maxFileSize = 20 * 1024 * 1024;
+    const maxFileSize = 10 * 1024 * 1024;
     if (file.size > maxFileSize) {
-      return NextResponse.json({ error: 'File quá lớn (tối đa 20MB).' }, { status: 413 });
+      return NextResponse.json({ error: 'File quá lớn (tối đa 10MB).' }, { status: 413 });
     }
 
     const bytes = await file.arrayBuffer();

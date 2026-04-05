@@ -43,15 +43,16 @@ This operation now requires a valid admin session.
 
 1. Bootstrap once via `/admin/login` (`POST /api/admin/auth/bootstrap`) to get a generated password.
 2. Log in with that password (`POST /api/admin/auth/login`).
-3. Admin session cookie is valid for 3 hours and tied to client IP hash.
+3. Admin session cookie is valid for 3 hours and tied to HMAC-hashed client IP.
 4. Use `/api/admin/auth/logout` to invalidate current session.
 5. Cross-site requests to sensitive admin endpoints are rejected by `Origin` checks.
 
 ## Feedback Operations
 
 - Public submit route: `POST /api/feedback`
-- PII fields (`name`, `class`, `email`) are SHA-256 hashed before write.
+- PII fields (`name`, `class`, `email`) are keyed HMAC-SHA256 hashed before write.
 - Stored as Redis hashes keyed by `feedback:{uuid}` with `createdAt` and `createdAtUnix`.
+- Feedback text is sanitized to redact obvious email/phone patterns before write.
 - Duplicate bursts are throttled with short-lived Redis dedupe keys.
 - IP-based rate limits are also enforced on feedback submission.
 - Admin read route: `POST /api/admin/feedback/read` requires active session and password re-check.
