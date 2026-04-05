@@ -1,11 +1,13 @@
 import { createHash, randomBytes, randomUUID, timingSafeEqual } from 'crypto';
 import { cookies } from 'next/headers';
 import { redis } from '@/lib/redis';
+import bcrypt from 'bcrypt';
 
 export const ADMIN_SESSION_COOKIE = 'admin_session';
 export const ADMIN_SESSION_TTL_SECONDS = 60 * 60 * 3;
 
 const ADMIN_CREDENTIALS_KEY = 'admin:credentials:v1';
+const BCRYPT_ROUNDS = 12;
 
 const sha256 = (value: string) => createHash('sha256').update(value).digest('hex');
 
@@ -37,7 +39,7 @@ export const bootstrapAdminCredentials = async () => {
   }
 
   const password = randomBytes(18).toString('base64url');
-  const passwordHash = sha256(password);
+  const passwordHash = await bcrypt.hash(password, BCRYPT_ROUNDS);
 
   await redis.hset(ADMIN_CREDENTIALS_KEY, {
     passwordHash,
@@ -103,7 +105,13 @@ export const getActiveAdminSession = async (ip: string) => {
   };
 };
 
-export const hashPassword = (password: string): string => sha256(password);
+export const hashPassword = async (password: string): Promise<string> => {
+  const normalized = password.trim();
+  if (!normalized) {
+    throw new Error('Cannot hash empty password');
+  }
+  return bcrypt.hash(normalized, BCRYPT_ROUNDS);
+};
 
 export const verifyAdminPassword = async (password: string): Promise<boolean> => {
   const normalized = password.trim();
@@ -112,13 +120,9 @@ export const verifyAdminPassword = async (password: string): Promise<boolean> =>
   const creds = await getAdminCredentials();
   if (!creds?.passwordHash) return false;
 
-  const submittedHash = hashPassword(normalized);
-  const submittedBuffer = Buffer.from(submittedHash, 'utf8');
-  const storedBuffer = Buffer.from(creds.passwordHash, 'utf8');
-
-  if (submittedBuffer.length !== storedBuffer.length) {
+  try {
+    return await bcrypt.compare(normalized, creds.passwordHash);
+  } catch {
     return false;
   }
-
-  return timingSafeEqual(submittedBuffer, storedBuffer);
 };
