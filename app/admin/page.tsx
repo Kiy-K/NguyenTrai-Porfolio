@@ -21,6 +21,11 @@ interface AdminFeedbackRecord {
   createdAt: string;
 }
 
+interface UploadedMuxVideo {
+  muxAssetId: string;
+  muxPlaybackId: string;
+}
+
 export default function AdminPage() {
   const router = useRouter();
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -106,11 +111,10 @@ export default function AdminPage() {
   }, [isUploading]);
 
   // Mux video upload state
-  const [muxUploadState, setMuxUploadState] = useState<'idle' | 'uploading' | 'processing' | 'ready' | 'error'>('idle');
+  const [muxUploadState, setMuxUploadState] = useState<'idle' | 'uploading' | 'processing' | 'error'>('idle');
   const [muxUploadProgress, setMuxUploadProgress] = useState(0);
   const [muxUploadId, setMuxUploadId] = useState('');
-  const [muxPlaybackId, setMuxPlaybackId] = useState('');
-  const [muxAssetId, setMuxAssetId] = useState('');
+  const [uploadedMuxVideos, setUploadedMuxVideos] = useState<UploadedMuxVideo[]>([]);
 
   // Resume polling immediately when user switches back to this tab
   useEffect(() => {
@@ -134,8 +138,6 @@ export default function AdminPage() {
     setMuxUploadState('idle');
     setMuxUploadProgress(0);
     setMuxUploadId('');
-    setMuxPlaybackId('');
-    setMuxAssetId('');
     setIsUploading(false);
     setStatus({ type: null, message: '' });
   };
@@ -350,10 +352,14 @@ export default function AdminPage() {
         pollRetryCountRef.current = 0; // reset on success
 
         if (data.status === 'ready') {
-          setMuxPlaybackId(data.playbackId);
-          setMuxAssetId(data.assetId);
-          setMuxUploadState('ready');
-          setStatus({ type: 'success', message: 'Video đã sẵn sàng!' });
+          setUploadedMuxVideos((prev) => [
+            ...prev,
+            { muxPlaybackId: data.playbackId, muxAssetId: data.assetId },
+          ]);
+          setMuxUploadState('idle');
+          setMuxUploadProgress(0);
+          setMuxUploadId('');
+          setStatus({ type: 'success', message: 'Video đã sẵn sàng! Bạn có thể tải thêm video.' });
           setTimeout(() => setStatus({ type: null, message: '' }), 3000);
           setIsUploading(false);
           return;
@@ -547,14 +553,24 @@ export default function AdminPage() {
 
     setStatus({ type: 'loading', message: 'Đang lưu sản phẩm...' });
 
+    const videos = [
+      ...(formData.video.trim() ? [{ video: formData.video.trim() }] : []),
+      ...uploadedMuxVideos.map((item) => ({
+        muxAssetId: item.muxAssetId,
+        muxPlaybackId: item.muxPlaybackId,
+      })),
+    ];
+    const primaryMuxVideo = uploadedMuxVideos[0];
+
     const newProduct = {
       title: formData.title,
       description: formData.description,
       fullDescription: formData.fullDescription,
       images: images,
       video: formData.video || undefined,
-      muxAssetId: muxAssetId || undefined,
-      muxPlaybackId: muxPlaybackId || undefined,
+      muxAssetId: primaryMuxVideo?.muxAssetId || undefined,
+      muxPlaybackId: primaryMuxVideo?.muxPlaybackId || undefined,
+      videos: videos.length > 0 ? videos : undefined,
       teamMembers: formData.teamMembers || undefined,
       section: formData.section
     };
@@ -583,8 +599,7 @@ export default function AdminPage() {
       setMuxUploadState('idle');
       setMuxUploadProgress(0);
       setMuxUploadId('');
-      setMuxPlaybackId('');
-      setMuxAssetId('');
+      setUploadedMuxVideos([]);
 
       setTimeout(() => {
         router.push(sectionPath);
@@ -973,7 +988,33 @@ export default function AdminPage() {
             </div>
 
             <div>
-              <label className="block text-lg font-bold text-[#2C1E16] mb-3 font-playfair">Video (Tùy chọn — Tải lên qua Mux)</label>
+              <label className="block text-lg font-bold text-[#2C1E16] mb-3 font-playfair">
+                Video (Tùy chọn — Tải lên qua Mux, có thể thêm nhiều video)
+              </label>
+
+              {uploadedMuxVideos.length > 0 && (
+                <div className="mb-4 space-y-3">
+                  <p className="text-sm font-bold text-[#5C4033] font-playfair">
+                    Đã tải {uploadedMuxVideos.length} video:
+                  </p>
+                  {uploadedMuxVideos.map((item, index) => (
+                    <div key={`${item.muxPlaybackId}-${index}`} className="rounded-lg overflow-hidden bg-black aspect-video relative border-4 border-[#2C1E16] shadow-xl">
+                      <button
+                        type="button"
+                        onClick={() =>
+                          setUploadedMuxVideos((prev) =>
+                            prev.filter((_, itemIndex) => itemIndex !== index)
+                          )
+                        }
+                        className="absolute top-2 right-2 z-10 bg-white/90 text-red-700 px-2 py-1 rounded text-xs font-bold hover:bg-red-700 hover:text-white transition-colors"
+                      >
+                        Xóa
+                      </button>
+                      <MuxVideoPlayer playbackId={item.muxPlaybackId} />
+                    </div>
+                  ))}
+                </div>
+              )}
 
               {muxUploadState === 'idle' && (
                 <div
@@ -1030,30 +1071,6 @@ export default function AdminPage() {
                   <button type="button" onClick={cancelUpload} className="text-sm text-red-600 hover:text-red-800 font-bold underline transition-colors">
                     Hủy và chọn video khác
                   </button>
-                </div>
-              )}
-
-              {muxUploadState === 'ready' && (
-                <div>
-                  <div className="flex justify-between items-center mb-2">
-                    <p className="text-base font-bold text-[#2C1E16] font-playfair">Xem trước Video (Mux):</p>
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setMuxUploadState('idle');
-                        setMuxUploadProgress(0);
-                        setMuxUploadId('');
-                        setMuxPlaybackId('');
-                        setMuxAssetId('');
-                      }}
-                      className="text-sm text-red-600 hover:text-red-800 font-bold transition-colors"
-                    >
-                      Xóa Video
-                    </button>
-                  </div>
-                  <div className="rounded-lg overflow-hidden bg-black aspect-video relative border-4 border-[#2C1E16] shadow-xl">
-                    <MuxVideoPlayer playbackId={muxPlaybackId} />
-                  </div>
                 </div>
               )}
 

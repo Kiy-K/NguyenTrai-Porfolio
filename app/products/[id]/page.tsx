@@ -1,6 +1,7 @@
 import { notFound } from 'next/navigation';
 import Image from 'next/image';
 import { getProduct } from '@/lib/data';
+import { ProductVideo } from '@/data/products';
 import Navigation from '@/components/Navigation';
 import SummarizeButton from '@/components/SummarizeButton';
 import ShareButton from '@/components/ShareButton';
@@ -10,6 +11,54 @@ import BackButton from '@/components/BackButton';
 
 export const revalidate = 1800; // Cache for 30 minutes
 
+function buildVideoList(product: {
+  videos?: ProductVideo[];
+  video?: string;
+  muxAssetId?: string;
+  muxPlaybackId?: string;
+}): ProductVideo[] {
+  const videoList: ProductVideo[] = [];
+  const seenMuxPlaybackIds = new Set<string>();
+  const seenVideoUrls = new Set<string>();
+
+  for (const item of product.videos || []) {
+    const normalizedPlaybackId = item.muxPlaybackId?.trim() || '';
+    const normalizedVideoUrl = item.video?.trim() || '';
+
+    if (normalizedPlaybackId) {
+      if (seenMuxPlaybackIds.has(normalizedPlaybackId)) continue;
+      seenMuxPlaybackIds.add(normalizedPlaybackId);
+      videoList.push({
+        muxAssetId: item.muxAssetId,
+        muxPlaybackId: normalizedPlaybackId,
+      });
+      continue;
+    }
+
+    if (normalizedVideoUrl) {
+      if (seenVideoUrls.has(normalizedVideoUrl)) continue;
+      seenVideoUrls.add(normalizedVideoUrl);
+      videoList.push({ video: normalizedVideoUrl });
+    }
+  }
+
+  const legacyPlaybackId = product.muxPlaybackId?.trim() || '';
+  if (legacyPlaybackId && !seenMuxPlaybackIds.has(legacyPlaybackId)) {
+    seenMuxPlaybackIds.add(legacyPlaybackId);
+    videoList.push({
+      muxAssetId: product.muxAssetId,
+      muxPlaybackId: legacyPlaybackId,
+    });
+  }
+
+  const legacyVideoUrl = product.video?.trim() || '';
+  if (legacyVideoUrl && !seenVideoUrls.has(legacyVideoUrl)) {
+    videoList.push({ video: legacyVideoUrl });
+  }
+
+  return videoList;
+}
+
 export default async function ProductDetail({ params }: { params: Promise<{ id: string }> }) {
   const resolvedParams = await params;
   // Lấy dữ liệu sản phẩm từ Redis
@@ -18,6 +67,8 @@ export default async function ProductDetail({ params }: { params: Promise<{ id: 
   if (!product) {
     notFound();
   }
+
+  const videos = buildVideoList(product);
 
   return (
     <div className="min-h-screen bg-[#F4EBD0] font-playfair">
@@ -105,16 +156,25 @@ export default async function ProductDetail({ params }: { params: Promise<{ id: 
               </div>
             )}
 
-            {/* Video Section — Mux takes priority; falls back to Cloudinary URL */}
-            {(product.muxPlaybackId || product.video) && (
+            {/* Video Section */}
+            {videos.length > 0 && (
               <div className="mb-12">
                 <h3 className="text-2xl font-bold text-[#2C1E16] mb-6 font-playfair border-b border-[#D4C4A8] pb-2">Video giới thiệu</h3>
-                <div className="rounded-sm overflow-hidden bg-black aspect-video relative border border-[#D4C4A8] shadow-lg">
-                  {product.muxPlaybackId ? (
-                    <MuxVideoPlayer playbackId={product.muxPlaybackId} />
-                  ) : (
-                    <VideoPlayer url={product.video!} />
-                  )}
+                <div className="space-y-6">
+                  {videos.map((item, index) => (
+                    <div key={`${item.muxPlaybackId || item.video || 'video'}-${index}`}>
+                      {videos.length > 1 && (
+                        <p className="text-sm font-semibold text-[#5C4033] mb-2">Video {index + 1}</p>
+                      )}
+                      <div className="rounded-sm overflow-hidden bg-black aspect-video relative border border-[#D4C4A8] shadow-lg">
+                        {item.muxPlaybackId ? (
+                          <MuxVideoPlayer playbackId={item.muxPlaybackId} />
+                        ) : (
+                          <VideoPlayer url={item.video!} />
+                        )}
+                      </div>
+                    </div>
+                  ))}
                 </div>
               </div>
             )}

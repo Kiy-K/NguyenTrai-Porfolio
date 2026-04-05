@@ -12,7 +12,7 @@ A Next.js 16 App Router project that presents the life, works, and legacy of Ngu
 - Admin page (`/admin`) to:
   - Create entries
   - Upload images to Cloudinary
-  - Upload videos directly to Mux (direct upload + polling)
+  - Upload multiple videos directly to Mux (direct upload + polling)
   - Clear all Redis data
   - Get AI title suggestions while typing
   - Read hashed feedback records from Redis with admin password re-check
@@ -117,6 +117,7 @@ All content lives in Redis key `portfolio_data_v4`:
 - `description: string`
 - `fullDescription?: string`
 - `images: string[]`
+- `videos?: { video?: string; muxAssetId?: string; muxPlaybackId?: string }[]`
 - `video?: string`
 - `muxAssetId?: string`
 - `muxPlaybackId?: string`

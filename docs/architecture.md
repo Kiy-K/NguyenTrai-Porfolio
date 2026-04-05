@@ -19,7 +19,7 @@ This project is a Next.js App Router application with a server-backed content st
 { products: Product[] }
 ```
 
-`Product` is defined in `data/products.ts` and includes optional media fields (`video`, `muxAssetId`, `muxPlaybackId`) plus descriptive fields (`title`, `description`, `fullDescription`, `tags`, `section`, etc.).
+`Product` is defined in `data/products.ts` and includes optional media fields (`videos`, `video`, `muxAssetId`, `muxPlaybackId`) plus descriptive fields (`title`, `description`, `fullDescription`, `tags`, `section`, etc.).
 
 Feedback storage uses separate Redis hashes:
 
@@ -102,9 +102,9 @@ Admin writes the section as the human-readable section name.
 1. Admin requests a one-time URL from `/api/mux/upload-url`.
 2. Browser uploads video directly to Mux via XHR PUT.
 3. Frontend polls `/api/mux/asset/[uploadId]` until `ready`.
-4. On success, stores `muxPlaybackId` and `muxAssetId` in product payload.
+4. On success, appends a video entry to product payload (`videos[]`) with `muxPlaybackId` and `muxAssetId`.
 
-At render time, detail page prefers Mux playback, then falls back to Cloudinary video URL (`video`) if present.
+At render time, detail page supports multiple videos and prefers Mux playback for each entry. Legacy single-video fallback (`video`) still works.
 
 ## AI Integration
 

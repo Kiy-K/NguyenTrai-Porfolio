@@ -35,6 +35,13 @@ Creates a new product by appending to Redis array.
   "description": "string",
   "fullDescription": "string (optional)",
   "images": ["https://..."],
+  "videos": [
+    {
+      "video": "https://... (optional)",
+      "muxAssetId": "string (optional)",
+      "muxPlaybackId": "string (optional)"
+    }
+  ],
   "video": "https://... (optional)",
   "muxAssetId": "string (optional)",
   "muxPlaybackId": "string (optional)",
@@ -46,6 +53,8 @@ Creates a new product by appending to Redis array.
 Notes:
 
 - If `id` is omitted, the route assigns `Date.now().toString()`.
+- `videos` is optional and allows one or many video entries per product.
+- Legacy single-video fields (`video`, `muxAssetId`, `muxPlaybackId`) are still accepted for backward compatibility.
 - Redis must be configured (`UPSTASH_REDIS_REST_URL`) or route returns `500`.
 
 ### Success
