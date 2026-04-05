@@ -14,7 +14,6 @@ npm run dev
 
 - Home page: `http://localhost:3000/`
 - Admin page: `http://localhost:3000/admin`
-- Admin login: `http://localhost:3000/admin/login`
 - API list: `GET /api/products`
 
 ## Environment Setup Strategy
@@ -37,24 +36,6 @@ DELETE /api/products
 ```
 
 This resets Redis key `portfolio_data_v4` to an empty list.
-This operation now requires a valid admin session.
-
-## Admin Access Flow
-
-1. Bootstrap once via `/admin/login` (`POST /api/admin/auth/bootstrap`) to get a generated password.
-2. Log in with that password (`POST /api/admin/auth/login`).
-3. Admin session cookie is valid for 3 hours and tied to client IP hash.
-4. Use `/api/admin/auth/logout` to invalidate current session.
-5. Cross-site requests to sensitive admin endpoints are rejected by `Origin` checks.
-
-## Feedback Operations
-
-- Public submit route: `POST /api/feedback`
-- PII fields (`name`, `class`, `email`) are SHA-256 hashed before write.
-- Stored as Redis hashes keyed by `feedback:{uuid}` with `createdAt` and `createdAtUnix`.
-- Duplicate bursts are throttled with short-lived Redis dedupe keys.
-- IP-based rate limits are also enforced on feedback submission.
-- Admin read route: `POST /api/admin/feedback/read` requires active session and password re-check.
 
 ## Build and Production
 
@@ -136,8 +117,7 @@ For Braintrust LLM traces, set:
 
 ## Known Constraints
 
-- Admin session is IP-bound; changing outbound IP can invalidate active sessions.
-- Build/runtime still requires correct env vars for Redis/Mux/Cloudinary integrations.
+- No authentication on `/admin` or API routes (currently open).
 - No automated test suite configured.
 - Section matching uses section names, not IDs.
 - Product IDs are time-based strings when omitted.

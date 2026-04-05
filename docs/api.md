@@ -22,11 +22,6 @@ Returns all products from cached Redis reads.
 
 Creates a new product by appending to Redis array.
 
-### Auth
-
-- Requires active admin session cookie (`admin_session`)
-- Session is IP-bound and expires after 3 hours
-
 ### Request body
 
 ```json
@@ -54,18 +49,11 @@ Notes:
 
 ### Errors
 
-- `401` if admin session is missing/invalid
-- `403` if request `Origin` is missing/mismatched
-- `429` if rate limit exceeded
 - `500` for validation/storage failures
 
 ## `DELETE /api/products`
 
 Resets `portfolio_data_v4` to `{ products: [] }`.
-
-### Auth
-
-- Requires active admin session cookie (`admin_session`)
 
 ### Success
 
@@ -73,9 +61,6 @@ Resets `portfolio_data_v4` to `{ products: [] }`.
 
 ### Errors
 
-- `401` if admin session is missing/invalid
-- `403` if request `Origin` is missing/mismatched
-- `429` if rate limit exceeded
 - `500` if Redis is missing or operation fails
 
 ## `GET /api/products/[id]`
@@ -101,10 +86,6 @@ Returns one product by stringified ID comparison.
 
 Uploads a multipart file to Cloudinary using `cloudinary.uploader.upload_stream`.
 
-### Auth
-
-- Requires active admin session cookie (`admin_session`)
-
 ### Form data
 
 - `file` (required)
@@ -117,10 +98,6 @@ Returns Cloudinary upload result JSON (includes `secure_url`).
 ### Errors
 
 - `400` when file missing
-- `401` if admin session is missing/invalid
-- `403` if request `Origin` is missing/mismatched
-- `413` if file size exceeds route limit
-- `429` if rate limit exceeded
 - `500` on Cloudinary failure
 
 ## `POST /api/get-summary`
@@ -223,10 +200,6 @@ Semantic ID matching over supplied project snippets.
 
 Creates a one-time Mux direct upload URL.
 
-### Auth
-
-- Requires active admin session cookie (`admin_session`)
-
 ### Success
 
 ```json
@@ -238,18 +211,11 @@ Creates a one-time Mux direct upload URL.
 
 ### Errors
 
-- `401` if admin session is missing/invalid
-- `403` if request `Origin` is missing/mismatched
-- `429` if rate limit exceeded
 - `500` if Mux credentials missing or API call fails
 
 ## `GET /api/mux/asset/[uploadId]`
 
 Maps Mux upload/asset lifecycle to frontend-friendly statuses.
-
-### Auth
-
-- Requires active admin session cookie (`admin_session`)
 
 ### Success
 
@@ -279,135 +245,4 @@ Maps Mux upload/asset lifecycle to frontend-friendly statuses.
 
 ### Errors
 
-- `401` if admin session is missing/invalid
-- `429` if rate limit exceeded
 - `500` when Mux lookup fails
-
-## `POST /api/feedback`
-
-Creates a new feedback record as a Redis hash.
-
-### Request body
-
-```json
-{
-  "name": "string",
-  "class": "string (optional)",
-  "email": "string",
-  "text": "string",
-  "rating": 1,
-  "videoId": "string (optional)"
-}
-```
-
-### Behavior
-
-- `name`, `class`, and `email` are SHA-256 hashed before storage.
-- Raw PII values are never written to Redis.
-- Stored key format: `feedback:{uuid}` (Redis Hash).
-- Timestamp fields are stored as `createdAt` and `createdAtUnix`.
-- Deduplication key with `SET NX EX` blocks rapid spam retries in a short window.
-
-### Success
-
-```json
-{
-  "success": true,
-  "uuid": "....",
-  "id": "....",
-  "createdAt": "2026-04-05T..."
-}
-```
-
-### Errors
-
-- `400` invalid payload
-- `429` duplicate submission detected in dedupe window
-- `429` IP rate limit exceeded
-- `500` storage/runtime errors
-
-## `POST /api/admin/auth/bootstrap`
-
-One-time admin credential bootstrap.
-
-### Behavior
-
-- Generates random password server-side.
-- Stores only password hash in Redis.
-- Returns plaintext password only on initial bootstrap.
-
-### Errors
-
-- `409` if credentials already initialized
-- `403` if request `Origin` is missing/mismatched
-- `429` if rate limit exceeded
-
-## `POST /api/admin/auth/login`
-
-Authenticates admin with password and creates a 3-hour IP-bound session.
-
-### Request body
-
-```json
-{
-  "password": "string"
-}
-```
-
-### Success
-
-- `200` with `{ success: true, expiresAt }` and sets `admin_session` httpOnly cookie.
-
-### Errors
-
-- `401` invalid password/session creation failure
-- `403` if request `Origin` is missing/mismatched
-- `429` if rate limit exceeded
-
-## `GET /api/admin/auth/status`
-
-Checks whether the current cookie session is valid for the caller IP.
-
-### Success
-
-- `200` with `{ success: true, ... }`
-
-### Errors
-
-- `401` if missing/expired/invalid session
-
-## `POST /api/admin/auth/logout`
-
-Invalidates current admin session and clears cookie.
-
-### Errors
-
-- `403` if request `Origin` is missing/mismatched
-
-## `POST /api/admin/feedback/read`
-
-Reads hashed feedback records for admin tooling.
-
-### Auth
-
-- Requires active admin session cookie **and** admin password in request body.
-
-### Request body
-
-```json
-{
-  "password": "string",
-  "limit": 50
-}
-```
-
-### Response
-
-- Returns only hashed identity fields (`nameHash`, `classHash`, `emailHash`) plus non-PII content fields.
-- Excludes internal dedupe keys.
-
-### Errors
-
-- `401` if admin session is missing/invalid
-- `403` if request `Origin` is missing/mismatched or password is incorrect
-- `429` if rate limit exceeded

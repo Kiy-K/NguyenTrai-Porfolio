@@ -5,8 +5,6 @@
 This project is a Next.js App Router application with a server-backed content store and media integrations:
 
 - Content metadata in Upstash Redis (`portfolio_data_v4`)
-- Feedback records in Redis hash keys (`feedback:{uuid}`)
-- Admin credentials/sessions in Redis (`admin:*`)
 - Images in Cloudinary
 - Videos in Mux (preferred) with Cloudinary URL fallback
 - AI features powered by Gemini and/or Mistral
@@ -20,11 +18,6 @@ This project is a Next.js App Router application with a server-backed content st
 ```
 
 `Product` is defined in `data/products.ts` and includes optional media fields (`video`, `muxAssetId`, `muxPlaybackId`) plus descriptive fields (`title`, `description`, `fullDescription`, `tags`, `section`, etc.).
-
-Feedback storage uses separate Redis hashes:
-
-- `feedback:{uuid}` with fields: `id`, `nameHash`, `classHash`, `emailHash`, `text`, `rating`, `videoId`, `createdAt`, `createdAtUnix`
-- No raw `name`, `class`, or `email` values are persisted
 
 ### Read strategy
 
@@ -54,7 +47,6 @@ to force fresh reads for server-rendered views.
 - `/sections/[id]`: Category-specific list
 - `/products/[id]`: Product detail page
 - `/admin`: Client-side content management and uploads
-- `/admin/login`: Admin authentication UI
 
 ### API routes
 
@@ -63,8 +55,6 @@ to force fresh reads for server-rendered views.
   - `POST /api/products`
   - `DELETE /api/products`
   - `GET /api/products/[id]`
-- Feedback:
-  - `POST /api/feedback`
 - AI:
   - `POST /api/suggest-title`
   - `POST /api/get-summary`
@@ -73,12 +63,6 @@ to force fresh reads for server-rendered views.
   - `POST /api/upload` (Cloudinary)
   - `POST /api/mux/upload-url`
   - `GET /api/mux/asset/[uploadId]`
-- Admin auth:
-  - `POST /api/admin/auth/bootstrap`
-  - `POST /api/admin/auth/login`
-  - `GET /api/admin/auth/status`
-  - `POST /api/admin/auth/logout`
-  - `POST /api/admin/feedback/read`
 
 ## Section Mapping (Behavioral Detail)
 
@@ -130,17 +114,6 @@ At render time, detail page prefers Mux playback, then falls back to Cloudinary 
 - Core routes export `revalidate = 1800`.
 - Global `AutoReloader` triggers `router.refresh()` every 30 minutes for long-open tabs.
 - Navigation is sticky and auto-hides on downward scroll.
-
-## Security Model
-
-- `/admin/*` is guarded by `proxy.ts` checking `admin_session` cookie presence.
-- Server-side admin route handlers validate full session state against Redis and client IP hash.
-- Admin sessions expire after 3 hours.
-- Mutation endpoints (`/api/products` POST/DELETE, `/api/upload`, `/api/mux/upload-url`) require a valid admin session.
-- Reading feedback hashes from admin requires both an active session and password re-verification.
-- Sensitive admin mutation routes enforce same-origin `Origin` checks.
-- Redis-backed fixed-window rate limiting is applied to admin auth/mutation and feedback submission/read paths.
-- Global response headers are configured in `next.config.ts` for baseline browser hardening.
 
 ## Observability
 
