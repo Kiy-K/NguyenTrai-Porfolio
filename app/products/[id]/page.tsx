@@ -8,6 +8,7 @@ import ShareButton from '@/components/ShareButton';
 import VideoPlayer from '@/components/VideoPlayer';
 import MuxVideoPlayer from '@/components/MuxVideoPlayer';
 import BackButton from '@/components/BackButton';
+import RichTextWithEmbeds from '@/components/RichTextWithEmbeds';
 
 export const revalidate = 1800; // Cache for 30 minutes
 
@@ -125,9 +126,9 @@ export default async function ProductDetail({ params }: { params: Promise<{ id: 
 
             <div className="prose prose-lg max-w-none mb-12 text-[#2C1E16] font-playfair">
               <h2 className="text-2xl font-bold text-[#2C1E16] mb-6 font-playfair border-b border-[#D4C4A8] pb-2">Về tác phẩm này</h2>
-              <p className="text-[#2C1E16] leading-loose text-lg">
-                {product.fullDescription || product.description}
-              </p>
+              <div className="text-[#2C1E16] leading-loose text-lg">
+                <RichTextWithEmbeds text={product.fullDescription || product.description} />
+              </div>
               
               {/* AI Summarization Feature */}
               <div className="mt-8">
