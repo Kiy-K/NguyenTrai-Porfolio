@@ -26,5 +26,5 @@ export default function SmartEmbed({ url, plugins = defaultEmbedPlugins }: Smart
     );
   }
 
-  return <LinkPreview url={url} />;
+  return <LinkPreview key={url} url={url} />;
 }

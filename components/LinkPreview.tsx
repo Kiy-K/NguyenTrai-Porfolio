@@ -15,7 +15,10 @@ interface LinkPreviewProps {
   url: string;
 }
 
-type PreviewStatus = 'idle' | 'loading' | 'success' | 'error';
+type PreviewStatus = 'loading' | 'success' | 'error';
+
+const previewDataCache = new Map<string, PreviewMetadata>();
+const inflightPreviewRequests = new Map<string, Promise<PreviewMetadata>>();
 
 const getHostname = (value: string): string => {
   try {
@@ -25,65 +28,55 @@ const getHostname = (value: string): string => {
   }
 };
 
+const fetchPreviewMetadata = (url: string): Promise<PreviewMetadata> => {
+  const cached = previewDataCache.get(url);
+  if (cached) return Promise.resolve(cached);
+
+  const inflight = inflightPreviewRequests.get(url);
+  if (inflight) return inflight;
+
+  const promise = fetch(`/api/preview?url=${encodeURIComponent(url)}`)
+    .then(async (response) => {
+      if (!response.ok) {
+        throw new Error('Unable to fetch preview metadata');
+      }
+      const data = (await response.json()) as PreviewMetadata;
+      previewDataCache.set(url, data);
+      return data;
+    })
+    .finally(() => {
+      inflightPreviewRequests.delete(url);
+    });
+
+  inflightPreviewRequests.set(url, promise);
+  return promise;
+};
+
 export default function LinkPreview({ url }: LinkPreviewProps) {
   const containerRef = useRef<HTMLDivElement | null>(null);
-  const [shouldLoad, setShouldLoad] = useState(false);
-  const [status, setStatus] = useState<PreviewStatus>('idle');
-  const [metadata, setMetadata] = useState<PreviewMetadata | null>(null);
+  const initialMetadata = previewDataCache.get(url) ?? null;
+  const [status, setStatus] = useState<PreviewStatus>(initialMetadata ? 'success' : 'loading');
+  const [metadata, setMetadata] = useState<PreviewMetadata | null>(initialMetadata);
 
   useEffect(() => {
-    const element = containerRef.current;
-    if (!element) return;
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setShouldLoad(true);
-          observer.disconnect();
-        }
-      },
-      { rootMargin: '200px' }
-    );
-
-    observer.observe(element);
-    return () => observer.disconnect();
-  }, []);
-
-  useEffect(() => {
-    if (!shouldLoad || status !== 'idle') return;
+    if (status !== 'loading') return;
 
     let isActive = true;
-    const controller = new AbortController();
-
-    const loadPreview = async () => {
-      try {
-        setStatus('loading');
-        const response = await fetch(`/api/preview?url=${encodeURIComponent(url)}`, {
-          signal: controller.signal,
-        });
-
-        if (!response.ok) {
-          throw new Error('Unable to fetch preview metadata');
-        }
-
-        const data = (await response.json()) as PreviewMetadata;
+    fetchPreviewMetadata(url)
+      .then((data) => {
         if (!isActive) return;
-
         setMetadata(data);
         setStatus('success');
-      } catch {
+      })
+      .catch(() => {
         if (!isActive) return;
         setStatus('error');
-      }
-    };
-
-    loadPreview();
+      });
 
     return () => {
       isActive = false;
-      controller.abort();
     };
-  }, [shouldLoad, status, url]);
+  }, [status, url]);
 
   if (status === 'success' && metadata) {
     return (
@@ -124,10 +117,16 @@ export default function LinkPreview({ url }: LinkPreviewProps) {
 
   if (status === 'loading') {
     return (
-      <div ref={containerRef} className="rounded-lg border border-[#D4C4A8] bg-white p-4 animate-pulse">
-        <div className="h-4 w-1/3 bg-[#D4C4A8] rounded" />
-        <div className="mt-3 h-4 w-5/6 bg-[#D4C4A8] rounded" />
-        <div className="mt-2 h-4 w-2/3 bg-[#D4C4A8] rounded" />
+      <div ref={containerRef}>
+        <a
+          href={url}
+          target="_blank"
+          rel="noreferrer noopener"
+          className="text-[#8B3A3A] underline break-all"
+        >
+          {url}
+        </a>
+        <p className="mt-2 text-xs text-[#5C4033]">Loading preview...</p>
       </div>
     );
   }

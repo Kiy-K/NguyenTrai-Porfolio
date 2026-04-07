@@ -9,18 +9,12 @@ interface PreviewPayload {
   siteName?: string;
 }
 
-interface CachedPreviewEntry {
-  data: PreviewPayload;
-  expiresAt: number;
-}
-
-const REQUEST_TIMEOUT_MS = 8_000;
-const CACHE_TTL_MS = 10 * 60 * 1000;
-const MAX_HTML_BYTES = 1024 * 1024;
+const REQUEST_TIMEOUT_MS = 4_500;
+const MAX_HTML_BYTES = 50 * 1024;
+const REVALIDATE_SECONDS = 3600;
+const CACHE_CONTROL_HEADER = 'public, s-maxage=3600, stale-while-revalidate=86400';
 const PREVIEW_USER_AGENT =
   'Mozilla/5.0 (compatible; NguyenTraiPortfolioPreviewBot/1.0; +https://example.com)';
-
-const previewCache = new Map<string, CachedPreviewEntry>();
 
 const getFirstNonEmpty = (...values: Array<string | undefined>): string | undefined => {
   for (const value of values) {
@@ -49,21 +43,48 @@ const toAbsoluteUrl = (candidateUrl: string | undefined, baseUrl: URL): string |
   }
 };
 
-const getCachedPreview = (url: string): PreviewPayload | null => {
-  const cached = previewCache.get(url);
-  if (!cached) return null;
-  if (cached.expiresAt < Date.now()) {
-    previewCache.delete(url);
-    return null;
-  }
-  return cached.data;
-};
+const withCacheHeader = (status = 200) => ({
+  status,
+  headers: {
+    'Cache-Control': CACHE_CONTROL_HEADER,
+  },
+});
 
-const setCachedPreview = (url: string, data: PreviewPayload) => {
-  previewCache.set(url, {
-    data,
-    expiresAt: Date.now() + CACHE_TTL_MS,
-  });
+const readBoundedHtml = async (response: Response, maxBytes: number): Promise<string> => {
+  if (!response.body) {
+    return '';
+  }
+
+  const reader = response.body.getReader();
+  const chunks: Uint8Array[] = [];
+  let total = 0;
+
+  try {
+    while (total < maxBytes) {
+      const { done, value } = await reader.read();
+      if (done || !value) break;
+
+      const remaining = maxBytes - total;
+      const chunk = value.length > remaining ? value.slice(0, remaining) : value;
+      chunks.push(chunk);
+      total += chunk.length;
+
+      if (value.length > remaining) break;
+    }
+  } finally {
+    await reader.cancel().catch(() => undefined);
+  }
+
+  if (chunks.length === 0) return '';
+
+  const boundedBytes = new Uint8Array(total);
+  let offset = 0;
+  for (const chunk of chunks) {
+    boundedBytes.set(chunk, offset);
+    offset += chunk.length;
+  }
+
+  return new TextDecoder('utf-8').decode(boundedBytes);
 };
 
 export async function GET(request: Request) {
@@ -71,22 +92,15 @@ export async function GET(request: Request) {
   const rawUrl = searchParams.get('url')?.trim();
 
   if (!rawUrl) {
-    return NextResponse.json({ error: 'Missing url query parameter' }, { status: 400 });
+    return NextResponse.json({ error: 'Missing url query parameter' }, withCacheHeader(400));
   }
 
   const targetUrl = normalizeUrl(rawUrl);
   if (!targetUrl) {
-    return NextResponse.json({ error: 'Invalid URL. Only http/https are supported.' }, { status: 400 });
-  }
-
-  const cached = getCachedPreview(targetUrl.toString());
-  if (cached) {
-    return NextResponse.json(cached, {
-      status: 200,
-      headers: {
-        'Cache-Control': 'public, max-age=600',
-      },
-    });
+    return NextResponse.json(
+      { error: 'Invalid URL. Only http/https are supported.' },
+      withCacheHeader(400)
+    );
   }
 
   const controller = new AbortController();
@@ -101,10 +115,11 @@ export async function GET(request: Request) {
       },
       redirect: 'follow',
       signal: controller.signal,
+      next: { revalidate: REVALIDATE_SECONDS },
     });
 
     if (!response.ok) {
-      return NextResponse.json({ error: 'Could not fetch target URL' }, { status: 502 });
+      return NextResponse.json({ error: 'Could not fetch target URL' }, withCacheHeader(502));
     }
 
     const contentType = response.headers.get('content-type') || '';
@@ -114,12 +129,10 @@ export async function GET(request: Request) {
         title: targetUrl.hostname,
         siteName: targetUrl.hostname,
       };
-      setCachedPreview(targetUrl.toString(), fallback);
-      return NextResponse.json(fallback);
+      return NextResponse.json(fallback, withCacheHeader());
     }
 
-    const html = await response.text();
-    const boundedHtml = html.length > MAX_HTML_BYTES ? html.slice(0, MAX_HTML_BYTES) : html;
+    const boundedHtml = await readBoundedHtml(response, MAX_HTML_BYTES);
     const $ = cheerio.load(boundedHtml);
 
     const title = getFirstNonEmpty(
@@ -156,20 +169,14 @@ export async function GET(request: Request) {
       siteName,
     };
 
-    setCachedPreview(targetUrl.toString(), payload);
-
-    return NextResponse.json(payload, {
-      headers: {
-        'Cache-Control': 'public, max-age=600',
-      },
-    });
+    return NextResponse.json(payload, withCacheHeader());
   } catch (error) {
     const isAbortError = error instanceof Error && error.name === 'AbortError';
     return NextResponse.json(
       {
         error: isAbortError ? 'Preview request timed out' : 'Failed to generate preview',
       },
-      { status: 504 }
+      withCacheHeader(504)
     );
   } finally {
     clearTimeout(timeout);
