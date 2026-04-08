@@ -4,6 +4,7 @@ import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import './globals.css'; // Global styles
 import AutoReloader from '@/components/AutoReloader';
+import ElevenLabsConvaiWidget from '@/components/ElevenLabsConvaiWidget';
 
 const playfair = Playfair_Display({
   subsets: ['latin', 'vietnamese'],
@@ -22,6 +23,7 @@ export default function RootLayout({children}: {children: React.ReactNode}) {
       <body suppressHydrationWarning className="font-playfair bg-[#F4EBD0] text-[#2C1E16]">
         <AutoReloader />
         {children}
+        <ElevenLabsConvaiWidget />
         <Analytics />
         <SpeedInsights />
       </body>

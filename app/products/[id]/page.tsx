@@ -9,6 +9,8 @@ import VideoPlayer from '@/components/VideoPlayer';
 import MuxVideoPlayer from '@/components/MuxVideoPlayer';
 import BackButton from '@/components/BackButton';
 import RichTextWithEmbeds from '@/components/RichTextWithEmbeds';
+import SmartEmbed from '@/components/SmartEmbed';
+import { parseTextWithUrls } from '@/lib/url-parser';
 
 export const revalidate = 1800; // Cache for 30 minutes
 
@@ -70,6 +72,9 @@ export default async function ProductDetail({ params }: { params: Promise<{ id: 
   }
 
   const videos = buildVideoList(product);
+  const productText = product.fullDescription || product.description || '';
+  const mainEmbedUrl =
+    parseTextWithUrls(productText).find((segment) => segment.type === 'url')?.value ?? null;
 
   return (
     <div className="min-h-screen bg-[#F4EBD0] font-playfair">
@@ -82,19 +87,26 @@ export default async function ProductDetail({ params }: { params: Promise<{ id: 
         </div>
 
         <div className="bg-white rounded-sm shadow-sm border border-[#D4C4A8] overflow-hidden relative animate-in fade-in slide-in-from-bottom-8 duration-700">
-          {/* Main Image */}
-          {product.images && product.images.length > 0 && (
-            <div className="relative h-64 sm:h-96 w-full bg-[#F4EBD0] border-b border-[#D4C4A8]">
-              <Image
-                src={product.images[0]}
-                alt={product.title}
-                fill
-                sizes="(max-width: 1024px) 100vw, 1024px"
-                className="object-cover"
-                referrerPolicy="no-referrer"
-                priority
-              />
+          {/* Main Media */}
+          {mainEmbedUrl ? (
+            <div className="w-full bg-[#F4EBD0] border-b border-[#D4C4A8] p-4 sm:p-6">
+              <SmartEmbed url={mainEmbedUrl} />
             </div>
+          ) : (
+            product.images &&
+            product.images.length > 0 && (
+              <div className="relative h-64 sm:h-96 w-full bg-[#F4EBD0] border-b border-[#D4C4A8]">
+                <Image
+                  src={product.images[0]}
+                  alt={product.title}
+                  fill
+                  sizes="(max-width: 1024px) 100vw, 1024px"
+                  className="object-cover"
+                  referrerPolicy="no-referrer"
+                  priority
+                />
+              </div>
+            )
           )}
 
           <div className="p-8 sm:p-12">
