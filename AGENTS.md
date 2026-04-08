@@ -4,6 +4,10 @@
 
 Nguyen Trai Portfolio is a Next.js 16 App Router application for publishing historical content with admin-managed products/articles, AI-assisted writing and search, image/video upload, and Redis-backed storage.
 
+## Product Mission
+
+Preserve and promote the legacy of Nguyễn Trãi and raise awareness among youth through modern, accessible, and media-rich educational content.
+
 Core stack:
 
 - Next.js 16 + React 19 + TypeScript

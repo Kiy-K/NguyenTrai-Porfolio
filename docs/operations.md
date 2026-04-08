@@ -1,5 +1,9 @@
 # Operations Runbook
 
+## Mission Context
+
+Operational decisions should support the core product mission: preserve Nguyễn Trãi's legacy and expand youth awareness through reliable access to high-quality historical content.
+
 ## Local Development
 
 ### 1. Install + run

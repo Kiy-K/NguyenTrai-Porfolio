@@ -1,5 +1,4 @@
 import { NextResponse } from 'next/server';
-import * as cheerio from 'cheerio';
 import { lookup } from 'node:dns/promises';
 import { isIP } from 'node:net';
 
@@ -44,6 +43,59 @@ const getFirstNonEmpty = (...values: Array<string | undefined>): string | undefi
     if (trimmed) return trimmed;
   }
   return undefined;
+};
+
+const normalizeWhitespace = (value: string): string => value.replace(/\s+/g, ' ').trim();
+
+const decodeHtmlEntities = (value: string): string =>
+  value
+    .replace(/&amp;/gi, '&')
+    .replace(/&quot;/gi, '"')
+    .replace(/&#39;/gi, "'")
+    .replace(/&lt;/gi, '<')
+    .replace(/&gt;/gi, '>');
+
+const parseHtmlAttributes = (tag: string): Record<string, string> => {
+  const attributes: Record<string, string> = {};
+  const attrRegex = /([^\s"'=<>`/]+)\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s"'=<>`]+))/g;
+  let match: RegExpExecArray | null;
+  while ((match = attrRegex.exec(tag)) !== null) {
+    const key = match[1].toLowerCase();
+    const value = match[2] ?? match[3] ?? match[4] ?? '';
+    attributes[key] = decodeHtmlEntities(value.trim());
+  }
+  return attributes;
+};
+
+const findMetaContent = (
+  html: string,
+  attributeName: 'property' | 'name',
+  attributeValue: string
+): string | undefined => {
+  const metaRegex = /<meta\b[^>]*>/gi;
+  let metaMatch: RegExpExecArray | null;
+  const targetName = attributeName.toLowerCase();
+  const targetValue = attributeValue.toLowerCase();
+
+  while ((metaMatch = metaRegex.exec(html)) !== null) {
+    const attributes = parseHtmlAttributes(metaMatch[0]);
+    const currentName = attributes[targetName]?.toLowerCase();
+    if (currentName !== targetValue) continue;
+
+    const content = attributes.content;
+    if (content) return normalizeWhitespace(content);
+  }
+
+  return undefined;
+};
+
+const findTitleText = (html: string): string | undefined => {
+  const titleMatch = html.match(/<title\b[^>]*>([\s\S]*?)<\/title>/i);
+  if (!titleMatch?.[1]) return undefined;
+
+  const stripped = titleMatch[1].replace(/<[^>]+>/g, '');
+  const normalized = normalizeWhitespace(decodeHtmlEntities(stripped));
+  return normalized || undefined;
 };
 
 function ipV4ToInt(ip: string): number {
@@ -338,31 +390,30 @@ export async function GET(request: Request) {
     }
 
     const boundedHtml = await readBoundedHtml(response, MAX_HTML_BYTES);
-    const $ = cheerio.load(boundedHtml);
 
     const title = getFirstNonEmpty(
-      $('meta[property="og:title"]').attr('content'),
-      $('meta[name="twitter:title"]').attr('content'),
-      $('title').first().text(),
+      findMetaContent(boundedHtml, 'property', 'og:title'),
+      findMetaContent(boundedHtml, 'name', 'twitter:title'),
+      findTitleText(boundedHtml),
       finalUrl.hostname
     );
 
     const description = getFirstNonEmpty(
-      $('meta[property="og:description"]').attr('content'),
-      $('meta[name="twitter:description"]').attr('content'),
-      $('meta[name="description"]').attr('content')
+      findMetaContent(boundedHtml, 'property', 'og:description'),
+      findMetaContent(boundedHtml, 'name', 'twitter:description'),
+      findMetaContent(boundedHtml, 'name', 'description')
     );
 
     const image = toAbsoluteUrl(
       getFirstNonEmpty(
-        $('meta[property="og:image"]').attr('content'),
-        $('meta[name="twitter:image"]').attr('content')
+        findMetaContent(boundedHtml, 'property', 'og:image'),
+        findMetaContent(boundedHtml, 'name', 'twitter:image')
       ),
       finalUrl
     );
 
     const siteName = getFirstNonEmpty(
-      $('meta[property="og:site_name"]').attr('content'),
+      findMetaContent(boundedHtml, 'property', 'og:site_name'),
       finalUrl.hostname
     );
 

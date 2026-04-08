@@ -2,6 +2,10 @@
 
 This file gives coding agents and contributors high-signal context for this repository.
 
+## Mission
+
+Preserve and promote the legacy of Nguyễn Trãi while increasing awareness and interest among younger generations through accessible digital experiences.
+
 ## Commands
 
 ```bash

@@ -1,8 +1,8 @@
 import { NextResponse } from 'next/server';
-import Mux from '@mux/mux-node';
 import { getActiveAdminSession, getClientIpFromHeaders } from '@/lib/admin-auth';
 import { consumeRateLimit } from '@/lib/rate-limit';
 import { enforceSameOrigin } from '@/lib/request-security';
+import { createMuxUpload } from '@/lib/mux-client';
 
 // POST /api/mux/upload-url
 // Creates a Mux direct upload session and returns the one-time upload URL.
@@ -34,19 +34,9 @@ export async function POST(request: Request) {
       );
     }
 
-    const mux = new Mux({
-      tokenId: process.env.MUX_TOKEN_ID,
-      tokenSecret: process.env.MUX_TOKEN_SECRET,
-    });
-
     const requestOrigin = new URL(request.url).origin;
     const corsOrigin = process.env.APP_URL || requestOrigin;
-    const upload = await mux.video.uploads.create({
-      cors_origin: corsOrigin,
-      new_asset_settings: {
-        playback_policy: ['public'],
-      },
-    });
+    const upload = await createMuxUpload(corsOrigin);
 
     return NextResponse.json({ uploadUrl: upload.url, uploadId: upload.id });
   } catch (error) {

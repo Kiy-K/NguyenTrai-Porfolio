@@ -2,6 +2,10 @@
 
 All routes are Next.js Route Handlers under `app/api`.
 
+## Mission Context
+
+These APIs power a historical education platform focused on preserving Nguyễn Trãi's legacy and increasing awareness among younger audiences.
+
 ## `GET /api/products`
 
 Returns all products from cached Redis reads.

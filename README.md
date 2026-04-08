@@ -2,6 +2,10 @@
 
 A Next.js 16 App Router project that presents the life, works, and legacy of Nguyen Trai, with content management, AI-assisted writing/search, and media upload support.
 
+## Mission
+
+Preserve and promote the historical legacy of Nguyễn Trãi while raising awareness and engagement among younger generations through accessible digital storytelling, media-rich learning content, and responsible AI-assisted discovery.
+
 ## What This App Does
 
 - Public site with:

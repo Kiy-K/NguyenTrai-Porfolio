@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
-import Mux from '@mux/mux-node';
 import { getActiveAdminSession, getClientIpFromHeaders } from '@/lib/admin-auth';
 import { consumeRateLimit } from '@/lib/rate-limit';
+import { retrieveMuxAsset, retrieveMuxUpload } from '@/lib/mux-client';
 
 // GET /api/mux/asset/[uploadId]
 // Polls the Mux upload → asset pipeline and returns a unified status.
@@ -35,12 +35,7 @@ export async function GET(
   const { uploadId } = await params;
 
   try {
-    const mux = new Mux({
-      tokenId: process.env.MUX_TOKEN_ID,
-      tokenSecret: process.env.MUX_TOKEN_SECRET,
-    });
-
-    const upload = await mux.video.uploads.retrieve(uploadId);
+    const upload = await retrieveMuxUpload(uploadId);
 
     if (upload.status === 'waiting') {
       return NextResponse.json({ status: 'uploading' });
@@ -52,7 +47,7 @@ export async function GET(
 
     // Upload file was received — now check the resulting asset
     if (upload.asset_id) {
-      const asset = await mux.video.assets.retrieve(upload.asset_id);
+      const asset = await retrieveMuxAsset(upload.asset_id);
 
       if (asset.status === 'errored') {
         return NextResponse.json({ status: 'error' });

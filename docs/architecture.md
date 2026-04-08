@@ -11,6 +11,10 @@ This project is a Next.js App Router application with a server-backed content st
 - Multiple videos per product via Mux (preferred) with Cloudinary URL fallback
 - AI features powered by Gemini and/or Mistral
 
+## Product Goal
+
+The platform goal is to preserve Nguyễn Trãi's historical legacy and raise awareness among youth by making archival and interpretive content easier to discover, consume, and share.
+
 ## Data Storage
 
 ### Redis shape
