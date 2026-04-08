@@ -220,7 +220,8 @@ This app requires server runtime APIs (`/api/*`) and should be deployed on a Nex
 - Admin sessions use an `httpOnly` cookie (`SameSite=Strict`), are bound to HMAC-hashed client IP, and expire after 3 hours.
 - Feedback storage never persists raw `name`, `class`, or `email`; only keyed HMAC hashes are stored.
 - Feedback entries are stored as Redis hashes under keys `feedback:record:{uuid}` with timestamp fields and indexed through RediSearch schema.
-- Feedback text is sanitized for obvious email/phone patterns before storage.
+- Feedback text is sanitized with a trusted HTML sanitizer before storage to prevent script/event payloads.
+- `/api/preview` only fetches metadata from an explicit domain allowlist (`PREVIEW_ALLOWED_DOMAINS`) and blocks private/internal IP targets.
 - Sensitive admin mutation endpoints enforce same-origin `Origin` checks (basic CSRF mitigation).
 - Redis-backed rate limiting is enabled for admin auth/mutation routes and feedback submission.
 - Standard HTTP security headers are applied globally in `next.config.ts` (`nosniff`, frame deny, referrer policy, permissions policy, HSTS).

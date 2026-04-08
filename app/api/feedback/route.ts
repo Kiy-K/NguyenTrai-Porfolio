@@ -1,5 +1,7 @@
 import { NextResponse } from 'next/server';
 import { createHmac, randomUUID } from 'crypto';
+import sanitizeHtml from 'sanitize-html';
+import { z } from 'zod';
 import { redis } from '@/lib/redis';
 import { consumeRateLimit } from '@/lib/rate-limit';
 import { getClientIpFromHeaders } from '@/lib/admin-auth';
@@ -16,6 +18,23 @@ interface FeedbackPayload {
 
 const FEEDBACK_DEDUPE_TTL_SECONDS = 300;
 const DEFAULT_DEV_PEPPER = 'dev-only-insecure-feedback-pepper-change-me';
+const FEEDBACK_MAX_LENGTH = 2000;
+
+const feedbackSchema = z.object({
+  name: z.string().trim().min(1).max(120),
+  class: z.string().trim().max(80).optional().default(''),
+  email: z
+    .string()
+    .trim()
+    .max(320)
+    .email()
+    .optional()
+    .or(z.literal(''))
+    .default(''),
+  text: z.string().trim().min(1).max(FEEDBACK_MAX_LENGTH),
+  rating: z.number().int().min(1).max(5).optional(),
+  videoId: z.string().trim().max(120).optional(),
+});
 
 const getFeedbackPepper = () =>
   (process.env.FEEDBACK_HASH_PEPPER ||
@@ -28,9 +47,12 @@ const hashSensitiveValue = (value: string) =>
   createHmac('sha256', getFeedbackPepper()).update(value).digest('hex');
 
 const sanitizeFeedbackText = (value: string): string =>
-  value
-    .replace(/[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/gi, '[redacted-email]')
-    .replace(/(?:\+?\d[\d .-]{7,}\d)/g, '[redacted-phone]');
+  sanitizeHtml(value, {
+    allowedTags: [],
+    allowedAttributes: {},
+    disallowedTagsMode: 'discard',
+    parser: { decodeEntities: true },
+  }).trim();
 
 export async function POST(request: Request) {
   try {
@@ -53,52 +75,39 @@ export async function POST(request: Request) {
       );
     }
 
-    const { name, class: className, email, text, rating, videoId } =
-      (await request.json()) as FeedbackPayload;
+    const rawPayload = (await request.json()) as FeedbackPayload;
+    const payloadResult = feedbackSchema.safeParse({
+      ...rawPayload,
+      email: rawPayload.email?.trim().toLowerCase() || '',
+      rating:
+        rawPayload.rating === undefined || rawPayload.rating === null
+          ? undefined
+          : Number(rawPayload.rating),
+    });
 
-    if (!name?.trim() || !text?.trim()) {
+    if (!payloadResult.success) {
+      return NextResponse.json(
+        { error: 'Dữ liệu góp ý không hợp lệ. Vui lòng kiểm tra lại.' },
+        { status: 400 }
+      );
+    }
+
+    const { name, class: className, email, text, rating, videoId } = payloadResult.data;
+    const trimmedName = name;
+    const normalizedClass = className;
+    const normalizedEmail = email;
+    const sanitizedText = sanitizeFeedbackText(text);
+
+    if (!sanitizedText) {
       return NextResponse.json(
         { error: 'Vui lòng nhập đầy đủ họ tên và nội dung góp ý.' },
         { status: 400 }
       );
     }
 
-    if (rating !== undefined) {
-      const normalizedRating = Number(rating);
-      if (!Number.isFinite(normalizedRating) || normalizedRating < 1 || normalizedRating > 5) {
-        return NextResponse.json({ error: 'Điểm đánh giá không hợp lệ.' }, { status: 400 });
-      }
-    }
-
-    const trimmedName = name.trim();
-    const normalizedClass = (className || '').trim();
-    const normalizedEmail = (email || '').trim().toLowerCase();
-    const trimmedText = text.trim();
-
-    if (trimmedName.length > 120) {
-      return NextResponse.json({ error: 'Tên quá dài.' }, { status: 400 });
-    }
-
-    if (normalizedClass.length > 80) {
-      return NextResponse.json({ error: 'Tên lớp quá dài.' }, { status: 400 });
-    }
-
-    if (normalizedEmail.length > 320) {
-      return NextResponse.json({ error: 'Email quá dài.' }, { status: 400 });
-    }
-
-    if (normalizedEmail && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(normalizedEmail)) {
-      return NextResponse.json({ error: 'Email không hợp lệ.' }, { status: 400 });
-    }
-
-    if (trimmedText.length > 2000) {
-      return NextResponse.json({ error: 'Nội dung góp ý quá dài.' }, { status: 400 });
-    }
-
     const nameHash = hashSensitiveValue(trimmedName);
     const classHash = hashSensitiveValue(normalizedClass.toLowerCase());
     const emailHash = hashSensitiveValue(normalizedEmail);
-    const sanitizedText = sanitizeFeedbackText(trimmedText);
 
     // Anti-duplication window: same identity in a short time bucket is considered spam.
     const bucket = Math.floor(Date.now() / 1000 / FEEDBACK_DEDUPE_TTL_SECONDS);

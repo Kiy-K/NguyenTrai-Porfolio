@@ -1,6 +1,10 @@
 import { NextResponse } from 'next/server';
 import { lookup } from 'node:dns/promises';
 import { isIP } from 'node:net';
+import { z } from 'zod';
+import sanitizeHtml from 'sanitize-html';
+import { consumeRateLimit } from '@/lib/rate-limit';
+import { getClientIpFromHeaders } from '@/lib/admin-auth';
 
 interface PreviewPayload {
   url: string;
@@ -17,6 +21,21 @@ const CACHE_CONTROL_HEADER = 'public, s-maxage=3600, stale-while-revalidate=8640
 const PREVIEW_USER_AGENT =
   'Mozilla/5.0 (compatible; NguyenTraiPortfolioPreviewBot/1.0; +https://example.com)';
 const MAX_REDIRECTS = 5;
+const PREVIEW_RATE_LIMIT = { limit: 60, windowSeconds: 60 };
+
+const DEFAULT_ALLOWED_PREVIEW_DOMAINS = [
+  'youtube.com',
+  'youtu.be',
+  'vimeo.com',
+  'wikipedia.org',
+  'wikimedia.org',
+  'vnexpress.net',
+  'tuoitre.vn',
+  'thanhnien.vn',
+  'dantri.com.vn',
+  'github.com',
+  'medium.com',
+] as const;
 
 const BLOCKED_HOSTNAMES = new Set(['localhost']);
 
@@ -37,6 +56,26 @@ const IPV4_BLOCKED_CIDRS: Array<[number, number]> = [
   [ipV4ToInt('224.0.0.0'), 4],
 ];
 
+const previewQuerySchema = z.object({
+  url: z.string().trim().url().max(2048),
+});
+
+const parseAllowedPreviewDomains = (): string[] => {
+  const fromEnv = (process.env.PREVIEW_ALLOWED_DOMAINS || '')
+    .split(',')
+    .map((value) => value.trim().toLowerCase())
+    .filter(Boolean)
+    .map((value) => value.replace(/^\./, ''));
+
+  if (fromEnv.length > 0) {
+    return [...new Set(fromEnv)];
+  }
+
+  return [...DEFAULT_ALLOWED_PREVIEW_DOMAINS];
+};
+
+const ALLOWED_PREVIEW_DOMAINS = parseAllowedPreviewDomains();
+
 const getFirstNonEmpty = (...values: Array<string | undefined>): string | undefined => {
   for (const value of values) {
     const trimmed = value?.trim();
@@ -47,13 +86,15 @@ const getFirstNonEmpty = (...values: Array<string | undefined>): string | undefi
 
 const normalizeWhitespace = (value: string): string => value.replace(/\s+/g, ' ').trim();
 
-const decodeHtmlEntities = (value: string): string =>
-  value
-    .replace(/&amp;/gi, '&')
-    .replace(/&quot;/gi, '"')
-    .replace(/&#39;/gi, "'")
-    .replace(/&lt;/gi, '<')
-    .replace(/&gt;/gi, '>');
+const sanitizeMetadataText = (value: string): string =>
+  normalizeWhitespace(
+    sanitizeHtml(value, {
+      allowedTags: [],
+      allowedAttributes: {},
+      disallowedTagsMode: 'discard',
+      parser: { decodeEntities: true },
+    })
+  );
 
 const parseHtmlAttributes = (tag: string): Record<string, string> => {
   const attributes: Record<string, string> = {};
@@ -61,8 +102,8 @@ const parseHtmlAttributes = (tag: string): Record<string, string> => {
   let match: RegExpExecArray | null;
   while ((match = attrRegex.exec(tag)) !== null) {
     const key = match[1].toLowerCase();
-    const value = match[2] ?? match[3] ?? match[4] ?? '';
-    attributes[key] = decodeHtmlEntities(value.trim());
+    const value = (match[2] ?? match[3] ?? match[4] ?? '').trim();
+    attributes[key] = value;
   }
   return attributes;
 };
@@ -83,7 +124,7 @@ const findMetaContent = (
     if (currentName !== targetValue) continue;
 
     const content = attributes.content;
-    if (content) return normalizeWhitespace(content);
+    if (content) return sanitizeMetadataText(content);
   }
 
   return undefined;
@@ -93,9 +134,7 @@ const findTitleText = (html: string): string | undefined => {
   const titleMatch = html.match(/<title\b[^>]*>([\s\S]*?)<\/title>/i);
   if (!titleMatch?.[1]) return undefined;
 
-  const stripped = titleMatch[1].replace(/<[^>]+>/g, '');
-  const normalized = normalizeWhitespace(decodeHtmlEntities(stripped));
-  return normalized || undefined;
+  return sanitizeMetadataText(titleMatch[1]);
 };
 
 function ipV4ToInt(ip: string): number {
@@ -185,12 +224,12 @@ const isBlockedIpv6 = (ip: string): boolean => {
   const isUnspecified = expanded.every((part) => part === 0);
   if (isUnspecified) return true;
   if (first === 0 && second === 0 && third === 0 && fourth === 0 && fifth === 0 && sixth === 0 && seventh === 0 && eighth === 1) {
-    return true; // ::1 loopback
+    return true;
   }
-  if ((first & 0xfe00) === 0xfc00) return true; // fc00::/7 unique local
-  if ((first & 0xffc0) === 0xfe80) return true; // fe80::/10 link-local
-  if ((first & 0xffc0) === 0xfec0) return true; // fec0::/10 site-local (deprecated)
-  if (first === 0x2001 && second === 0x0db8) return true; // 2001:db8::/32 docs range
+  if ((first & 0xfe00) === 0xfc00) return true;
+  if ((first & 0xffc0) === 0xfe80) return true;
+  if ((first & 0xffc0) === 0xfec0) return true;
+  if (first === 0x2001 && second === 0x0db8) return true;
 
   if (
     first === 0 &&
@@ -217,14 +256,29 @@ const isBlockedHost = (host: string): boolean => {
   return false;
 };
 
+const isAllowedHost = (host: string): boolean => {
+  const normalized = host.toLowerCase();
+  return ALLOWED_PREVIEW_DOMAINS.some(
+    (allowedDomain) => normalized === allowedDomain || normalized.endsWith(`.${allowedDomain}`)
+  );
+};
+
 const assertSafeTargetUrl = async (url: URL): Promise<void> => {
   if (url.username || url.password) {
     throw new Error('URL credentials are not allowed');
   }
 
+  if (url.port && url.port !== '80' && url.port !== '443') {
+    throw new Error('Target port is not allowed');
+  }
+
   const hostname = url.hostname.trim();
   if (!hostname || isBlockedHost(hostname)) {
     throw new Error('Target host is not allowed');
+  }
+
+  if (!isAllowedHost(hostname)) {
+    throw new Error('Target host is outside the preview allowlist');
   }
 
   const ipVersion = isIP(hostname);
@@ -308,10 +362,11 @@ const toAbsoluteUrl = (candidateUrl: string | undefined, baseUrl: URL): string |
   }
 };
 
-const withCacheHeader = (status = 200) => ({
+const withCacheHeader = (status = 200, extraHeaders: Record<string, string> = {}) => ({
   status,
   headers: {
     'Cache-Control': CACHE_CONTROL_HEADER,
+    ...extraHeaders,
   },
 });
 
@@ -354,13 +409,34 @@ const readBoundedHtml = async (response: Response, maxBytes: number): Promise<st
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
-  const rawUrl = searchParams.get('url')?.trim();
+  const parsedQuery = previewQuerySchema.safeParse({
+    url: searchParams.get('url')?.trim(),
+  });
 
-  if (!rawUrl) {
-    return NextResponse.json({ error: 'Missing url query parameter' }, withCacheHeader(400));
+  if (!parsedQuery.success) {
+    return NextResponse.json(
+      { error: 'Invalid URL. Only http/https are supported.' },
+      withCacheHeader(400)
+    );
   }
 
-  const targetUrl = normalizeUrl(rawUrl);
+  const ip = getClientIpFromHeaders(request.headers);
+  try {
+    const rateLimit = await consumeRateLimit({
+      key: `preview:${ip}`,
+      ...PREVIEW_RATE_LIMIT,
+    });
+    if (!rateLimit.allowed) {
+      return NextResponse.json(
+        { error: 'Too many preview requests. Please retry later.' },
+        withCacheHeader(429, { 'Retry-After': String(rateLimit.retryAfterSeconds) })
+      );
+    }
+  } catch {
+    // Keep preview endpoint available even if Redis is unavailable.
+  }
+
+  const targetUrl = normalizeUrl(parsedQuery.data.url);
   if (!targetUrl) {
     return NextResponse.json(
       { error: 'Invalid URL. Only http/https are supported.' },
@@ -433,7 +509,9 @@ export async function GET(request: Request) {
       (error.message.includes('not allowed') ||
         error.message.includes('restricted') ||
         error.message.includes('invalid') ||
-        error.message.includes('resolve'));
+        error.message.includes('resolve') ||
+        error.message.includes('allowlist') ||
+        error.message.includes('port'));
     return NextResponse.json(
       {
         error: isAbortError

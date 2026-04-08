@@ -63,10 +63,18 @@ This operation now requires a valid admin session.
 - PII fields (`name`, `class`, `email`) are keyed HMAC-SHA256 hashed before write.
 - Stored as Redis hashes keyed by `feedback:record:{uuid}` with `createdAt` and `createdAtUnix`.
 - Feedback read/query is backed by RediSearch index schema `feedback_idx_v1`.
-- Feedback text is sanitized to redact obvious email/phone patterns before write.
+- Feedback text is sanitized with `sanitize-html` before write.
 - Duplicate bursts are throttled with short-lived Redis dedupe keys.
 - IP-based rate limits are also enforced on feedback submission.
 - Admin read route: `POST /api/admin/feedback/read` requires active session and password re-check.
+
+## Link Preview Security
+
+- Route: `GET /api/preview`
+- External fetch targets are restricted to a domain allowlist (`PREVIEW_ALLOWED_DOMAINS` env var).
+- Private/internal IP ranges and localhost-style targets are blocked.
+- Redirect chains are validated hop-by-hop before each outbound request.
+- Endpoint uses timeout + bounded read size and per-IP rate limiting.
 
 ## Build and Production
 

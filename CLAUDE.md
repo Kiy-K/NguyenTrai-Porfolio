@@ -51,6 +51,10 @@ Copy `.env.example` to `.env.local` and set values as needed.
 - `BRAINTRUST_PROJECT_NAME` (optional, defaults to `nguyen-trai-portfolio`)
 - `OTEL_PROPAGATE_CONTEXT_URLS` (optional)
 
+### Link preview security
+
+- `PREVIEW_ALLOWED_DOMAINS` (optional, comma-separated domain allowlist for `/api/preview`)
+
 ## Architecture Overview
 
 ### Data storage
@@ -96,6 +100,7 @@ Admin currently stores `section` as section name.
 - `POST /api/products`
 - `DELETE /api/products`
 - `GET /api/products/[id]`
+- `GET /api/preview`
 - `POST /api/upload` (Cloudinary)
 - `POST /api/suggest-title` (Gemini -> Mistral fallback)
 - `POST /api/get-summary` (Gemini -> Mistral fallback)

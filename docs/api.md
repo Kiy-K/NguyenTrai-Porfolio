@@ -322,11 +322,35 @@ Creates a new feedback record as a Redis hash and indexes it with RediSearch sch
 
 - `name`, `class`, and `email` are keyed HMAC-SHA256 hashed before storage.
 - Raw PII values are never written to Redis.
-- Feedback text is sanitized to redact obvious email/phone patterns.
+- Feedback text is sanitized with `sanitize-html` before write.
 - Stored key format: `feedback:record:{uuid}` (Redis Hash).
 - Route ensures feedback RediSearch index schema (`feedback_idx_v1`) exists before write.
 - Timestamp fields are stored as `createdAt` and `createdAtUnix`.
 - Deduplication key with `SET NX EX` blocks rapid spam retries in a short window.
+
+## `GET /api/preview`
+
+Fetches link metadata for rich link previews.
+
+### Query
+
+- `url` (required): full `http`/`https` URL
+
+### Security behavior
+
+- Strict URL validation via `zod` + `new URL(...)`.
+- Only domains in `PREVIEW_ALLOWED_DOMAINS` (or built-in defaults) are allowed.
+- Subdomains are allowed only under those approved domains.
+- Requests to localhost/internal/private IP ranges are blocked (IPv4 + IPv6).
+- Redirects are followed manually with repeated allowlist/IP checks for every hop.
+- Non-standard ports are rejected.
+- Per-IP rate limit is enforced.
+
+### Performance behavior
+
+- Outbound fetch uses Next.js revalidation cache (`next: { revalidate: 3600 }`).
+- API response uses `Cache-Control: public, s-maxage=3600, stale-while-revalidate=86400`.
+- HTML parsing is bounded to ~50KB and timeout-protected.
 
 ### Success
 

@@ -41,6 +41,7 @@ Optional integrations:
 - Mux: `MUX_TOKEN_ID`, `MUX_TOKEN_SECRET`, `NEXT_PUBLIC_MUX_DATA_ENV_KEY`, `APP_URL`
 - AI: `GEMINI_API_KEY`, `MISTRAL_API_KEY`
 - Observability: `BRAINTRUST_API_KEY`, `BRAINTRUST_PROJECT_NAME`, `OTEL_PROPAGATE_CONTEXT_URLS`
+- Preview allowlist: `PREVIEW_ALLOWED_DOMAINS` (comma-separated domains allowed by `GET /api/preview`)
 
 If Redis env vars are missing, read APIs can return empty results and write APIs will fail.
 
@@ -73,6 +74,7 @@ APIs:
 - `POST /api/products`
 - `DELETE /api/products`
 - `GET /api/products/[id]`
+- `GET /api/preview`
 - `POST /api/feedback`
 - `POST /api/upload`
 - `POST /api/suggest-title`
@@ -131,7 +133,9 @@ AI providers:
 - Admin mutation routes and admin feedback read route validate Redis-backed session + IP hash.
 - Admin sessions expire after 3 hours.
 - Feedback route hashes `name`, `class`, and `email` via SHA-256; do not introduce raw-PII storage.
+- Feedback text is sanitized with `sanitize-html` before write.
 - Feedback records are written as Redis hashes (`feedback:record:{uuid}`) and queried through RediSearch index `feedback_idx_v1`.
+- Link preview route only fetches allowlisted domains and blocks internal/private network targets to mitigate SSRF.
 - Sensitive admin mutation/auth routes enforce same-origin `Origin` checks.
 - Redis-backed rate limiting is active on admin auth/mutations and feedback submit/read routes.
 - Avoid committing secrets from `.env.local`.
