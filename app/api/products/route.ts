@@ -1,9 +1,9 @@
 import { NextResponse } from 'next/server';
 import { getProducts } from '@/lib/data';
-import { redis } from '@/lib/redis';
+import { appendProduct, writeContent } from '@/lib/persistence';
 import { revalidatePath } from 'next/cache';
 import { getActiveAdminSession, getClientIpFromHeaders } from '@/lib/admin-auth';
-import { enforceSameOrigin } from '@/lib/request-security';
+import { enforceSameOrigin, enforceDataWriteAvailability } from '@/lib/request-security';
 import { consumeRateLimit } from '@/lib/rate-limit';
 
 // GET /api/products - Lấy danh sách tất cả sản phẩm
@@ -21,6 +21,9 @@ export async function DELETE(request: Request) {
   try {
     const originError = enforceSameOrigin(request);
     if (originError) return originError;
+
+    const writePause = enforceDataWriteAvailability();
+    if (writePause) return writePause;
 
     if (!process.env.UPSTASH_REDIS_REST_URL) {
       return NextResponse.json({ error: 'Chưa cấu hình Redis' }, { status: 500 });
@@ -45,14 +48,14 @@ export async function DELETE(request: Request) {
     }
 
     // Reset the portfolio_data_v4 key to an empty array
-    await redis.set('portfolio_data_v4', { products: [] });
+    await writeContent({ products: [] });
     
     // Revalidate paths to ensure fresh data
     revalidatePath('/', 'layout');
     
     return NextResponse.json({ success: true, message: 'Đã xóa toàn bộ dữ liệu' }, { status: 200 });
   } catch (error) {
-    console.error('Error clearing database:', error);
+    console.error('Error clearing database:', error instanceof Error ? error.name : 'UnknownError');
     return NextResponse.json({ error: 'Không thể xóa dữ liệu' }, { status: 500 });
   }
 }
@@ -60,6 +63,9 @@ export async function POST(request: Request) {
   try {
     const originError = enforceSameOrigin(request);
     if (originError) return originError;
+
+    const writePause = enforceDataWriteAvailability();
+    if (writePause) return writePause;
 
     if (!process.env.UPSTASH_REDIS_REST_URL) {
       return NextResponse.json({ error: 'Chưa cấu hình Redis' }, { status: 500 });
@@ -84,27 +90,20 @@ export async function POST(request: Request) {
     }
 
     const newProduct = await request.json();
-    const data = await redis.get<{ products: any[] }>('portfolio_data_v4') || { products: [] };
     
     // Tạo ID đơn giản nếu chưa có
     if (!newProduct.id) {
       newProduct.id = Date.now().toString();
     }
     
-    // Ensure products array exists before pushing
-    if (!data.products) {
-      data.products = [];
-    }
-    
-    data.products.push(newProduct);
-    await redis.set('portfolio_data_v4', data);
+    await appendProduct(newProduct);
     
     // Revalidate paths to ensure fresh data
     revalidatePath('/', 'layout');
     
     return NextResponse.json({ success: true, product: newProduct }, { status: 201 });
   } catch (error) {
-    console.error('Error adding product:', error);
+    console.error('Error adding product:', error instanceof Error ? error.name : 'UnknownError');
     return NextResponse.json({ error: 'Không thể thêm sản phẩm' }, { status: 500 });
   }
 }

@@ -2,12 +2,15 @@ import { createHash, timingSafeEqual } from 'crypto';
 import { NextResponse } from 'next/server';
 import { bootstrapAdminCredentials, getClientIpFromHeaders } from '@/lib/admin-auth';
 import { consumeRateLimit } from '@/lib/rate-limit';
-import { enforceSameOrigin } from '@/lib/request-security';
+import { enforceSameOrigin, enforceDataWriteAvailability } from '@/lib/request-security';
 
 export async function POST(request: Request) {
   try {
     const originError = enforceSameOrigin(request);
     if (originError) return originError;
+
+    const writePause = enforceDataWriteAvailability();
+    if (writePause) return writePause;
 
     const expectedToken = process.env.ADMIN_BOOTSTRAP_TOKEN || '';
     const suppliedToken = request.headers.get('x-admin-bootstrap-token') || '';
@@ -61,7 +64,7 @@ export async function POST(request: Request) {
       { status: 200, headers: { 'Cache-Control': 'no-store' } }
     );
   } catch (error) {
-    console.error('Error bootstrapping admin credentials:', error);
+    console.error('Error bootstrapping admin credentials:', error instanceof Error ? error.name : 'UnknownError');
     return NextResponse.json({ error: 'Không thể khởi tạo mật khẩu admin' }, { status: 500 });
   }
 }

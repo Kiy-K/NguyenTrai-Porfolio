@@ -4,17 +4,19 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "node scripts/migrate-neon.cjs identity && next build",
     "start": "next start",
     "lint": "eslint .",
     "clean": "next clean",
     "test": "node --test tests/*.test.cjs",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "test:neon": "node scripts/test-neon.cjs"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.1",
     "@mistralai/mistralai": "^1.14.1",
     "@mux/mux-player-react": "^3.4.0",
+    "@neondatabase/serverless": "^1.2.0",
     "@opentelemetry/api": "^1.9.1",
     "@upstash/redis": "^1.37.0",
     "@vercel/analytics": "^2.0.1",

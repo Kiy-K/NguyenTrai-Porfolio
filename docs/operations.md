@@ -40,7 +40,7 @@ Use admin button in `/admin` (`Xóa toàn bộ dữ liệu`) or call:
 DELETE /api/products
 ```
 
-This resets Redis key `portfolio_data_v4` to an empty list.
+This resets the product list in the selected persistence backend; it does not clear feedback, credentials, or Redis temporary state.
 This operation now requires a valid admin session.
 
 ### Multi-video content writes
@@ -61,8 +61,8 @@ This operation now requires a valid admin session.
 
 - Public submit route: `POST /api/feedback`
 - PII fields (`name`, `class`, `email`) are keyed HMAC-SHA256 hashed before write.
-- Stored as Redis hashes keyed by `feedback:record:{uuid}` with `createdAt` and `createdAtUnix`.
-- Feedback read/query is backed by RediSearch index schema `feedback_idx_v1`.
+- Stored in the selected backend with original source keys, `createdAt`, and `createdAtUnix`; PostgreSQL uses `portfolio.feedback`.
+- Redis reads use `feedback_idx_v1`; PostgreSQL reads use bounded newest SQL queries.
 - Feedback text is sanitized with `sanitize-html` before write.
 - Duplicate bursts are throttled with short-lived Redis dedupe keys.
 - IP-based rate limits are also enforced on feedback submission.
@@ -164,3 +164,7 @@ For Braintrust LLM traces, set:
 - Section matching uses section names, not IDs.
 - Product IDs are time-based strings when omitted.
 - Product media may use either `videos[]` (multi-video) or legacy single-video fields.
+
+## Neon migration
+
+Follow [Neon migration operations](neon-migration.md) for protected export, endpoint verification, transactional import, write pause, cutover, and rollback. Keep sessions/rate limits in Redis and preserve the source records.

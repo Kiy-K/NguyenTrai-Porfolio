@@ -13,3 +13,11 @@ export function enforceSameOrigin(request: Request): NextResponse | null {
 
   return null;
 }
+
+export function enforceDataWriteAvailability(): NextResponse | null {
+  if (process.env.DATA_WRITE_PAUSED !== '1') return null;
+  return NextResponse.json(
+    { error: 'Hệ thống đang chuyển dữ liệu. Vui lòng thử lại sau ít phút.' },
+    { status: 503, headers: { 'Retry-After': '60', 'Cache-Control': 'no-store', 'X-Data-Write-Paused': '1' } }
+  );
+}

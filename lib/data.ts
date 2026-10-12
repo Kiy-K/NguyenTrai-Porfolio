@@ -1,24 +1,23 @@
-import { redis } from './redis';
-import { products as mockProducts, Product } from '@/data/products';
+import { readContent, usesPostgres } from '@/lib/persistence';
+import { Product } from '@/data/products';
 import { unstable_cache } from 'next/cache';
 
 // Hàm lấy danh sách sản phẩm từ Redis
 export const getProducts = unstable_cache(
   async (): Promise<Product[]> => {
-    if (!process.env.UPSTASH_REDIS_REST_URL) {
+    if (!usesPostgres() && !process.env.UPSTASH_REDIS_REST_URL) {
       console.warn('UPSTASH_REDIS_REST_URL is not set. Returning empty array.');
       return [];
     }
     try {
-      const data = await redis.get<{ products: Product[] }>('portfolio_data_v4');
+      const data = await readContent();
       if (!data || !data.products) {
-        // Khởi tạo mảng rỗng vào Redis nếu chưa có
-        await redis.set('portfolio_data_v4', { products: [] });
         return [];
       }
       return data.products;
     } catch (e) {
-      console.error('Lỗi Redis:', e);
+      console.error('Content read failed:', e instanceof Error ? e.name : 'UnknownError');
+      if (usesPostgres()) throw e;
       return [];
     }
   },

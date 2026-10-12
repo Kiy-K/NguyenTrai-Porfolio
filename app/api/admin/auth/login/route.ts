@@ -8,7 +8,7 @@ import {
   verifyAdminPassword,
 } from '@/lib/admin-auth';
 import { consumeRateLimit } from '@/lib/rate-limit';
-import { enforceSameOrigin } from '@/lib/request-security';
+import { enforceSameOrigin, enforceDataWriteAvailability } from '@/lib/request-security';
 
 interface LoginPayload {
   password: string;
@@ -18,6 +18,9 @@ export async function POST(request: Request) {
   try {
     const originError = enforceSameOrigin(request);
     if (originError) return originError;
+
+    const writePause = enforceDataWriteAvailability();
+    if (writePause) return writePause;
 
     if (!process.env.UPSTASH_REDIS_REST_URL) {
       return NextResponse.json({ error: 'Chưa cấu hình Redis' }, { status: 500 });
@@ -84,7 +87,7 @@ export async function POST(request: Request) {
 
     return response;
   } catch (error) {
-    console.error('Error logging in admin:', error);
+    console.error('Error logging in admin:', error instanceof Error ? error.name : 'UnknownError');
     return NextResponse.json({ error: 'Không thể đăng nhập quản trị' }, { status: 500 });
   }
 }
