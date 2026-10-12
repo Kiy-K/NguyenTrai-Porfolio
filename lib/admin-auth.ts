@@ -96,20 +96,21 @@ export const getAdminCredentials = async () => {
 };
 
 export const bootstrapAdminCredentials = async () => {
-  const existing = await getAdminCredentials();
-  if (existing) {
-    return { created: false as const, password: null };
-  }
-
   const password = randomBytes(18).toString('base64url');
   const securedCredentials = await hashPasswordWithSalt(password);
 
-  await redis.hset(ADMIN_CREDENTIALS_KEY, {
-    passwordHash: securedCredentials.passwordHash,
-    passwordSalt: securedCredentials.passwordSalt,
-    passwordScheme: securedCredentials.passwordScheme,
-    createdAt: new Date().toISOString(),
-  });
+  // Check and write in one command; even partial existing records require owner recovery.
+  const created = await redis.eval(`
+    if redis.call('EXISTS', KEYS[1]) == 1 then return 0 end
+    redis.call('HSET', KEYS[1], unpack(ARGV))
+    return 1
+  `, [ADMIN_CREDENTIALS_KEY], [
+    'passwordHash', securedCredentials.passwordHash,
+    'passwordSalt', securedCredentials.passwordSalt,
+    'passwordScheme', securedCredentials.passwordScheme,
+    'createdAt', new Date().toISOString(),
+  ]);
+  if (created !== 1) return { created: false as const, password: null };
 
   return { created: true as const, password };
 };

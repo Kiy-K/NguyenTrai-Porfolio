@@ -372,17 +372,20 @@ Fetches link metadata for rich link previews.
 
 ## `POST /api/admin/auth/bootstrap`
 
-One-time admin credential bootstrap.
+Owner-controlled, one-time admin credential provisioning.
 
 ### Behavior
 
+- Requires same-origin `Origin` and `x-admin-bootstrap-token` matching server-only `ADMIN_BOOTSTRAP_TOKEN` (at least 32 characters). Empty/short configuration disables the endpoint.
 - Generates random password server-side.
+- Atomically creates `admin:credentials:v1` with Redis Lua `EXISTS` + `HSET`; existing keys, including partial records, are never overwritten.
 - Stores only salted `PBKDF2-SHA256` password hash in Redis.
 - Returns plaintext password only on initial bootstrap.
 
 ### Errors
 
-- `409` if credentials already initialized
+- `409` if the credential key already exists; no password is returned
+- `403` if owner token is missing/invalid or provisioning is disabled
 - `403` if request `Origin` is missing/mismatched
 - `429` if rate limit exceeded
 

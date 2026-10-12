@@ -1,3 +1,4 @@
+import { createHash, timingSafeEqual } from 'crypto';
 import { NextResponse } from 'next/server';
 import { bootstrapAdminCredentials, getClientIpFromHeaders } from '@/lib/admin-auth';
 import { consumeRateLimit } from '@/lib/rate-limit';
@@ -7,6 +8,17 @@ export async function POST(request: Request) {
   try {
     const originError = enforceSameOrigin(request);
     if (originError) return originError;
+
+    const expectedToken = process.env.ADMIN_BOOTSTRAP_TOKEN || '';
+    const suppliedToken = request.headers.get('x-admin-bootstrap-token') || '';
+    const digest = (value: string) => createHash('sha256').update(value).digest();
+    if (expectedToken.length < 32 || !suppliedToken ||
+        !timingSafeEqual(digest(suppliedToken), digest(expectedToken))) {
+      return NextResponse.json(
+        { error: 'Khởi tạo admin cần mã xác nhận của chủ sở hữu.' },
+        { status: 403, headers: { 'Cache-Control': 'no-store' } }
+      );
+    }
 
     if (!process.env.UPSTASH_REDIS_REST_URL) {
       return NextResponse.json({ error: 'Chưa cấu hình Redis' }, { status: 500 });
