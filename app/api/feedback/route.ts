@@ -3,6 +3,8 @@ import { createHmac, randomUUID } from 'crypto';
 import sanitizeHtml from 'sanitize-html';
 import { z } from 'zod';
 import { redis } from '@/lib/redis';
+import { usesPostgres, writeFeedback } from '@/lib/persistence';
+import { enforceDataWriteAvailability } from '@/lib/request-security';
 import { consumeRateLimit } from '@/lib/rate-limit';
 import { getClientIpFromHeaders } from '@/lib/admin-auth';
 import { FEEDBACK_KEY_PREFIX, ensureFeedbackSearchIndex } from '@/lib/feedback-search';
@@ -56,11 +58,14 @@ const sanitizeFeedbackText = (value: string): string =>
 
 export async function POST(request: Request) {
   try {
+    const writePause = enforceDataWriteAvailability();
+    if (writePause) return writePause;
+
     if (!process.env.UPSTASH_REDIS_REST_URL) {
       return NextResponse.json({ error: 'Chưa cấu hình Redis' }, { status: 500 });
     }
 
-    await ensureFeedbackSearchIndex();
+    if (!usesPostgres()) await ensureFeedbackSearchIndex();
 
     const ip = getClientIpFromHeaders(request.headers);
     const ipRateLimit = await consumeRateLimit({
@@ -146,11 +151,11 @@ export async function POST(request: Request) {
       payload.videoId = normalizedVideoId;
     }
 
-    await redis.hset(key, payload);
+    await writeFeedback(key, payload);
 
     return NextResponse.json({ success: true, uuid: id, id, createdAt }, { status: 201 });
   } catch (error) {
-    console.error('Error saving feedback:', error);
+    console.error('Error saving feedback:', error instanceof Error ? error.name : 'UnknownError');
     return NextResponse.json({ error: 'Không thể lưu góp ý' }, { status: 500 });
   }
 }

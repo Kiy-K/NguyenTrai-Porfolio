@@ -17,7 +17,7 @@ Preserve and promote the historical legacy of Nguyễn Trãi while raising aware
   - Create entries
   - Upload images to Cloudinary
   - Upload multiple videos directly to Mux (direct upload + polling)
-  - Clear all Redis data
+  - Clear the product list
   - Get AI title suggestions while typing
   - Read hashed feedback records via RediSearch index with admin password re-check
 
@@ -26,7 +26,7 @@ Preserve and promote the historical legacy of Nguyễn Trãi while raising aware
 - `next@16` (App Router)
 - `react@19`
 - Tailwind CSS v4
-- Upstash Redis (product JSON plus feedback/admin/session hashes)
+- Neon PostgreSQL for migrated content, feedback, and credential hashes; Upstash Redis remains the default before explicit cutover and stores sessions/rate limits.
 - Upstash RediSearch schema/index for feedback querying
 - Cloudinary (media upload + Cloudinary video fallback player)
 - Mux (direct video upload + playback)
@@ -67,7 +67,7 @@ Set these in `.env.local`.
 - `ADMIN_AUTH_PEPPER` (optional but recommended; extra secret for admin/session HMAC hashing)
 - `FEEDBACK_HASH_PEPPER` (optional but recommended; dedicated secret for feedback identity hashing)
 
-If Redis is missing, read APIs return empty arrays and write APIs return errors.
+Redis remains required for sessions and rate limits. When PostgreSQL is selected, a missing DATABASE_URL or imported content is an error; the app never silently falls back to Redis.
 
 ### Cloudinary
 
@@ -109,7 +109,7 @@ No test framework is configured in this repository currently.
 
 ## Data Model and Storage
 
-All content lives in Redis key `portfolio_data_v4`:
+Content keeps the logical key `portfolio_data_v4` in the selected backend: Redis before cutover, or JSONB in `portfolio.state` when `PERSISTENCE_BACKEND=postgres`:
 
 ```ts
 { products: Product[] }
@@ -141,7 +141,7 @@ All content lives in Redis key `portfolio_data_v4`:
 
 ## Feedback Search Behavior
 
-- Feedback records are written as Redis hashes under `feedback:record:{uuid}`.
+- Feedback records retain their original source keys and hashed fields in the selected backend.
 - A RediSearch index schema (`feedback_idx_v1`) is used for feedback query/read paths.
 - Admin feedback read uses RediSearch query ordering by `createdAtUnix` (newest first) with legacy fallback for older keys.
 
@@ -219,7 +219,7 @@ This app requires server runtime APIs (`/api/*`) and should be deployed on a Nex
 - Admin credentials are stored as salted `PBKDF2-SHA256` hashes.
 - Admin sessions use an `httpOnly` cookie (`SameSite=Strict`), are bound to HMAC-hashed client IP, and expire after 3 hours.
 - Feedback storage never persists raw `name`, `class`, or `email`; only keyed HMAC hashes are stored.
-- Feedback entries are stored as Redis hashes under keys `feedback:record:{uuid}` with timestamp fields and indexed through RediSearch schema.
+- Feedback entries use Redis hashes/RediSearch before cutover, or `portfolio.feedback` with SQL reads after PostgreSQL selection.
 - Feedback text is sanitized with a trusted HTML sanitizer before storage to prevent script/event payloads.
 - `/api/preview` only fetches metadata from an explicit domain allowlist (`PREVIEW_ALLOWED_DOMAINS`) and blocks private/internal IP targets.
 - Sensitive admin mutation endpoints enforce same-origin `Origin` checks (basic CSRF mitigation).
@@ -227,3 +227,5 @@ This app requires server runtime APIs (`/api/*`) and should be deployed on a Nex
 - Standard HTTP security headers are applied globally in `next.config.ts` (`nosniff`, frame deny, referrer policy, permissions policy, HSTS).
 
 Security regression checks and deployment/recovery prerequisites: [M0A baseline](docs/security-m0a.md).
+
+Neon migration, protected backups, and cutover/rollback: [operations](docs/neon-migration.md). Run `npm run test:neon` for synthetic checks in a temporary Neon schema.

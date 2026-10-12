@@ -8,7 +8,7 @@ These APIs power a historical education platform focused on preserving Nguyễn 
 
 ## `GET /api/products`
 
-Returns all products from cached Redis reads.
+Returns all products from cached reads from the selected persistence backend.
 
 ### Success
 
@@ -24,7 +24,7 @@ Returns all products from cached Redis reads.
 
 ## `POST /api/products`
 
-Creates a new product by appending to Redis array.
+Creates a new product by appending to the selected content store (atomic JSONB append in PostgreSQL).
 
 ### Auth
 
@@ -303,7 +303,7 @@ Maps Mux upload/asset lifecycle to frontend-friendly statuses.
 
 ## `POST /api/feedback`
 
-Creates a new feedback record as a Redis hash and indexes it with RediSearch schema.
+Creates a sanitized feedback record with hashed identity fields in the selected backend. Redis uses its search index; PostgreSQL uses `portfolio.feedback`.
 
 ### Request body
 
@@ -321,7 +321,7 @@ Creates a new feedback record as a Redis hash and indexes it with RediSearch sch
 ### Behavior
 
 - `name`, `class`, and `email` are keyed HMAC-SHA256 hashed before storage.
-- Raw PII values are never written to Redis.
+- Raw identity fields are never stored in either backend.
 - Feedback text is sanitized with `sanitize-html` before write.
 - Stored key format: `feedback:record:{uuid}` (Redis Hash).
 - Route ensures feedback RediSearch index schema (`feedback_idx_v1`) exists before write.
@@ -378,8 +378,8 @@ Owner-controlled, one-time admin credential provisioning.
 
 - Requires same-origin `Origin` and `x-admin-bootstrap-token` matching server-only `ADMIN_BOOTSTRAP_TOKEN` (at least 32 characters). Empty/short configuration disables the endpoint.
 - Generates random password server-side.
-- Atomically creates `admin:credentials:v1` with Redis Lua `EXISTS` + `HSET`; existing keys, including partial records, are never overwritten.
-- Stores only salted `PBKDF2-SHA256` password hash in Redis.
+- Atomically creates `admin:credentials:v1` with Redis Lua or PostgreSQL `INSERT ... ON CONFLICT DO NOTHING`; existing keys, including partial records, are never overwritten.
+- Stores only salted `PBKDF2-SHA256` password hash in the selected store.
 - Returns plaintext password only on initial bootstrap.
 
 ### Errors
@@ -458,3 +458,7 @@ Reads hashed feedback records for admin tooling.
 - `401` if admin session is missing/invalid
 - `403` if request `Origin` is missing/mismatched or password is incorrect
 - `429` if rate limit exceeded
+
+## Persistent write maintenance
+
+With `DATA_WRITE_PAUSED=1`, product mutations, feedback submit, login, and credential bootstrap return 503 with Retry-After and X-Data-Write-Paused headers. Legacy password rechecks still verify correctly but defer hash upgrades until the pause ends. PostgreSQL requires configured DATABASE_URL and previously imported content. Redis session/auth/rate-limit dependencies remain required.

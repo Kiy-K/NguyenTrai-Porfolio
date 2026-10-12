@@ -5,6 +5,7 @@ import {
   verifyAdminPassword,
 } from '@/lib/admin-auth';
 import { redis } from '@/lib/redis';
+import { usesPostgres, readPostgresFeedback } from '@/lib/persistence';
 import { consumeRateLimit } from '@/lib/rate-limit';
 import { enforceSameOrigin } from '@/lib/request-security';
 import { FEEDBACK_KEY_PREFIX, searchFeedbackByNewest } from '@/lib/feedback-search';
@@ -116,32 +117,38 @@ export async function POST(request: Request) {
 
     const safeLimit = Math.min(Math.max(Number(limit) || 50, 1), 200);
     let feedback: FeedbackHashRecord[] = [];
-    try {
-      const indexedRows = await searchFeedbackByNewest(safeLimit);
-      feedback = indexedRows
-        .map((row) => toFeedbackRecord(row))
-        .filter((row): row is FeedbackHashRecord => Boolean(row))
-        .slice(0, safeLimit);
-    } catch (searchError) {
-      console.error('Error querying RediSearch feedback index. Falling back to legacy scan.', searchError);
-      const [indexedPrefixFallback, legacyFallback] = await Promise.all([
-        readFeedbackBySearchPrefix(safeLimit),
-        readLegacyFeedback(safeLimit),
-      ]);
-      feedback = [...indexedPrefixFallback, ...legacyFallback]
-        .sort((a, b) => b.createdAtUnix - a.createdAtUnix)
-        .slice(0, safeLimit);
-    }
+    if (usesPostgres()) {
+      feedback = (await readPostgresFeedback(safeLimit))
+        .map(row => toFeedbackRecord(row))
+        .filter((row): row is FeedbackHashRecord => Boolean(row));
+    } else {
+      try {
+        const indexedRows = await searchFeedbackByNewest(safeLimit);
+        feedback = indexedRows
+          .map((row) => toFeedbackRecord(row))
+          .filter((row): row is FeedbackHashRecord => Boolean(row))
+          .slice(0, safeLimit);
+      } catch (searchError) {
+        console.error('Error querying RediSearch feedback index. Falling back to legacy scan.', searchError instanceof Error ? searchError.name : 'UnknownError');
+        const [indexedPrefixFallback, legacyFallback] = await Promise.all([
+          readFeedbackBySearchPrefix(safeLimit),
+          readLegacyFeedback(safeLimit),
+        ]);
+        feedback = [...indexedPrefixFallback, ...legacyFallback]
+          .sort((a, b) => b.createdAtUnix - a.createdAtUnix)
+          .slice(0, safeLimit);
+      }
 
-    // Include legacy feedback keys if indexed results are fewer than requested limit.
-    if (feedback.length < safeLimit) {
-      const legacyRows = await readLegacyFeedback(safeLimit);
-      const seen = new Set(feedback.map((item) => item.id));
-      for (const item of legacyRows) {
-        if (seen.has(item.id)) continue;
-        feedback.push(item);
-        seen.add(item.id);
-        if (feedback.length >= safeLimit) break;
+      // Include legacy feedback keys if indexed results are fewer than requested limit.
+      if (feedback.length < safeLimit) {
+        const legacyRows = await readLegacyFeedback(safeLimit);
+        const seen = new Set(feedback.map((item) => item.id));
+        for (const item of legacyRows) {
+          if (seen.has(item.id)) continue;
+          feedback.push(item);
+          seen.add(item.id);
+          if (feedback.length >= safeLimit) break;
+        }
       }
     }
 
@@ -156,7 +163,7 @@ export async function POST(request: Request) {
       { status: 200 }
     );
   } catch (error) {
-    console.error('Error reading feedback hashes:', error);
+    console.error('Error reading feedback hashes:', error instanceof Error ? error.name : 'UnknownError');
     return NextResponse.json({ error: 'Không thể đọc dữ liệu feedback' }, { status: 500 });
   }
 }

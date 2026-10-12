@@ -59,7 +59,7 @@ Copy `.env.example` to `.env.local` and set values as needed.
 
 ### Data storage
 
-All content is stored in Redis key `portfolio_data_v4` as:
+Content retains logical key `portfolio_data_v4` in the selected backend (`lib/persistence.ts`), Redis by default or Neon `portfolio.state` when PERSISTENCE_BACKEND=postgres:
 
 ```ts
 { products: Product[] }
@@ -67,7 +67,7 @@ All content is stored in Redis key `portfolio_data_v4` as:
 
 `Product` is defined in `data/products.ts`.
 
-Feedback is stored as Redis hashes under `feedback:record:{uuid}` and queried via RediSearch index `feedback_idx_v1`.
+Feedback uses Redis hashes/RediSearch before cutover, or Neon `portfolio.feedback` after PERSISTENCE_BACKEND=postgres. Expiring sessions and rate limits remain Redis-backed.
 
 ### Read path
 
@@ -144,3 +144,5 @@ Player behavior in detail page:
 - Use `rg` for search and file discovery.
 - Do not introduce behavior changes when updating docs-only tasks.
 - Keep docs aligned with actual route and env behavior from code, not assumptions.
+
+For persistence changes or migration, read `docs/neon-migration.md`. PostgreSQL requires DATABASE_URL and a verified import; never silently fall back between backends. DATA_WRITE_PAUSED=1 blocks persistent mutations and defers legacy credential upgrades. Preserve Redis source data and all media references.

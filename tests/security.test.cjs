@@ -9,8 +9,9 @@ afterEach(() => { process.env = { ...env }; });
 const ownerToken = 'test-owner-token-'.repeat(4);
 
 function authWith(redis) {
+  const persistence = loadTs('lib/persistence.ts', { '@/lib/redis': { redis }, '@neondatabase/serverless': { neon: () => { throw new Error('Unexpected PostgreSQL access'); } } });
   return loadTs('lib/admin-auth.ts', {
-    '@/lib/redis': { redis }, 'next/headers': { cookies: async () => ({ get: () => undefined }) },
+    '@/lib/persistence': persistence, '@/lib/redis': { redis }, 'next/headers': { cookies: async () => ({ get: () => undefined }) },
   });
 }
 function bootstrapRoute(redis) {
@@ -173,9 +174,18 @@ test('existing IP-bound administrator sessions remain valid', async () => {
   const ipHash = authWith({}).hashIp(ip);
   const session = { sessionId: id, ipHash, expiresAtUnix: String(Date.now() + 60000) };
   const auth = loadTs('lib/admin-auth.ts', {
-    '@/lib/redis': { redis: { hgetall: async () => session } },
+    '@/lib/persistence': {}, '@/lib/redis': { redis: { hgetall: async () => session } },
     'next/headers': { cookies: async () => ({ get: () => ({ value: id }) }) },
   });
   assert.equal((await auth.getActiveAdminSession(ip)).sessionId, id);
   assert.equal(await auth.getActiveAdminSession('192.0.2.11'), null);
+});
+
+test('legacy password recheck does not mutate credentials during the write pause', async () => {
+  process.env.DATA_WRITE_PAUSED = '1';
+  const original = { passwordHash: createHash('sha256').update('existing-password').digest('hex'), createdAt: 'original' };
+  const redis = memoryRedis(original);
+  assert.equal(await authWith(redis).verifyAdminPassword('existing-password'), true);
+  assert.deepEqual(redis.record(), original);
+  assert.equal(await authWith(redis).verifyAdminPassword('incorrect'), false);
 });

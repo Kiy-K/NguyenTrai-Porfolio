@@ -2,7 +2,7 @@
 
 ## Project Overview
 
-Nguyen Trai Portfolio is a Next.js 16 App Router application for publishing historical content with admin-managed products/articles, AI-assisted writing and search, image/video upload, and Redis-backed storage.
+Nguyen Trai Portfolio is a Next.js 16 App Router application for publishing historical content with admin-managed products/articles, AI-assisted writing and search, image/video upload, and selectable Redis/Neon persistent storage.
 
 ## Product Mission
 
@@ -12,7 +12,7 @@ Core stack:
 
 - Next.js 16 + React 19 + TypeScript
 - Tailwind CSS v4
-- Upstash Redis for content storage (`portfolio_data_v4`)
+- Neon PostgreSQL for content/credential JSONB and feedback after explicit cutover; Redis is the default before cutover.
 - Upstash RediSearch schema/index for feedback reads
 - Cloudinary for image upload and video fallback
 - Mux for direct video uploads and playback
@@ -43,11 +43,11 @@ Optional integrations:
 - Observability: `BRAINTRUST_API_KEY`, `BRAINTRUST_PROJECT_NAME`, `OTEL_PROPAGATE_CONTEXT_URLS`
 - Preview allowlist: `PREVIEW_ALLOWED_DOMAINS` (comma-separated domains allowed by `GET /api/preview`)
 
-If Redis env vars are missing, read APIs can return empty results and write APIs will fail.
+Redis is required for sessions/rate limits. Redis-selected reads may return empty results when unconfigured; PostgreSQL-selected reads fail explicitly on missing/invalid imported content.
 
 ## Architecture and Data Flow
 
-- Canonical content key in Redis: `portfolio_data_v4`
+- Canonical logical content key: `portfolio_data_v4`; selected backend operations live in `lib/persistence.ts`.
 - Stored JSON shape: `{ products: Product[] }`
 - Product type source: `data/products.ts`
 - Cached reads in `lib/data.ts` using `unstable_cache` (30 minutes, `products` tag)
@@ -98,7 +98,7 @@ APIs:
 
 ## Testing and Validation
 
-This repository currently has no automated test suite.
+Focused Node regression tests run with `npm test`; real synthetic Neon checks run with `npm run test:neon` when a usable ignored DATABASE_URL is configured.
 
 For most changes, run:
 
@@ -134,7 +134,7 @@ AI providers:
 - Admin sessions expire after 3 hours.
 - Feedback route hashes `name`, `class`, and `email` via SHA-256; do not introduce raw-PII storage.
 - Feedback text is sanitized with `sanitize-html` before write.
-- Feedback records are written as Redis hashes (`feedback:record:{uuid}`) and queried through RediSearch index `feedback_idx_v1`.
+- Feedback uses Redis hashes/RediSearch before cutover and Neon `portfolio.feedback` after PostgreSQL selection; preserve hashed identity fields.
 - Link preview route only fetches allowlisted domains and blocks internal/private network targets to mitigate SSRF.
 - Sensitive admin mutation/auth routes enforce same-origin `Origin` checks.
 - Redis-backed rate limiting is active on admin auth/mutations and feedback submit/read routes.
@@ -157,3 +157,5 @@ Before finishing a task:
 - `docs/api.md`
 - `docs/operations.md`
 - `CLAUDE.md`
+
+For persistence changes or migration, read `docs/neon-migration.md`. PostgreSQL requires DATABASE_URL and a verified import; never silently fall back between backends. DATA_WRITE_PAUSED=1 blocks persistent mutations and defers legacy credential upgrades. Preserve Redis source data and all media references.

@@ -4,9 +4,9 @@
 
 This project is a Next.js App Router application with a server-backed content store and media integrations:
 
-- Content metadata in Upstash Redis (`portfolio_data_v4`)
-- Feedback records in Redis hash keys (`feedback:record:{uuid}`) indexed by RediSearch schema
-- Admin credentials/sessions in Redis (`admin:*`)
+- Persistent content and credential hash payloads in the selected backend (`lib/persistence.ts`): Redis by default, Neon `portfolio.state` when `PERSISTENCE_BACKEND=postgres`.
+- Feedback records in Redis hashes/RediSearch before cutover, or JSONB in Neon `portfolio.feedback` after cutover.
+- Expiring administrator sessions, IP bindings, rate limits, and dedupe state remain in Redis.
 - Images in Cloudinary
 - Multiple videos per product via Mux (preferred) with Cloudinary URL fallback
 - AI features powered by Gemini and/or Mistral
@@ -17,7 +17,7 @@ The platform goal is to preserve Nguyễn Trãi's historical legacy and raise aw
 
 ## Data Storage
 
-### Redis shape
+### Preserved content shape
 
 ```ts
 { products: Product[] }
@@ -25,11 +25,11 @@ The platform goal is to preserve Nguyễn Trãi's historical legacy and raise aw
 
 `Product` is defined in `data/products.ts` and includes optional media fields (`videos`, `video`, `muxAssetId`, `muxPlaybackId`) plus descriptive fields (`title`, `description`, `fullDescription`, `tags`, `section`, etc.).
 
-Feedback storage uses separate Redis hashes:
+Feedback keeps the same fields/source keys in the selected backend:
 
 - `feedback:record:{uuid}` with fields: `id`, `nameHash`, `classHash`, `emailHash`, `text`, `rating`, `videoId`, `createdAt`, `createdAtUnix`
 - No raw `name`, `class`, or `email` values are persisted
-- Query/read path uses RediSearch index `feedback_idx_v1` (`SEARCH.CREATE` + `SEARCH.QUERY`)
+- Redis reads use `feedback_idx_v1`; PostgreSQL reads use SQL with bounded newest reads and modern-record precedence over legacy duplicate IDs.
 
 ### Read strategy
 
@@ -43,7 +43,7 @@ Feedback storage uses separate Redis hashes:
 
 ### Write strategy
 
-`POST /api/products` and `DELETE /api/products` update Redis and call:
+`POST /api/products` and `DELETE /api/products` update the selected backend and call:
 
 ```ts
 revalidatePath('/', 'layout')
@@ -165,3 +165,7 @@ This can be overridden via `OTEL_PROPAGATE_CONTEXT_URLS`.
 - `/api/search-projects`
 
 Enable it with `BRAINTRUST_API_KEY` (and optional `BRAINTRUST_PROJECT_NAME`).
+
+## Migration controls
+
+`PERSISTENCE_BACKEND=postgres` requires a verified import and DATABASE_URL. Backend failures never silently switch storage. SQL credential provisioning and product append are atomic. `DATA_WRITE_PAUSED=1` rejects persistent mutation routes with 503 and defers legacy credential upgrades. Content reads never initialize storage. See [cutover and recovery](neon-migration.md).

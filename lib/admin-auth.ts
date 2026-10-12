@@ -2,11 +2,11 @@ import { createHash, createHmac, pbkdf2 as pbkdf2Callback, randomBytes, randomUU
 import { cookies } from 'next/headers';
 import { promisify } from 'util';
 import { redis } from '@/lib/redis';
+import { readCredentials, createCredentials, updateCredentials } from '@/lib/persistence';
 
 export const ADMIN_SESSION_COOKIE = 'admin_session';
 export const ADMIN_SESSION_TTL_SECONDS = 60 * 60 * 3;
 
-const ADMIN_CREDENTIALS_KEY = 'admin:credentials:v1';
 const PASSWORD_SCHEME = 'pbkdf2-v1';
 const LEGACY_PASSWORD_SCHEME = 'sha256-v0';
 const pbkdf2 = promisify(pbkdf2Callback);
@@ -82,7 +82,7 @@ export const getClientIpFromHeaders = (headers: Headers): string => {
 export const hashIp = (ip: string): string => hmacSha256(ip, getAdminPepper());
 
 export const getAdminCredentials = async () => {
-  const existing = await redis.hgetall<Record<string, string>>(ADMIN_CREDENTIALS_KEY);
+  const existing = await readCredentials();
   if (!existing?.passwordHash) {
     return null;
   }
@@ -99,18 +99,11 @@ export const bootstrapAdminCredentials = async () => {
   const password = randomBytes(18).toString('base64url');
   const securedCredentials = await hashPasswordWithSalt(password);
 
-  // Check and write in one command; even partial existing records require owner recovery.
-  const created = await redis.eval(`
-    if redis.call('EXISTS', KEYS[1]) == 1 then return 0 end
-    redis.call('HSET', KEYS[1], unpack(ARGV))
-    return 1
-  `, [ADMIN_CREDENTIALS_KEY], [
-    'passwordHash', securedCredentials.passwordHash,
-    'passwordSalt', securedCredentials.passwordSalt,
-    'passwordScheme', securedCredentials.passwordScheme,
-    'createdAt', new Date().toISOString(),
-  ]);
-  if (created !== 1) return { created: false as const, password: null };
+  const created = await createCredentials({
+    ...securedCredentials,
+    createdAt: new Date().toISOString(),
+  });
+  if (!created) return { created: false as const, password: null };
 
   return { created: true as const, password };
 };
@@ -192,9 +185,11 @@ export const verifyAdminPassword = async (password: string): Promise<boolean> =>
     return false;
   }
 
+  if (process.env.DATA_WRITE_PAUSED === '1') return true;
+
   // Silent credential upgrade path from legacy SHA-256 to salted PBKDF2.
   const upgradedCredentials = await hashPasswordWithSalt(normalized);
-  await redis.hset(ADMIN_CREDENTIALS_KEY, {
+  await updateCredentials({
     passwordHash: upgradedCredentials.passwordHash,
     passwordSalt: upgradedCredentials.passwordSalt,
     passwordScheme: upgradedCredentials.passwordScheme,
