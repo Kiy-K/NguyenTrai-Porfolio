@@ -1,3 +1,4 @@
+import { safeAdminRedirect } from '@/lib/admin-redirect';
 import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
 
@@ -16,7 +17,7 @@ export function proxy(request: NextRequest) {
     if (!hasSessionCookie) {
       const loginUrl = new URL('/admin/login', request.url);
       if (pathname !== '/admin/login') {
-        loginUrl.searchParams.set('next', `${pathname}${search}`);
+        loginUrl.searchParams.set('next', safeAdminRedirect(`${pathname}${search}`));
       }
       return NextResponse.redirect(loginUrl);
     }

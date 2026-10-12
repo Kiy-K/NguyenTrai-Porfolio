@@ -166,7 +166,7 @@ In admin, the `<select>` stores section names. Keep this behavior in mind if you
 - `/sections/[id]` section listing
 - `/products/[id]` product detail
 - `/admin` content management UI
-- `/admin/login` admin login + bootstrap password
+- `/admin/login` admin login + owner-token provisioning
 
 ### API
 
@@ -181,7 +181,7 @@ In admin, the `<select>` stores section names. Keep this behavior in mind if you
 - `POST /api/search-projects` Mistral semantic matching over visible products
 - `POST /api/mux/upload-url` create Mux direct upload URL
 - `GET /api/mux/asset/[uploadId]` poll Mux upload/asset status
-- `POST /api/admin/auth/bootstrap` one-time admin password generation
+- `POST /api/admin/auth/bootstrap` owner-controlled atomic admin provisioning
 - `POST /api/admin/auth/login` admin login (3-hour session, IP-bound)
 - `GET /api/admin/auth/status` validate admin session
 - `POST /api/admin/auth/logout` invalidate admin session
@@ -225,3 +225,5 @@ This app requires server runtime APIs (`/api/*`) and should be deployed on a Nex
 - Sensitive admin mutation endpoints enforce same-origin `Origin` checks (basic CSRF mitigation).
 - Redis-backed rate limiting is enabled for admin auth/mutation routes and feedback submission.
 - Standard HTTP security headers are applied globally in `next.config.ts` (`nosniff`, frame deny, referrer policy, permissions policy, HSTS).
+
+Security regression checks and deployment/recovery prerequisites: [M0A baseline](docs/security-m0a.md).

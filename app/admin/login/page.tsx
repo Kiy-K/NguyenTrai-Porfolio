@@ -1,13 +1,15 @@
 'use client';
 
 import { FormEvent, useEffect, useState } from 'react';
+import { safeAdminRedirect } from '@/lib/admin-redirect';
 import { useRouter, useSearchParams } from 'next/navigation';
 
 export default function AdminLoginPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const nextPath = searchParams.get('next') || '/admin';
+  const nextPath = safeAdminRedirect(searchParams.get('next'));
   const [password, setPassword] = useState('');
+  const [bootstrapToken, setBootstrapToken] = useState('');
   const [generatedPassword, setGeneratedPassword] = useState('');
   const [status, setStatus] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -29,11 +31,12 @@ export default function AdminLoginPage() {
 
   const bootstrapPassword = async () => {
     setIsLoading(true);
-    setStatus('Đang tạo/lấy mật khẩu admin...');
+    setStatus('Đang khởi tạo mật khẩu admin...');
 
     try {
       const res = await fetch('/api/admin/auth/bootstrap', {
         method: 'POST',
+        headers: { 'x-admin-bootstrap-token': bootstrapToken },
       });
       const data = await res.json().catch(() => ({} as { error?: string; password?: string }));
 
@@ -42,6 +45,7 @@ export default function AdminLoginPage() {
       }
 
       setGeneratedPassword(data.password || '');
+      setBootstrapToken('');
       setStatus('Mật khẩu admin đã sẵn sàng. Hãy sao chép và đăng nhập.');
     } catch (error: unknown) {
       const message = error instanceof Error ? error.message : 'Không thể tạo mật khẩu admin.';
@@ -116,13 +120,24 @@ export default function AdminLoginPage() {
           </button>
         </form>
 
+        <label htmlFor="bootstrap-token" className="block mt-6 text-sm font-semibold">
+          Mã khởi tạo của chủ sở hữu (chỉ dùng lần đầu)
+        </label>
+        <input
+          id="bootstrap-token"
+          type="password"
+          autoComplete="off"
+          value={bootstrapToken}
+          onChange={(e) => setBootstrapToken(e.target.value)}
+          className="w-full mt-2 px-4 py-3 border border-[#D4C4A8] rounded-lg"
+        />
         <button
           type="button"
           onClick={bootstrapPassword}
-          disabled={isLoading}
+          disabled={isLoading || !bootstrapToken}
           className="w-full mt-3 px-5 py-3 rounded-lg border border-[#8B3A3A] text-[#8B3A3A] font-semibold disabled:opacity-60"
         >
-          Tạo/Lấy mật khẩu ngẫu nhiên
+          Khởi tạo mật khẩu admin
         </button>
 
         <p className="mt-3 text-xs text-[#8B3A3A]">
