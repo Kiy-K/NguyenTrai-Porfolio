@@ -88,3 +88,53 @@ test('destination pins the endpoint and database and rejects schema ownership co
   const ownedByOther = () => Promise.resolve(++calls === 1 ? [{ database: 'neondb', role: 'owner' }] : [{ owner: 'other-owner' }]);
   await assert.rejects(tools.verifyDestination(ownedByOther, url, 'ep-production.neon.tech/neondb'), /ownership/i);
 });
+
+// Definitions as reported by PostgreSQL 18 for scripts/neon-schema.sql.
+const schemaIndexes = [
+  { table: 'state', name: 'state_pkey', def: 'CREATE UNIQUE INDEX state_pkey ON portfolio.state USING btree (key)' },
+  { table: 'feedback', name: 'feedback_pkey', def: 'CREATE UNIQUE INDEX feedback_pkey ON portfolio.feedback USING btree (source_key)' },
+  { table: 'feedback', name: 'feedback_newest', def: 'CREATE INDEX feedback_newest ON portfolio.feedback USING btree (created_at_unix DESC)' },
+];
+const schemaConstraints = [
+  { table: 'state', name: 'state_pkey', def: 'PRIMARY KEY (key)' },
+  { table: 'state', name: 'state_key_check', def: "CHECK ((key = ANY (ARRAY['portfolio_data_v4'::text, 'admin:credentials:v1'::text])))" },
+  { table: 'state', name: 'state_payload_check', def: "CHECK ((jsonb_typeof(payload) = 'object'::text))" },
+  { table: 'feedback', name: 'feedback_pkey', def: 'PRIMARY KEY (source_key)' },
+  { table: 'feedback', name: 'feedback_payload_check', def: "CHECK ((jsonb_typeof(payload) = 'object'::text))" },
+  { table: 'feedback', name: 'feedback_created_at_unix_check', def: 'CHECK ((created_at_unix >= 0))' },
+];
+
+function existingSchema({ indexes = schemaIndexes, constraints = schemaConstraints } = {}) {
+  return async (parts) => {
+    const text = parts.join('?');
+    if (text.includes('current_database()')) return [{ database: 'neondb', role: 'owner' }];
+    if (text.includes('FROM pg_namespace')) return [{ owner: 'owner' }];
+    if (text.includes('c.relkind')) return ['state', 'feedback'].map(name => ({ name, kind: 'r', owner: 'owner' }))
+      .concat(['state_pkey', 'feedback_pkey', 'feedback_newest'].map(name => ({ name, kind: 'i', owner: 'owner' })));
+    if (text.includes('information_schema.columns')) return [
+      ['feedback', 'source_key', 'text'], ['feedback', 'payload', 'jsonb'], ['feedback', 'created_at_unix', 'int8'],
+      ['state', 'key', 'text'], ['state', 'payload', 'jsonb'],
+    ].map(([table_name, column_name, udt_name]) => ({ table_name, column_name, udt_name, is_nullable: 'NO' }));
+    if (text.includes("'PRIMARY KEY'")) return [{ table_name: 'feedback', column_name: 'source_key' }, { table_name: 'state', column_name: 'key' }];
+    if (text.includes('pg_proc')) return [{ count: '0' }];
+    if (text.includes('pg_indexes')) return indexes;
+    if (text.includes('pg_constraint')) return constraints;
+    throw new Error(`Unexpected query: ${text}`);
+  };
+}
+
+test('destination verification compares index and constraint definitions, not just names', async () => {
+  const url = 'postgresql://owner:password@ep-production.neon.tech/neondb';
+  const pin = 'ep-production.neon.tech/neondb';
+  assert.equal((await tools.verifyDestination(existingSchema(), url, pin)).schemaExists, true);
+  const withIndex = def => schemaIndexes.map(index => index.name === 'feedback_newest' ? { ...index, def } : index);
+  for (const altered of [
+    { indexes: withIndex('CREATE UNIQUE INDEX feedback_newest ON portfolio.feedback USING btree (created_at_unix DESC)') },
+    { indexes: withIndex('CREATE INDEX feedback_newest ON portfolio.feedback USING btree (created_at_unix DESC) WHERE (created_at_unix > 0)') },
+    { indexes: withIndex('CREATE INDEX feedback_newest ON portfolio.feedback USING btree (source_key)') },
+    { constraints: schemaConstraints.concat({ table: 'feedback', name: 'feedback_reject', def: 'CHECK (false)' }) },
+    { constraints: schemaConstraints.filter(constraint => constraint.name !== 'state_key_check') },
+  ]) {
+    await assert.rejects(tools.verifyDestination(existingSchema(altered), url, pin), /definition/i);
+  }
+});
