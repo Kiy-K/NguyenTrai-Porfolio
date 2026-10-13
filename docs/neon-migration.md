@@ -28,6 +28,10 @@ URL. The build logs an endpoint/database fingerprint without credentials; pooled
 and direct transport URLs normalize to the same endpoint identity. Compare the
 production deployment fingerprint to `node scripts/migrate-neon.cjs identity`
 before import. Pin the exact expected host/database in the import command.
+Vercel production builds with PERSISTENCE_BACKEND=postgres fail unless
+APP_DATABASE_URL is set to a non-owner role; the failed build leaves the
+current deployment serving. To run as the owner again, instantly roll back to
+an earlier deployment rather than removing APP_DATABASE_URL.
 Existing dedicated schema objects must have the current database role as owner,
 the expected table/primary-key structure, and no unknown objects/functions/triggers.
 

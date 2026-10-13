@@ -206,6 +206,18 @@ async function verifyDestination(sql, databaseUrl, expectedDestination) {
   return { fingerprint: destinationFingerprint(databaseUrl), schemaExists: true };
 }
 
+// Same URL choice as lib/persistence.ts; the role name is logged so each build shows its privilege level.
+function runtimeIdentity(env) {
+  const persistenceBackend = env.PERSISTENCE_BACKEND || 'redis';
+  // Fail the build, not requests: a rejected build leaves the current deployment serving.
+  if (env.VERCEL_ENV === 'production' && persistenceBackend === 'postgres') {
+    if (!env.APP_DATABASE_URL) fail('Production PostgreSQL builds require APP_DATABASE_URL (least-privilege role); refusing the owner DATABASE_URL');
+    if (env.DATABASE_URL && new URL(env.APP_DATABASE_URL).username === new URL(env.DATABASE_URL).username) fail('APP_DATABASE_URL must not use the owner role');
+  }
+  const runtimeUrl = env.APP_DATABASE_URL || env.DATABASE_URL;
+  return { persistenceBackend, neonTargetFingerprint: runtimeUrl ? destinationFingerprint(runtimeUrl) : 'unconfigured', databaseRole: runtimeUrl ? decodeURIComponent(new URL(runtimeUrl).username) : 'unconfigured' };
+}
+
 async function main() {
   const [command, inputFile, expectedDestination] = process.argv.slice(2);
   if (!['identity', 'inventory', 'export', 'import', 'verify'].includes(command)) fail('Usage: identity | inventory | export <outside-Git-file> | import/verify <outside-Git-file> <expected-host/database>');
@@ -215,9 +227,7 @@ async function main() {
   const developmentFile = path.join(process.cwd(), '.env.development.local');
   if (fs.existsSync(developmentFile)) env.processEnv([{ path: developmentFile, contents: fs.readFileSync(developmentFile, 'utf8'), env: {} }], process.cwd(), log, true);
   if (command === 'identity') {
-    // Same URL choice as lib/persistence.ts; the role name is logged so each build shows its privilege level.
-    const runtimeUrl = process.env.APP_DATABASE_URL || process.env.DATABASE_URL;
-    console.log(JSON.stringify({ persistenceBackend: process.env.PERSISTENCE_BACKEND || 'redis', neonTargetFingerprint: runtimeUrl ? destinationFingerprint(runtimeUrl) : 'unconfigured', databaseRole: runtimeUrl ? decodeURIComponent(new URL(runtimeUrl).username) : 'unconfigured' }));
+    console.log(JSON.stringify(runtimeIdentity(process.env)));
     return;
   }
   const file = inputFile ? protectedBackupPath(inputFile) : null;
@@ -261,7 +271,7 @@ async function main() {
   console.log(JSON.stringify(await verifySnapshot(sql, snapshot)));
 }
 
-module.exports = { protectedBackupPath, destinationFingerprint, verifyDestination, verifyWritePause, canonical, digest, payloadDigest, validateSnapshot, collectSnapshot, importSnapshot, verifySnapshot };
+module.exports = { protectedBackupPath, destinationFingerprint, runtimeIdentity, verifyDestination, verifyWritePause, canonical, digest, payloadDigest, validateSnapshot, collectSnapshot, importSnapshot, verifySnapshot };
 if (require.main === module) main().catch(error => {
   console.error(error instanceof MigrationError ? error.message : `Migration failed (${error.name || 'UnknownError'}); details suppressed to protect data and secrets.`);
   process.exitCode = 1;
