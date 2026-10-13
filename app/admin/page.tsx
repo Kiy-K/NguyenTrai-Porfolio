@@ -538,8 +538,10 @@ export default function AdminPage() {
       const link = document.createElement('a');
       link.href = backupUrl;
       link.download = `products-backup-${new Date().toISOString().replace(/[:.]/g, '-')}.json`;
+      document.body.appendChild(link);
       link.click();
-      URL.revokeObjectURL(backupUrl);
+      link.remove();
+      setTimeout(() => URL.revokeObjectURL(backupUrl), 0);
 
       setStatus({ type: 'success', message: 'Đã xóa toàn bộ dữ liệu thành công! Bản sao lưu đã được tải xuống.' });
 
