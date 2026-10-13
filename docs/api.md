@@ -355,13 +355,13 @@ Fetches link metadata for rich link previews.
 - Requests to localhost/internal/private IP ranges are blocked (IPv4 + IPv6).
 - Redirects are followed manually with repeated allowlist/IP checks for every hop.
 - Non-standard ports are rejected.
-- Per-IP rate limit is enforced.
+- Per-IP rate limit is enforced. If the Redis-backed limiter is unavailable, the route returns `503` with `Retry-After: 30` and makes no outbound request.
 
 ### Performance behavior
 
 - Outbound fetch uses Next.js revalidation cache (`next: { revalidate: 3600 }`).
 - Successful (`200`) responses use `Cache-Control: public, s-maxage=3600, stale-while-revalidate=86400`.
-- Error responses (`400`, `429`, `502`, `504`) use `Cache-Control: no-store` so shared caches never replay a per-client or transient failure.
+- Error responses (`400`, `429`, `502`, `503`, `504`) use `Cache-Control: no-store` so shared caches never replay a per-client or transient failure.
 - HTML parsing is bounded to ~50KB and timeout-protected.
 
 ### Success

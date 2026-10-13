@@ -77,7 +77,7 @@ This operation requires a valid admin session and the exact confirmation phrase 
 - External fetch targets are restricted to a domain allowlist (`PREVIEW_ALLOWED_DOMAINS` env var).
 - Private/internal IP ranges and localhost-style targets are blocked.
 - Redirect chains are validated hop-by-hop before each outbound request.
-- Endpoint uses timeout + bounded read size and per-IP rate limiting.
+- Endpoint uses timeout + bounded read size and per-IP rate limiting; it fails closed (`503`) when Redis is unreachable.
 
 ## Build and Production
 
