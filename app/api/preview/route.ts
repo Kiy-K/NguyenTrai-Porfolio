@@ -365,7 +365,8 @@ const toAbsoluteUrl = (candidateUrl: string | undefined, baseUrl: URL): string |
 const withCacheHeader = (status = 200, extraHeaders: Record<string, string> = {}) => ({
   status,
   headers: {
-    'Cache-Control': CACHE_CONTROL_HEADER,
+    // Errors (rate limits, timeouts) are per-client or transient; a shared cache would replay them to everyone.
+    'Cache-Control': status === 200 ? CACHE_CONTROL_HEADER : 'no-store',
     ...extraHeaders,
   },
 });
