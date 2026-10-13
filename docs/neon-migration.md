@@ -94,13 +94,20 @@ row removal, truncation or schema changes). Migration tooling keeps using the
 owner DATABASE_URL. The build log prints `databaseRole` and the target
 fingerprint, never the password. Instantly rolling back to an earlier
 deployment built without it (for example `dpl_7HagW3y4…`) returns to the owner
-role. To rotate the password, run `ALTER ROLE
-portfolio_app PASSWORD ...` as the owner, update APP_DATABASE_URL, and redeploy.
+role.
+
+To rotate the credential without breaking running deployments, stage it:
+create a replacement login role (for example `portfolio_app_v2`) with the same
+grants from `scripts/neon-app-role.sql`, point APP_DATABASE_URL at it, redeploy
+and verify. Only then disable the old role (`ALTER ROLE portfolio_app NOLOGIN`).
+Changing the live role's password in place breaks every running deployment
+until the replacement is promoted. Deployments built with the old role can no
+longer serve after it is disabled, so pick a new instant-rollback target.
 
 ## Point-in-time restore
 
 The Neon store (`school-nguyentrai`, Vercel marketplace) is on the Free plan.
-Neon documents its restore window as at most 6 hours, capped at 1 GB-month of
+Neon documents its restore window as at most 6 hours, capped at 1 GB of
 changes (paid plans: up to 7 or 30 days). The project's exact
 `history_retention_seconds` needs a Neon API key or the Neon console (project
 settings, instant restore); it was not read. Treat PITR as an undo for the last
