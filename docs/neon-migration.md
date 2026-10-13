@@ -92,8 +92,9 @@ At runtime the app prefers APP_DATABASE_URL, a connection URL for the
 `portfolio_app` role with only the grants in `scripts/neon-app-role.sql` (no
 row removal, truncation or schema changes). Migration tooling keeps using the
 owner DATABASE_URL. The build log prints `databaseRole` and the target
-fingerprint, never the password. Removing APP_DATABASE_URL and redeploying
-returns to the owner role. To rotate the password, run `ALTER ROLE
+fingerprint, never the password. Instantly rolling back to an earlier
+deployment built without it (for example `dpl_7HagW3y4…`) returns to the owner
+role. To rotate the password, run `ALTER ROLE
 portfolio_app PASSWORD ...` as the owner, update APP_DATABASE_URL, and redeploy.
 
 ## Point-in-time restore
