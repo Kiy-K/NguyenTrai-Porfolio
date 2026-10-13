@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { getProducts } from '@/lib/data';
-import { appendProduct, writeContent } from '@/lib/persistence';
+import { appendProduct, readContent, writeContent } from '@/lib/persistence';
+import { CLEAR_ALL_CONFIRMATION } from '@/lib/constants';
 import { revalidatePath } from 'next/cache';
 import { getActiveAdminSession, getClientIpFromHeaders } from '@/lib/admin-auth';
 import { enforceSameOrigin, enforceDataWriteAvailability } from '@/lib/request-security';
@@ -47,13 +48,28 @@ export async function DELETE(request: Request) {
       );
     }
 
+    const body = await request.json().catch(() => null);
+    if (body?.confirm !== CLEAR_ALL_CONFIRMATION) {
+      return NextResponse.json(
+        { error: `Cần nhập "${CLEAR_ALL_CONFIRMATION}" để xác nhận xóa toàn bộ dữ liệu.` },
+        { status: 400 }
+      );
+    }
+
+    // Read uncached so the recovery copy matches what is actually cleared.
+    // shortcut: a product added between this read and the write is cleared without being returned; fine for a single admin, use an atomic UPDATE … RETURNING if that changes.
+    const removed = (await readContent())?.products ?? [];
+
     // Reset the portfolio_data_v4 key to an empty array
     await writeContent({ products: [] });
-    
+
     // Revalidate paths to ensure fresh data
     revalidatePath('/', 'layout');
-    
-    return NextResponse.json({ success: true, message: 'Đã xóa toàn bộ dữ liệu' }, { status: 200 });
+
+    return NextResponse.json(
+      { success: true, message: 'Đã xóa toàn bộ dữ liệu', deleted: removed },
+      { status: 200, headers: { 'Cache-Control': 'no-store' } }
+    );
   } catch (error) {
     console.error('Error clearing database:', error instanceof Error ? error.name : 'UnknownError');
     return NextResponse.json({ error: 'Không thể xóa dữ liệu' }, { status: 500 });

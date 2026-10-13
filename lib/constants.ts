@@ -9,3 +9,6 @@ export const SECTIONS = [
   { id: 'ban-do-so', name: 'Bản đồ số', path: '/sections/ban-do-so' },
   { id: 'hinh-anh', name: 'Một số hình ảnh thực hiện dự án', path: '/sections/hinh-anh' },
 ];
+
+// Phrase the admin must type before DELETE /api/products clears all content.
+export const CLEAR_ALL_CONFIRMATION = 'XÓA TOÀN BỘ';

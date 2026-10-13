@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react';
 import Navigation from '@/components/Navigation';
-import { SECTIONS } from '@/lib/constants';
+import { CLEAR_ALL_CONFIRMATION, SECTIONS } from '@/lib/constants';
 import Footer from '@/components/Footer';
 import { useRouter } from 'next/navigation';
 import { UploadCloud, X, LogOut, ShieldCheck } from 'lucide-react';
@@ -86,6 +86,7 @@ export default function AdminPage() {
   const [dragOverImageIndex, setDragOverImageIndex] = useState<number | null>(null);
   const [status, setStatus] = useState<{ type: 'success' | 'error' | 'loading' | null, message: string }>({ type: null, message: '' });
   const [showClearConfirm, setShowClearConfirm] = useState(false);
+  const [clearConfirmText, setClearConfirmText] = useState('');
   const [imageToRemove, setImageToRemove] = useState<number | null>(null);
   const [isUploading, setIsUploading] = useState(false);
   const [isImageUploading, setIsImageUploading] = useState(false);
@@ -509,6 +510,7 @@ export default function AdminPage() {
   };
 
   const handleClearDatabase = () => {
+    setClearConfirmText('');
     setShowClearConfirm(true);
   };
 
@@ -519,6 +521,8 @@ export default function AdminPage() {
     try {
       const res = await fetch('/api/products', {
         method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ confirm: clearConfirmText }),
       });
 
       const data = await res.json();
@@ -527,7 +531,20 @@ export default function AdminPage() {
         throw new Error(data.error || 'Có lỗi xảy ra khi xóa dữ liệu');
       }
 
-      setStatus({ type: 'success', message: 'Đã xóa toàn bộ dữ liệu thành công!' });
+      // Hand the admin a recovery copy of everything that was removed.
+      const backupUrl = URL.createObjectURL(
+        new Blob([JSON.stringify({ products: data.deleted ?? [] }, null, 2)], { type: 'application/json' })
+      );
+      const link = document.createElement('a');
+      link.href = backupUrl;
+      link.download = `products-backup-${new Date().toISOString().replace(/[:.]/g, '-')}.json`;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      // Revoking too early can cancel the download in Firefox/Safari.
+      setTimeout(() => URL.revokeObjectURL(backupUrl), 60_000);
+
+      setStatus({ type: 'success', message: 'Đã xóa toàn bộ dữ liệu thành công! Bản sao lưu đã được tải xuống.' });
 
       setTimeout(() => {
         router.push('/');
@@ -1118,6 +1135,17 @@ export default function AdminPage() {
             <p className="text-[#2C1E16] mb-6 text-center text-lg">
               Bạn có chắc chắn muốn xóa <strong>TOÀN BỘ</strong> dữ liệu? Hành động này không thể hoàn tác!
             </p>
+            <label htmlFor="clear-confirm" className="block text-[#2C1E16] mb-2 text-center">
+              Nhập <strong>{CLEAR_ALL_CONFIRMATION}</strong> để xác nhận:
+            </label>
+            <input
+              id="clear-confirm"
+              type="text"
+              value={clearConfirmText}
+              onChange={(e) => setClearConfirmText(e.target.value)}
+              autoComplete="off"
+              className="w-full mb-6 px-4 py-2 border-2 border-[#D4C4A8] rounded-lg focus:outline-none focus:border-[#8B3A3A]"
+            />
             <div className="flex justify-center gap-4">
               <button
                 type="button"
@@ -1129,7 +1157,8 @@ export default function AdminPage() {
               <button
                 type="button"
                 onClick={confirmClearDatabase}
-                className="px-6 py-3 bg-red-600 text-white font-bold rounded-lg hover:bg-red-700 transition-colors font-playfair shadow-md"
+                disabled={clearConfirmText !== CLEAR_ALL_CONFIRMATION}
+                className="px-6 py-3 bg-red-600 text-white font-bold rounded-lg hover:bg-red-700 transition-colors font-playfair shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 Xóa Dữ Liệu
               </button>
