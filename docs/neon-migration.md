@@ -85,6 +85,27 @@ them: admin login then fails with `500 UpstashError` before the password is
 checked (a wrong password returns 500 instead of 401). Keep the Upstash
 database reachable from Vercel; sessions and rate limits always need Redis.
 
+## Runtime database role
+
+The Vercel–Neon integration manages DATABASE_URL (owner role); do not edit it.
+At runtime the app prefers APP_DATABASE_URL, a connection URL for the
+`portfolio_app` role with only the grants in `scripts/neon-app-role.sql` (no
+row removal, truncation or schema changes). Migration tooling keeps using the
+owner DATABASE_URL. The build log prints `databaseRole` and the target
+fingerprint, never the password. Removing APP_DATABASE_URL and redeploying
+returns to the owner role. To rotate the password, run `ALTER ROLE
+portfolio_app PASSWORD ...` as the owner, update APP_DATABASE_URL, and redeploy.
+
+## Point-in-time restore
+
+The Neon store (`school-nguyentrai`, Vercel marketplace) is on the Free plan.
+Neon documents its restore window as at most 6 hours, capped at 1 GB-month of
+changes (paid plans: up to 7 or 30 days). The project's exact
+`history_retention_seconds` needs a Neon API key or the Neon console (project
+settings, instant restore); it was not read. Treat PITR as an undo for the last
+few hours only, not as a backup: the protected export and the untouched Redis
+source are the durable recovery points.
+
 ## Recovery
 
 Keep peppers, Redis connection settings, and source data unchanged. Before new
@@ -94,6 +115,35 @@ switching back, or those new records would be lost. Retain the protected export,
 counts/digests, import verification, target fingerprint, and release IDs.
 Credential loss or a conflicting/partial destination requires owner recovery;
 never delete credential records, reset products, or expose hashes to solve it.
+
+### Rollback reconciliation (Neon → Redis)
+
+No reconcile tool exists yet; build and test it before it is needed. The
+existing tooling only reads Redis and writes Neon. Requirements:
+
+1. Set DATA_WRITE_PAUSED=1 and verify the live pause marker, as for the
+   original export. Neon is the source of truth until the switch.
+2. Write a protected export of the Neon state (content, credential record,
+   all feedback) outside Git (0700/0600), with counts and a canonical digest.
+   Two reads must match.
+3. Compare with Redis and copy only what differs. Never delete Redis keys or
+   overwrite anything that is not a Neon record:
+   - `admin:credentials:v1`: write the Neon hash fields. The Redis hash is
+     stale since the 2026-10-13 password reset; the old hash stays in the
+     2026-10-12 protected backup.
+   - `feedback:record:<id>`: add each Neon feedback row missing from Redis,
+     with the payload as hash string fields. Existing Redis feedback is kept.
+   - `portfolio_data_v4`: write the Neon content only if it differs
+     canonically (jsonb reorders keys; compare canonical digests).
+   - Leave `feedback_idx_v1`, sessions, rate limits and dedupe keys alone.
+4. Re-read Redis and confirm canonical equality with the Neon export: counts,
+   credential hash, every feedback payload, content digest, media references.
+5. Set PERSISTENCE_BACKEND=redis, deploy while paused, verify, then unpause.
+   Owner login checks the copied credential.
+
+Records that exist only in Neon as of 2026-10-13: the reset credential hash and
+two synthetic feedback records (`16c6a75b-…`, `a556b80b-…`). Content is still
+equal to the 2026-10-12 backup.
 
 Full dependency audit still reports six high/two moderate findings in development
 tooling; production dependency audit passes. CI reports the full audit and blocks
