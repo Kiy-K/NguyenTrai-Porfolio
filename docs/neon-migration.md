@@ -72,15 +72,18 @@ Legacy password checks from feedback read defer upgrades during the pause.
    checked immediately after unpausing. A clearly identified synthetic feedback
    record may verify the write/read path; record its UUID in the receipt.
 
-## Runtime database role
+## Production status
 
-The Vercel–Neon integration manages DATABASE_URL (owner role); do not edit it.
-At runtime the app prefers APP_DATABASE_URL, a connection URL for the
-`portfolio_app` role with only the grants in `scripts/neon-app-role.sql` (no
-row removal, truncation or schema changes). Migration tooling keeps using the
-owner DATABASE_URL. The build log prints `databaseRole` and the target
-fingerprint, never the password. Removing APP_DATABASE_URL and redeploying
-returns to the owner role.
+Production has served from Neon (`PERSISTENCE_BACKEND=postgres`, writes
+unpaused) since 2026-10-13; receipts are in the
+[execution ledger](superpowers/plans/2026-10-12-neon-persistence-ledger.md).
+New Neon writes have happened (credential reset, feedback), so rollback to Redis
+now requires the reconcile step below.
+
+Vercel functions have no static egress IPs, so an Upstash IP allowlist blocks
+them: admin login then fails with `500 UpstashError` before the password is
+checked (a wrong password returns 500 instead of 401). Keep the Upstash
+database reachable from Vercel; sessions and rate limits always need Redis.
 
 ## Recovery
 
