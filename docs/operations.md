@@ -38,10 +38,13 @@ Use admin button in `/admin` (`Xóa toàn bộ dữ liệu`) or call:
 
 ```http
 DELETE /api/products
+Content-Type: application/json
+
+{ "confirm": "XÓA TOÀN BỘ" }
 ```
 
 This resets the product list in the selected persistence backend; it does not clear feedback, credentials, or Redis temporary state.
-This operation now requires a valid admin session.
+This operation requires a valid admin session and the exact confirmation phrase (otherwise `400`). The response's `deleted` array holds everything that was cleared; keep it — the admin button saves it automatically as a JSON file. Server-side recovery otherwise relies on Neon point-in-time restore.
 
 ### Multi-video content writes
 

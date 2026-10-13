@@ -80,12 +80,21 @@ Resets `portfolio_data_v4` to `{ products: [] }`.
 
 - Requires active admin session cookie (`admin_session`)
 
+### Request body
+
+```json
+{ "confirm": "XÓA TOÀN BỘ" }
+```
+
+The phrase is `CLEAR_ALL_CONFIRMATION` in `lib/constants.ts`.
+
 ### Success
 
-- `200` with `{ success: true, message: ... }`
+- `200` with `{ success: true, message: ..., deleted: Product[] }` and `Cache-Control: no-store`; `deleted` is the content that was cleared (read uncached), for recovery. The admin UI downloads it as `products-backup-<timestamp>.json`.
 
 ### Errors
 
+- `400` if the confirmation phrase is missing or wrong (no storage read or write happens)
 - `401` if admin session is missing/invalid
 - `403` if request `Origin` is missing/mismatched
 - `429` if rate limit exceeded

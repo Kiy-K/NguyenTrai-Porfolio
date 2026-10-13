@@ -541,7 +541,8 @@ export default function AdminPage() {
       document.body.appendChild(link);
       link.click();
       link.remove();
-      setTimeout(() => URL.revokeObjectURL(backupUrl), 0);
+      // Revoking too early can cancel the download in Firefox/Safari.
+      setTimeout(() => URL.revokeObjectURL(backupUrl), 60_000);
 
       setStatus({ type: 'success', message: 'Đã xóa toàn bộ dữ liệu thành công! Bản sao lưu đã được tải xuống.' });
 
