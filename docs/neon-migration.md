@@ -72,6 +72,19 @@ Legacy password checks from feedback read defer upgrades during the pause.
    checked immediately after unpausing. A clearly identified synthetic feedback
    record may verify the write/read path; record its UUID in the receipt.
 
+## Production status
+
+Production has served from Neon (`PERSISTENCE_BACKEND=postgres`, writes
+unpaused) since 2026-10-13; receipts are in the
+[execution ledger](superpowers/plans/2026-10-12-neon-persistence-ledger.md).
+New Neon writes have happened (credential reset, feedback), so rollback to Redis
+now requires the reconcile step below.
+
+Vercel functions have no static egress IPs, so an Upstash IP allowlist blocks
+them: admin login then fails with `500 UpstashError` before the password is
+checked (a wrong password returns 500 instead of 401). Keep the Upstash
+database reachable from Vercel; sessions and rate limits always need Redis.
+
 ## Recovery
 
 Keep peppers, Redis connection settings, and source data unchanged. Before new
