@@ -434,7 +434,11 @@ export async function GET(request: Request) {
       );
     }
   } catch {
-    // Keep preview endpoint available even if Redis is unavailable.
+    // Fail closed: without the limiter this route is an unthrottled outbound fetcher.
+    return NextResponse.json(
+      { error: 'Preview is temporarily unavailable. Please retry later.' },
+      withCacheHeader(503, { 'Retry-After': '30' })
+    );
   }
 
   const targetUrl = normalizeUrl(parsedQuery.data.url);
