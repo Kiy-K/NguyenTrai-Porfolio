@@ -89,6 +89,25 @@ test('destination pins the endpoint and database and rejects schema ownership co
   await assert.rejects(tools.verifyDestination(ownedByOther, url, 'ep-production.neon.tech/neondb'), /ownership/i);
 });
 
+test('production PostgreSQL builds fail closed without a separate least-privilege APP_DATABASE_URL', () => {
+  const owner = 'postgresql://neondb_owner:o@ep-production-pooler.neon.tech/neondb';
+  const app = 'postgresql://portfolio_app:a@ep-production-pooler.neon.tech/neondb';
+  const production = { VERCEL_ENV: 'production', PERSISTENCE_BACKEND: 'postgres', DATABASE_URL: owner };
+  assert.throws(() => tools.runtimeIdentity(production), /APP_DATABASE_URL/);
+  assert.throws(() => tools.runtimeIdentity({ ...production, APP_DATABASE_URL: owner }), /owner role/);
+  assert.throws(() => tools.runtimeIdentity({ ...production, DATABASE_URL: undefined, APP_DATABASE_URL: app }), /owner DATABASE_URL/);
+  for (const elsewhere of [app.replace('ep-production', 'ep-other'), app.replace('/neondb', '/otherdb')]) {
+    assert.throws(() => tools.runtimeIdentity({ ...production, APP_DATABASE_URL: elsewhere }), /same database/);
+  }
+  const identity = tools.runtimeIdentity({ ...production, APP_DATABASE_URL: app });
+  assert.equal(identity.databaseRole, 'portfolio_app');
+  assert.equal(identity.neonTargetFingerprint, tools.destinationFingerprint(owner));
+  // Previews, Redis production and local builds keep working without the role.
+  assert.equal(tools.runtimeIdentity({ ...production, VERCEL_ENV: 'preview' }).databaseRole, 'neondb_owner');
+  assert.equal(tools.runtimeIdentity({ ...production, PERSISTENCE_BACKEND: 'redis' }).persistenceBackend, 'redis');
+  assert.equal(tools.runtimeIdentity({}).neonTargetFingerprint, 'unconfigured');
+});
+
 // Definitions as reported by PostgreSQL 18 for scripts/neon-schema.sql.
 const schemaIndexes = [
   { table: 'state', name: 'state_pkey', def: 'CREATE UNIQUE INDEX state_pkey ON portfolio.state USING btree (key)' },
