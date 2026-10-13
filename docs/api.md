@@ -473,4 +473,4 @@ Reads hashed feedback records for admin tooling.
 
 ## Persistent write maintenance
 
-With `DATA_WRITE_PAUSED=1`, product mutations, feedback submit, login, and credential bootstrap return 503 with Retry-After and X-Data-Write-Paused headers. Legacy password rechecks still verify correctly but defer hash upgrades until the pause ends. PostgreSQL requires configured DATABASE_URL and previously imported content. Redis session/auth/rate-limit dependencies remain required.
+With `DATA_WRITE_PAUSED=1`, product mutations, feedback submit, login, and credential bootstrap return 503 with Retry-After and X-Data-Write-Paused headers. Legacy password rechecks still verify correctly but defer hash upgrades until the pause ends. PostgreSQL requires configured APP_DATABASE_URL or DATABASE_URL and previously imported content. Redis session/auth/rate-limit dependencies remain required.

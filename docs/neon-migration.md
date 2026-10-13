@@ -72,6 +72,16 @@ Legacy password checks from feedback read defer upgrades during the pause.
    checked immediately after unpausing. A clearly identified synthetic feedback
    record may verify the write/read path; record its UUID in the receipt.
 
+## Runtime database role
+
+The Vercel–Neon integration manages DATABASE_URL (owner role); do not edit it.
+At runtime the app prefers APP_DATABASE_URL, a connection URL for the
+`portfolio_app` role with only the grants in `scripts/neon-app-role.sql` (no
+row removal, truncation or schema changes). Migration tooling keeps using the
+owner DATABASE_URL. The build log prints `databaseRole` and the target
+fingerprint, never the password. Removing APP_DATABASE_URL and redeploying
+returns to the owner role.
+
 ## Recovery
 
 Keep peppers, Redis connection settings, and source data unchanged. Before new

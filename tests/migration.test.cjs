@@ -41,8 +41,19 @@ test('unknown backend and missing PostgreSQL configuration fail closed', async (
   process.env.PERSISTENCE_BACKEND = 'typo';
   assert.throws(() => store.usesPostgres(), /backend/i);
   process.env.PERSISTENCE_BACKEND = 'postgres';
-  delete process.env.DATABASE_URL;
+  delete process.env.DATABASE_URL; delete process.env.APP_DATABASE_URL;
   await assert.rejects(store.readContent(), /DATABASE_URL/);
+});
+
+test('runtime connection prefers the least-privilege APP_DATABASE_URL over the owner DATABASE_URL', async () => {
+  process.env.PERSISTENCE_BACKEND = 'postgres';
+  process.env.DATABASE_URL = 'postgresql://owner:o@localhost/test';
+  const urls = [];
+  const connect = () => loadTs('lib/persistence.ts', { '@/lib/redis': { redis: {} }, '@neondatabase/serverless': { neon: url => { urls.push(url); return async () => [{ payload: { products: [] } }]; } } });
+  await connect().readContent();
+  process.env.APP_DATABASE_URL = 'postgresql://portfolio_app:a@localhost/test';
+  await connect().readContent();
+  assert.deepEqual(urls, ['postgresql://owner:o@localhost/test', 'postgresql://portfolio_app:a@localhost/test']);
 });
 
 test('PostgreSQL reads require imported content and never fall back to Redis', async () => {
