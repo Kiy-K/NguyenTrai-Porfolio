@@ -180,7 +180,9 @@ async function main() {
   const developmentFile = path.join(process.cwd(), '.env.development.local');
   if (fs.existsSync(developmentFile)) env.processEnv([{ path: developmentFile, contents: fs.readFileSync(developmentFile, 'utf8'), env: {} }], process.cwd(), log, true);
   if (command === 'identity') {
-    console.log(JSON.stringify({ persistenceBackend: process.env.PERSISTENCE_BACKEND || 'redis', neonTargetFingerprint: process.env.DATABASE_URL ? destinationFingerprint(process.env.DATABASE_URL) : 'unconfigured' }));
+    // Same URL choice as lib/persistence.ts; the role name is logged so each build shows its privilege level.
+    const runtimeUrl = process.env.APP_DATABASE_URL || process.env.DATABASE_URL;
+    console.log(JSON.stringify({ persistenceBackend: process.env.PERSISTENCE_BACKEND || 'redis', neonTargetFingerprint: runtimeUrl ? destinationFingerprint(runtimeUrl) : 'unconfigured', databaseRole: runtimeUrl ? decodeURIComponent(new URL(runtimeUrl).username) : 'unconfigured' }));
     return;
   }
   const file = inputFile ? protectedBackupPath(inputFile) : null;

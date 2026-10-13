@@ -168,4 +168,4 @@ Enable it with `BRAINTRUST_API_KEY` (and optional `BRAINTRUST_PROJECT_NAME`).
 
 ## Migration controls
 
-`PERSISTENCE_BACKEND=postgres` requires a verified import and DATABASE_URL. Backend failures never silently switch storage. SQL credential provisioning and product append are atomic. `DATA_WRITE_PAUSED=1` rejects persistent mutation routes with 503 and defers legacy credential upgrades. Content reads never initialize storage. See [cutover and recovery](neon-migration.md).
+`PERSISTENCE_BACKEND=postgres` requires a verified import and DATABASE_URL (the runtime prefers the least-privilege APP_DATABASE_URL when set). Backend failures never silently switch storage. SQL credential provisioning and product append are atomic. `DATA_WRITE_PAUSED=1` rejects persistent mutation routes with 503 and defers legacy credential upgrades. Content reads never initialize storage. See [cutover and recovery](neon-migration.md).
