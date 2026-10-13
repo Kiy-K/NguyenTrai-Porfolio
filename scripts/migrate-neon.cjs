@@ -212,7 +212,10 @@ function runtimeIdentity(env) {
   // Fail the build, not requests: a rejected build leaves the current deployment serving.
   if (env.VERCEL_ENV === 'production' && persistenceBackend === 'postgres') {
     if (!env.APP_DATABASE_URL) fail('Production PostgreSQL builds require APP_DATABASE_URL (least-privilege role); refusing the owner DATABASE_URL');
-    if (env.DATABASE_URL && new URL(env.APP_DATABASE_URL).username === new URL(env.DATABASE_URL).username) fail('APP_DATABASE_URL must not use the owner role');
+    if (!env.DATABASE_URL) fail('Production PostgreSQL builds require the owner DATABASE_URL to verify APP_DATABASE_URL');
+    // The app URL must reach the same verified endpoint/database as the owner URL, under a different role.
+    if (destinationFingerprint(env.APP_DATABASE_URL) !== destinationFingerprint(env.DATABASE_URL)) fail('APP_DATABASE_URL must target the same database as DATABASE_URL');
+    if (new URL(env.APP_DATABASE_URL).username === new URL(env.DATABASE_URL).username) fail('APP_DATABASE_URL must not use the owner role');
   }
   const runtimeUrl = env.APP_DATABASE_URL || env.DATABASE_URL;
   return { persistenceBackend, neonTargetFingerprint: runtimeUrl ? destinationFingerprint(runtimeUrl) : 'unconfigured', databaseRole: runtimeUrl ? decodeURIComponent(new URL(runtimeUrl).username) : 'unconfigured' };

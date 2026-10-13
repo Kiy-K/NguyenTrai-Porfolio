@@ -95,6 +95,10 @@ test('production PostgreSQL builds fail closed without a separate least-privileg
   const production = { VERCEL_ENV: 'production', PERSISTENCE_BACKEND: 'postgres', DATABASE_URL: owner };
   assert.throws(() => tools.runtimeIdentity(production), /APP_DATABASE_URL/);
   assert.throws(() => tools.runtimeIdentity({ ...production, APP_DATABASE_URL: owner }), /owner role/);
+  assert.throws(() => tools.runtimeIdentity({ ...production, DATABASE_URL: undefined, APP_DATABASE_URL: app }), /owner DATABASE_URL/);
+  for (const elsewhere of [app.replace('ep-production', 'ep-other'), app.replace('/neondb', '/otherdb')]) {
+    assert.throws(() => tools.runtimeIdentity({ ...production, APP_DATABASE_URL: elsewhere }), /same database/);
+  }
   const identity = tools.runtimeIdentity({ ...production, APP_DATABASE_URL: app });
   assert.equal(identity.databaseRole, 'portfolio_app');
   assert.equal(identity.neonTargetFingerprint, tools.destinationFingerprint(owner));
