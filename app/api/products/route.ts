@@ -121,7 +121,8 @@ export async function POST(request: Request) {
 
     const parsed = productInputSchema.safeParse(await request.json().catch(() => null));
     if (!parsed.success) {
-      return NextResponse.json({ error: 'Dữ liệu sản phẩm không hợp lệ' }, { status: 400 });
+      const field = parsed.error.issues[0]?.path.join('.') || 'body';
+      return NextResponse.json({ error: `Dữ liệu sản phẩm không hợp lệ (${field})` }, { status: 400 });
     }
     const newProduct = { ...parsed.data, id: randomUUID() };
 

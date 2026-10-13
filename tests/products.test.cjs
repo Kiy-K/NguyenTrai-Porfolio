@@ -43,7 +43,7 @@ test('product creation stores only validated fields with a server-generated id',
   assert.equal(res.status, 201);
   assert.equal(appended.length, 1);
   const [saved] = appended;
-  assert.match(saved.id, /^[0-9a-f-]{36}$/);
+  assert.match(saved.id, /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/);
   assert.equal(saved.title, 'Bình Ngô đại cáo');
   assert.equal(saved.status, undefined);
   assert.equal(saved.injected, undefined);
@@ -63,5 +63,8 @@ test('invalid product payloads are rejected before storage', async () => {
   ]) {
     assert.equal((await post(body)).status, 400, JSON.stringify(body).slice(0, 60));
   }
+  // The admin UI shows this message, so it must name the offending field.
+  const badMux = await post({ ...adminPayload, videos: [{ muxPlaybackId: '../x' }] });
+  assert.match((await badMux.json()).error, /videos\.0\.muxPlaybackId/);
   assert.equal(appended.length, 0);
 });
