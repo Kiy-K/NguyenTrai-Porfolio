@@ -132,6 +132,29 @@ function destinationFingerprint(databaseUrl) {
   return digest(`${url.hostname.replace(/-pooler(?=\.)/, '')}/${decodeURIComponent(url.pathname.slice(1))}`);
 }
 
+// scripts/neon-schema.sql as rendered by pg_indexes/pg_get_constraintdef (PostgreSQL 18). Fails closed if the format differs.
+const EXPECTED_DEFINITIONS = {
+  state: {
+    indexes: { state_pkey: 'CREATE UNIQUE INDEX state_pkey ON portfolio.state USING btree (key)' },
+    constraints: {
+      state_pkey: 'PRIMARY KEY (key)',
+      state_key_check: "CHECK ((key = ANY (ARRAY['portfolio_data_v4'::text, 'admin:credentials:v1'::text])))",
+      state_payload_check: "CHECK ((jsonb_typeof(payload) = 'object'::text))",
+    },
+  },
+  feedback: {
+    indexes: {
+      feedback_pkey: 'CREATE UNIQUE INDEX feedback_pkey ON portfolio.feedback USING btree (source_key)',
+      feedback_newest: 'CREATE INDEX feedback_newest ON portfolio.feedback USING btree (created_at_unix DESC)',
+    },
+    constraints: {
+      feedback_pkey: 'PRIMARY KEY (source_key)',
+      feedback_payload_check: "CHECK ((jsonb_typeof(payload) = 'object'::text))",
+      feedback_created_at_unix_check: 'CHECK ((created_at_unix >= 0))',
+    },
+  },
+};
+
 async function verifyDestination(sql, databaseUrl, expectedDestination) {
   const url = new URL(databaseUrl);
   const identity = `${url.hostname}/${decodeURIComponent(url.pathname.slice(1))}`;
@@ -168,6 +191,18 @@ async function verifyDestination(sql, databaseUrl, expectedDestination) {
     (SELECT count(*) FROM pg_proc p JOIN pg_namespace n ON n.oid = p.pronamespace WHERE n.nspname = 'portfolio') +
     (SELECT count(*) FROM pg_trigger t JOIN pg_class c ON c.oid = t.tgrelid JOIN pg_namespace n ON n.oid = c.relnamespace WHERE n.nspname = 'portfolio' AND NOT t.tgisinternal) AS count`;
   if (Number(custom.count)) fail('Unexpected destination functions or triggers');
+  // Names alone would accept a UNIQUE/partial feedback_newest or an extra CHECK that rejects imported rows.
+  const indexes = await sql`SELECT tablename AS table, indexname AS name, indexdef AS def FROM pg_indexes WHERE schemaname = 'portfolio'`;
+  const constraints = await sql`SELECT c.relname AS table, k.conname AS name, pg_get_constraintdef(k.oid) AS def
+    FROM pg_constraint k JOIN pg_class c ON c.oid = k.conrelid WHERE k.connamespace = 'portfolio'::regnamespace AND k.contype <> 'n'`;
+  for (const table of ['state', 'feedback']) {
+    if (!objects.some(object => object.name === table)) continue;
+    const definitions = rows => Object.fromEntries(rows.filter(row => row.table === table).map(row => [row.name, row.def]));
+    if (canonical(definitions(indexes)) !== canonical(EXPECTED_DEFINITIONS[table].indexes) ||
+        canonical(definitions(constraints)) !== canonical(EXPECTED_DEFINITIONS[table].constraints)) {
+      fail('Destination index or constraint definition mismatch (compare with scripts/neon-schema.sql)');
+    }
+  }
   return { fingerprint: destinationFingerprint(databaseUrl), schemaExists: true };
 }
 
