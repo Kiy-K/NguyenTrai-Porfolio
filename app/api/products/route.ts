@@ -6,6 +6,36 @@ import { revalidatePath } from 'next/cache';
 import { getActiveAdminSession, getClientIpFromHeaders } from '@/lib/admin-auth';
 import { enforceSameOrigin, enforceDataWriteAvailability } from '@/lib/request-security';
 import { consumeRateLimit } from '@/lib/rate-limit';
+import { SECTIONS } from '@/lib/constants';
+import { randomUUID } from 'crypto';
+import { z } from 'zod';
+
+const isHttpUrl = (value: string) => {
+  try {
+    return ['http:', 'https:'].includes(new URL(value).protocol);
+  } catch {
+    return false;
+  }
+};
+const httpUrl = z.string().trim().max(2048).refine(isHttpUrl);
+const muxId = z.string().trim().regex(/^[A-Za-z0-9]{1,128}$/);
+
+// Mirrors the admin form; unknown keys (id, status, ...) are stripped.
+const productInputSchema = z.object({
+  title: z.string().trim().min(1).max(200),
+  description: z.string().trim().min(1).max(2000),
+  fullDescription: z.string().max(50_000).optional(),
+  images: z.array(httpUrl).max(50).default([]),
+  video: httpUrl.optional(),
+  muxAssetId: muxId.optional(),
+  muxPlaybackId: muxId.optional(),
+  videos: z
+    .array(z.object({ video: httpUrl.optional(), muxAssetId: muxId.optional(), muxPlaybackId: muxId.optional() }))
+    .max(20)
+    .optional(),
+  teamMembers: z.string().trim().max(1000).optional(),
+  section: z.string().refine((name) => SECTIONS.some((section) => section.name === name)),
+});
 
 // GET /api/products - Lấy danh sách tất cả sản phẩm
 export async function GET() {
@@ -105,13 +135,13 @@ export async function POST(request: Request) {
       );
     }
 
-    const newProduct = await request.json();
-    
-    // Tạo ID đơn giản nếu chưa có
-    if (!newProduct.id) {
-      newProduct.id = Date.now().toString();
+    const parsed = productInputSchema.safeParse(await request.json().catch(() => null));
+    if (!parsed.success) {
+      const field = parsed.error.issues[0]?.path.join('.') || 'body';
+      return NextResponse.json({ error: `Dữ liệu sản phẩm không hợp lệ (${field})` }, { status: 400 });
     }
-    
+    const newProduct = { ...parsed.data, id: randomUUID() };
+
     await appendProduct(newProduct);
     
     // Revalidate paths to ensure fresh data

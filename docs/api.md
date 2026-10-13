@@ -56,7 +56,8 @@ Creates a new product by appending to the selected content store (atomic JSONB a
 
 Notes:
 
-- If `id` is omitted, the route assigns `Date.now().toString()`.
+- The server always assigns `id` with `crypto.randomUUID()`; a client-supplied `id`, `status` or any other unlisted field is ignored.
+- Validation: `title` (1–200 chars) and `description` (1–2000) are trimmed and required; `fullDescription` ≤ 50,000; `images` ≤ 50 and `video` must be `http(s)` URLs; Mux IDs must be alphanumeric; `videos` ≤ 20 entries; `teamMembers` ≤ 1000; `section` must be a `SECTIONS` name.
 - `videos` is optional and allows one or many video entries per product.
 - Legacy single-video fields (`video`, `muxAssetId`, `muxPlaybackId`) are still accepted for backward compatibility.
 - Redis must be configured (`UPSTASH_REDIS_REST_URL`) or route returns `500`.
@@ -69,8 +70,9 @@ Notes:
 
 - `401` if admin session is missing/invalid
 - `403` if request `Origin` is missing/mismatched
+- `400` with `{ error: "Dữ liệu sản phẩm không hợp lệ (<field>)" }` for malformed JSON or invalid fields
 - `429` if rate limit exceeded
-- `500` for validation/storage failures
+- `500` for storage failures
 
 ## `DELETE /api/products`
 
