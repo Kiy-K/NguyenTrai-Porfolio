@@ -147,6 +147,8 @@ Index and query share Vietnamese accent/đ folding. All query words must match; 
 
 ## Rendering and Client Behavior
 
+- The admin page keeps the no-store session check as its rendering gate. Only successful validation mounts `ArticleForm`, `MediaEditor`, `FeedbackPanel` and `SecurityActions`; save/delete share a pending lock. Media progress remains driven by file completion/XHR bytes, and unmount/cancel invalidates late video responses. Native confirmation dialogs preserve typed deletion and recovery download. Server authentication, origin, IP and rate-limit checks remain unchanged.
+
 - Product/section routes use dynamic rendering; the homepage remains static.
 - Global `AutoReloader` triggers `router.refresh()` every 30 minutes for long-open tabs.
 - Public routes share navigation in `app/(public)/layout.tsx`, so it remains mounted and usable across route fallbacks. Navigation is sticky and auto-hides on downward scroll.

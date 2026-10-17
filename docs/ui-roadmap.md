@@ -1,6 +1,6 @@
 # Nguyen Trai: UI/UX, Search and AI Summary Removal Roadmap
 
-**Status:** P0 implemented locally in two independent review branches; release approval pending
+**Status:** P0–P2 implemented locally; local P3 audit complete; release approval pending
 **Baseline:** `main` at `1c74f3d` (2026-10-17), after PRs #26, #27 and #28  
 **Principle:** Small, testable PRs. Preserve the historical identity and production reliability.
 
@@ -8,7 +8,14 @@
 
 - P0a: `feat/search-minisearch` — local MiniSearch replacement, search API removal, 87 passing tests, lint/typecheck/build, independent review, desktop/mobile/offline Playwright and measured search/bundle results. See [search validation](ui-p0-search-validation.md).
 - P0b: `refactor/remove-ai-summary` — independent branch from the same baseline; summary component/API/callers removed while authored content remains. See that branch's `docs/ui-p0-summary-validation.md` for its validation.
-- Both changes are local and unmerged. No push, deployment, production write or environment change was performed. Review/release gates below remain in force; P1–P4 are not claimed complete.
+- The original P0 changes remain available as independent branches. The downstream local branches below combine them for continued work without changing main or production.
+
+Continuation completed after owner instruction:
+
+- P1: `ui/public-polish` — responsive spacing, faster/reduced motion, aligned skeletons and keyboard-safe mobile navigation; independent review and desktop/mobile validation. See [public validation](ui-p1-public-validation.md).
+- P2: `refactor/admin-sections` — gated form/media/feedback/security components, actual progress, actionable feedback and native confirmation dialogs; independent review, 92 branch tests and mocked desktop/mobile workflow checks. See [admin validation](ui-p2-admin-validation.md).
+- `perf/a11y-audit` combines all reviewed changes locally; the integrated suite passes 99 tests. See [accessibility/performance/CDN report](ui-p3-a11y-performance.md). Current-release GET-only CDN headers were sampled without logging content. Post-release verification and field metrics still require an approved release. The third-party widget contrast issue remains documented.
+- P4 remains optional and evidence-gated; no new state/cache framework, hosted search or legacy-data cleanup was justified. No main merge, push, deploy, environment change or production mutation occurred.
 
 ## Objectives and non-goals
 
@@ -27,13 +34,13 @@ Do not rewrite Next.js, replace Neon/Redis, change media providers, deploy autom
 - PR #27: shared 60-second public Redis cache-aside, with authenticated fresh reads and invalidation.
 - PR #28: streamed, layout-matched skeletons for public content/admin authentication/link previews; production deployed.
 
-## P0 — Retire public AI search and AI summaries (NEXT)
+## P0 — Retire public AI search and AI summaries
 
 ### P0a — Replace AI search with MiniSearch
 
 **Decision:** Use [MiniSearch](https://github.com/lucaong/minisearch), an in-memory JavaScript full-text search library with prefix matches, typo tolerance and field boosts. At the current scale (~31 products at the last verified inventory), a local index is sufficient. [Fuse.js](https://www.fusejs.io/) is a simpler fallback if MiniSearch is demonstrably worse; do not introduce hosted search, embeddings, Orama vector search or Pagefind's build-time indexing.
 
-**Existing code:** `components/ProjectList.tsx` currently combines substring matching with a debounced public POST to `/api/search-projects`. `app/api/search-projects/route.ts` calls Mistral using a client-supplied project array. This is unnecessary and can fail without API keys.
+**Planning baseline:** `components/ProjectList.tsx` combined substring matching with a debounced public POST to `/api/search-projects`. `app/api/search-projects/route.ts` called Mistral using a client-supplied project array. This was unnecessary and could fail without API keys.
 
 **Implementation PR A (separate from this document):**
 1. Add a small, typed, pure search adapter around MiniSearch; index **public products only**. Build the index once per change in the received product list (e.g. `useMemo`). Do not index credentials, admin records or private feedback.
@@ -50,7 +57,7 @@ Do not rewrite Next.js, replace Neon/Redis, change media providers, deploy autom
 
 **Decision:** Retire on-demand summaries rather than hiding the button or replacing it with another summarizer. Editorial `description` and `fullDescription` belong to the original articles and must stay.
 
-**Existing code:** `components/SummarizeButton.tsx` calls `POST /api/get-summary`, which currently routes to Gemini or Mistral. The component is imported and rendered by `components/ProjectCard.tsx`, `components/ProductCard.tsx`, and `app/(public)/products/[id]/page.tsx`.
+**Planning baseline:** `components/SummarizeButton.tsx` called `POST /api/get-summary`, routing to Gemini or Mistral. It was imported by `components/ProjectCard.tsx`, `components/ProductCard.tsx`, and `app/(public)/products/[id]/page.tsx`; those controls, component and API are now removed.
 
 **Implementation PR B (independent, reviewable, no migration):**
 1. Remove the summary button/UI from all public cards and product details, including imports, wrapper spacing and comments; preserve the normal description, article body, card links, share controls and media.
