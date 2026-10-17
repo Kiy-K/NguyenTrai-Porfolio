@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react';
 import Navigation from '@/components/Navigation';
+import { AuthSkeleton } from '@/components/ContentSkeletons';
 import { CLEAR_ALL_CONFIRMATION, SECTIONS } from '@/lib/constants';
 import Footer from '@/components/Footer';
 import { useRouter } from 'next/navigation';
@@ -51,11 +52,8 @@ export default function AdminPage() {
       } catch {
         router.replace('/admin/login');
         return;
-      } finally {
-        if (isMounted) {
-          setIsAuthChecking(false);
-        }
       }
+      if (isMounted) setIsAuthChecking(false);
     };
 
     checkAdminSession();
@@ -673,11 +671,7 @@ export default function AdminPage() {
   };
 
   if (!isClient || isAuthChecking) {
-    return (
-      <div className="min-h-screen bg-[#F4EBD0] flex items-center justify-center">
-        <p className="text-[#5C4033] font-playfair">Đang xác thực quản trị...</p>
-      </div>
-    );
+    return <AuthSkeleton />;
   }
 
   return (

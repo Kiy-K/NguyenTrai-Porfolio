@@ -1,7 +1,8 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import Image from 'next/image';
+import { SkeletonBlock } from '@/components/ContentSkeletons';
 
 interface PreviewMetadata {
   url: string;
@@ -53,7 +54,10 @@ const fetchPreviewMetadata = (url: string): Promise<PreviewMetadata> => {
 };
 
 export default function LinkPreview({ url }: LinkPreviewProps) {
-  const containerRef = useRef<HTMLDivElement | null>(null);
+  return <LinkPreviewContent key={url} url={url} />;
+}
+
+function LinkPreviewContent({ url }: LinkPreviewProps) {
   const initialMetadata = previewDataCache.get(url) ?? null;
   const [status, setStatus] = useState<PreviewStatus>(initialMetadata ? 'success' : 'loading');
   const [metadata, setMetadata] = useState<PreviewMetadata | null>(initialMetadata);
@@ -78,68 +82,53 @@ export default function LinkPreview({ url }: LinkPreviewProps) {
     };
   }, [status, url]);
 
-  if (status === 'success' && metadata) {
-    return (
-      <div ref={containerRef}>
-        <a
-          href={url}
-          target="_blank"
-          rel="noreferrer noopener"
-          className="block overflow-hidden rounded-lg border border-[#D4C4A8] bg-white hover:shadow-md transition-shadow"
-        >
-          {metadata.image && (
-            <div className="relative h-48 w-full bg-[#F4EBD0]">
-              <Image
-                src={metadata.image}
-                alt={metadata.title || metadata.siteName || 'Link preview image'}
-                fill
-                sizes="(max-width: 768px) 100vw, 768px"
-                className="object-cover"
-                referrerPolicy="no-referrer"
-              />
-            </div>
-          )}
-          <div className="p-4">
-            <p className="text-xs font-semibold uppercase tracking-wider text-[#8B3A3A]">
-              {metadata.siteName || getHostname(url)}
-            </p>
-            <h4 className="mt-1 text-lg font-bold text-[#2C1E16]">
-              {metadata.title || url}
-            </h4>
-            {metadata.description && (
-              <p className="mt-2 text-sm text-[#5C4033] line-clamp-3">{metadata.description}</p>
-            )}
-          </div>
-        </a>
-      </div>
-    );
-  }
-
-  if (status === 'loading') {
-    return (
-      <div ref={containerRef}>
-        <a
-          href={url}
-          target="_blank"
-          rel="noreferrer noopener"
-          className="text-[#8B3A3A] underline break-all"
-        >
-          {url}
-        </a>
-        <p className="mt-2 text-xs text-[#5C4033]">Loading preview...</p>
-      </div>
-    );
-  }
+  const isLoading = status === 'loading';
 
   return (
-    <div ref={containerRef}>
+    <div>
+      {isLoading && <p role="status" className="sr-only">Đang tải bản xem trước liên kết…</p>}
       <a
         href={url}
         target="_blank"
         rel="noreferrer noopener"
-        className="text-[#8B3A3A] underline break-all"
+        className="block overflow-hidden rounded-lg border border-[#D4C4A8] bg-white hover:shadow-md transition-shadow motion-reduce:transition-none focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#8B3A3A]"
       >
-        {url}
+        <div className="relative h-48 w-full bg-[#F4EBD0] overflow-hidden">
+          {metadata?.image ? (
+            <Image
+              src={metadata.image}
+              alt={metadata.title || metadata.siteName || 'Ảnh xem trước liên kết'}
+              fill
+              sizes="(max-width: 768px) 100vw, 768px"
+              className="object-cover"
+              referrerPolicy="no-referrer"
+            />
+          ) : isLoading ? (
+            <div className="skeleton-content h-full"><SkeletonBlock className="h-full w-full" /></div>
+          ) : (
+            <div aria-hidden="true" className="flex h-full items-center justify-center px-6 text-[#8B3A3A] break-all text-center">
+              {getHostname(url)}
+            </div>
+          )}
+        </div>
+        <div className="min-h-44 p-4">
+          <p className="text-xs font-semibold uppercase tracking-wider text-[#8B3A3A] truncate">
+            {metadata?.siteName || getHostname(url)}
+          </p>
+          <h4 className="mt-1 text-lg font-bold text-[#2C1E16] line-clamp-2 break-words">
+            {metadata?.title || url}
+          </h4>
+          {isLoading ? (
+            <div aria-hidden="true" className="skeleton-content mt-3 space-y-2">
+              <SkeletonBlock className="h-4 w-full" />
+              <SkeletonBlock className="h-4 w-3/4" />
+            </div>
+          ) : metadata?.description ? (
+            <p className="mt-2 text-sm text-[#5C4033] line-clamp-3">{metadata.description}</p>
+          ) : status === 'error' ? (
+            <p className="mt-2 text-sm text-[#5C4033]">Không thể tải bản xem trước. Mở liên kết để đọc tiếp.</p>
+          ) : null}
+        </div>
       </a>
     </div>
   );

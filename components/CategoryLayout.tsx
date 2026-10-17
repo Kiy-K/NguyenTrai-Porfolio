@@ -1,5 +1,7 @@
 'use client';
 
+import Link from 'next/link';
+
 import { SECTIONS } from '@/lib/constants';
 import { Heart, Leaf, Box, Palette, Gamepad2, Clapperboard, Camera, Mic, Map } from 'lucide-react';
 
@@ -29,7 +31,7 @@ export default function CategoryLayout() {
         
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
           {SECTIONS.map((section) => (
-            <a
+            <Link
               key={section.id}
               href={section.path}
               className="group relative flex flex-col items-center justify-center p-6 rounded-2xl border-2 transition-all duration-[800ms] ease-[cubic-bezier(0.25,0.1,0.25,1)] overflow-hidden bg-white border-[#D4C4A8] text-[#5C4033] hover:border-[#8B3A3A] hover:text-[#8B3A3A] hover:bg-[#FFFDF8] hover:shadow-[0_12px_40px_rgba(139,58,58,0.12)] hover:-translate-y-2"
@@ -40,7 +42,7 @@ export default function CategoryLayout() {
               <span className="text-sm font-bold font-playfair text-center leading-tight relative z-10">
                 {section.name}
               </span>
-            </a>
+            </Link>
           ))}
         </div>
       </div>
