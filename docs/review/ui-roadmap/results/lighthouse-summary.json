@@ -1,0 +1,473 @@
+[
+  {
+    "source": "nguyentrai-p1-before-lighthouse-mobile.json",
+    "phase": "before",
+    "profile": "mobile",
+    "fetchTime": "2026-10-17T06:54:19.830Z",
+    "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/155.0.0.0 Safari/537.36",
+    "categories": {
+      "performance": 0.95,
+      "accessibility": 0.96
+    },
+    "audits": {
+      "largest-contentful-paint": {
+        "value": 2255.7907,
+        "unit": "millisecond"
+      },
+      "cumulative-layout-shift": {
+        "value": 0,
+        "unit": "unitless"
+      },
+      "total-blocking-time": {
+        "value": 201.99999999999955,
+        "unit": "millisecond"
+      }
+    },
+    "contrast": [
+      {
+        "node": {
+          "type": "node",
+          "lhId": "1-0-SPAN",
+          "path": "1,HTML,1,BODY,2,ELEVENLABS-CONVAI,a,#document-fragment,3,DIV,0,P,0,SPAN",
+          "selector": "div.overlay > p.whitespace-nowrap > span.opacity-30",
+          "boundingRect": {
+            "top": 822,
+            "bottom": 834,
+            "left": 231,
+            "right": 283,
+            "width": 52,
+            "height": 12
+          },
+          "snippet": "<span class=\"opacity-30\">",
+          "nodeLabel": "Powered by",
+          "explanation": "Fix any of the following:\n  Element has insufficient color contrast of 2.06 (foreground color: #aba592, background color: #f4ebd0, font size: 7.5pt (10px), font weight: normal). Expected contrast ratio of 4.5:1"
+        },
+        "subItems": {
+          "type": "subitems",
+          "items": [
+            {
+              "relatedNode": {
+                "type": "node",
+                "lhId": "1-1-DIV",
+                "path": "1,HTML,1,BODY,1,DIV,4,DIV",
+                "selector": "body.font-playfair > div.min-h-screen > div.flex-1",
+                "boundingRect": {
+                  "top": 88,
+                  "bottom": 3513,
+                  "left": 0,
+                  "right": 390,
+                  "width": 390,
+                  "height": 3425
+                },
+                "snippet": "<div class=\"flex-1 bg-[#F4EBD0] font-playfair flex flex-col\">",
+                "nodeLabel": "- Danh Nhân Văn Hóa -\nNguyễn Trãi\n\n\"Việc nhân nghĩa cốt ở yên dân\nQuân điếu phạ…"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "node": {
+          "type": "node",
+          "lhId": "1-2-A",
+          "path": "1,HTML,1,BODY,2,ELEVENLABS-CONVAI,a,#document-fragment,3,DIV,0,P,1,A",
+          "selector": "div.overlay > p.whitespace-nowrap > a.underline",
+          "boundingRect": {
+            "top": 822,
+            "bottom": 834,
+            "left": 285,
+            "right": 346,
+            "width": 61,
+            "height": 12
+          },
+          "snippet": "<a href=\"https://elevenlabs.io/agents\" target=\"_blank\" class=\"underline cursor-pointer pointer-events-auto focus-visible:outline-hidden …\">",
+          "nodeLabel": "ElevenAgents",
+          "explanation": "Fix any of the following:\n  Element has insufficient color contrast of 2.06 (foreground color: #aba592, background color: #f4ebd0, font size: 7.5pt (10px), font weight: normal). Expected contrast ratio of 4.5:1"
+        },
+        "subItems": {
+          "type": "subitems",
+          "items": [
+            {
+              "relatedNode": {
+                "type": "node",
+                "lhId": "1-1-DIV",
+                "path": "1,HTML,1,BODY,1,DIV,4,DIV",
+                "selector": "body.font-playfair > div.min-h-screen > div.flex-1",
+                "boundingRect": {
+                  "top": 88,
+                  "bottom": 3513,
+                  "left": 0,
+                  "right": 390,
+                  "width": 390,
+                  "height": 3425
+                },
+                "snippet": "<div class=\"flex-1 bg-[#F4EBD0] font-playfair flex flex-col\">",
+                "nodeLabel": "- Danh Nhân Văn Hóa -\nNguyễn Trãi\n\n\"Việc nhân nghĩa cốt ở yên dân\nQuân điếu phạ…"
+              }
+            }
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "source": "nguyentrai-p1-before-lighthouse-desktop.json",
+    "phase": "before",
+    "profile": "desktop",
+    "fetchTime": "2026-10-17T06:54:23.487Z",
+    "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/155.0.0.0 Safari/537.36",
+    "categories": {
+      "performance": 1,
+      "accessibility": 0.96
+    },
+    "audits": {
+      "largest-contentful-paint": {
+        "value": 571.9174,
+        "unit": "millisecond"
+      },
+      "cumulative-layout-shift": {
+        "value": 0,
+        "unit": "unitless"
+      },
+      "total-blocking-time": {
+        "value": 17.000000000000057,
+        "unit": "millisecond"
+      }
+    },
+    "contrast": [
+      {
+        "node": {
+          "type": "node",
+          "lhId": "1-0-SPAN",
+          "path": "1,HTML,1,BODY,2,ELEVENLABS-CONVAI,a,#document-fragment,3,DIV,0,P,0,SPAN",
+          "selector": "div.overlay > p.whitespace-nowrap > span.opacity-30",
+          "boundingRect": {
+            "top": 978,
+            "bottom": 990,
+            "left": 1266,
+            "right": 1318,
+            "width": 52,
+            "height": 12
+          },
+          "snippet": "<span class=\"opacity-30\">",
+          "nodeLabel": "Powered by",
+          "explanation": "Fix any of the following:\n  Element has insufficient color contrast of 2.06 (foreground color: #aba592, background color: #f4ebd0, font size: 7.5pt (10px), font weight: normal). Expected contrast ratio of 4.5:1"
+        },
+        "subItems": {
+          "type": "subitems",
+          "items": [
+            {
+              "relatedNode": {
+                "type": "node",
+                "lhId": "1-1-DIV",
+                "path": "1,HTML,1,BODY,1,DIV,4,DIV",
+                "selector": "body.font-playfair > div.min-h-screen > div.flex-1",
+                "boundingRect": {
+                  "top": 88,
+                  "bottom": 3066,
+                  "left": 0,
+                  "right": 1425,
+                  "width": 1425,
+                  "height": 2978
+                },
+                "snippet": "<div class=\"flex-1 bg-[#F4EBD0] font-playfair flex flex-col\">",
+                "nodeLabel": "- Danh Nhân Văn Hóa -\nNguyễn Trãi\n\n\"Việc nhân nghĩa cốt ở yên dân\nQuân điếu phạ…"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "node": {
+          "type": "node",
+          "lhId": "1-2-A",
+          "path": "1,HTML,1,BODY,2,ELEVENLABS-CONVAI,a,#document-fragment,3,DIV,0,P,1,A",
+          "selector": "div.overlay > p.whitespace-nowrap > a.underline",
+          "boundingRect": {
+            "top": 978,
+            "bottom": 990,
+            "left": 1320,
+            "right": 1381,
+            "width": 61,
+            "height": 12
+          },
+          "snippet": "<a href=\"https://elevenlabs.io/agents\" target=\"_blank\" class=\"underline cursor-pointer pointer-events-auto focus-visible:outline-hidden …\">",
+          "nodeLabel": "ElevenAgents",
+          "explanation": "Fix any of the following:\n  Element has insufficient color contrast of 2.06 (foreground color: #aba592, background color: #f4ebd0, font size: 7.5pt (10px), font weight: normal). Expected contrast ratio of 4.5:1"
+        },
+        "subItems": {
+          "type": "subitems",
+          "items": [
+            {
+              "relatedNode": {
+                "type": "node",
+                "lhId": "1-1-DIV",
+                "path": "1,HTML,1,BODY,1,DIV,4,DIV",
+                "selector": "body.font-playfair > div.min-h-screen > div.flex-1",
+                "boundingRect": {
+                  "top": 88,
+                  "bottom": 3066,
+                  "left": 0,
+                  "right": 1425,
+                  "width": 1425,
+                  "height": 2978
+                },
+                "snippet": "<div class=\"flex-1 bg-[#F4EBD0] font-playfair flex flex-col\">",
+                "nodeLabel": "- Danh Nhân Văn Hóa -\nNguyễn Trãi\n\n\"Việc nhân nghĩa cốt ở yên dân\nQuân điếu phạ…"
+              }
+            }
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "source": "nguyentrai-p1-after-lighthouse-mobile.json",
+    "phase": "after",
+    "profile": "mobile",
+    "fetchTime": "2026-10-17T06:56:53.286Z",
+    "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/155.0.0.0 Safari/537.36",
+    "categories": {
+      "performance": 0.93,
+      "accessibility": 0.96
+    },
+    "audits": {
+      "largest-contentful-paint": {
+        "value": 2179.8148,
+        "unit": "millisecond"
+      },
+      "cumulative-layout-shift": {
+        "value": 0,
+        "unit": "unitless"
+      },
+      "total-blocking-time": {
+        "value": 267.7963000000002,
+        "unit": "millisecond"
+      }
+    },
+    "contrast": [
+      {
+        "node": {
+          "type": "node",
+          "lhId": "1-0-SPAN",
+          "path": "1,HTML,1,BODY,2,ELEVENLABS-CONVAI,a,#document-fragment,3,DIV,0,P,0,SPAN",
+          "selector": "div.overlay > p.whitespace-nowrap > span.opacity-30",
+          "boundingRect": {
+            "top": 822,
+            "bottom": 834,
+            "left": 231,
+            "right": 283,
+            "width": 52,
+            "height": 12
+          },
+          "snippet": "<span class=\"opacity-30\">",
+          "nodeLabel": "Powered by",
+          "explanation": "Fix any of the following:\n  Element has insufficient color contrast of 2.1 (foreground color: #b3b1ae, background color: #fffdf8, font size: 7.5pt (10px), font weight: normal). Expected contrast ratio of 4.5:1"
+        },
+        "subItems": {
+          "type": "subitems",
+          "items": [
+            {
+              "relatedNode": {
+                "type": "node",
+                "lhId": "1-1-ARTICLE",
+                "path": "1,HTML,1,BODY,1,DIV,4,DIV,0,MAIN,1,DIV,0,SECTION,0,DIV,1,DIV,0,ARTICLE",
+                "selector": "section#tong-quan-va-gop-y > div.bg-white > div.grid > article.rounded-2xl",
+                "boundingRect": {
+                  "top": 784,
+                  "bottom": 1074,
+                  "left": 49,
+                  "right": 341,
+                  "width": 292,
+                  "height": 290
+                },
+                "snippet": "<article class=\"rounded-2xl border border-[#D4C4A8] bg-[#FFFDF8] p-6\">",
+                "nodeLabel": "Tổng quan dự án\nPhần 1: Tiếng vọng từ tình yêu thiên nhiên\nPhần 2: Tiếng vọng t…"
+              }
+            }
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "source": "nguyentrai-p1-after-lighthouse-desktop.json",
+    "phase": "after",
+    "profile": "desktop",
+    "fetchTime": "2026-10-17T06:56:57.397Z",
+    "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/155.0.0.0 Safari/537.36",
+    "categories": {
+      "performance": 1,
+      "accessibility": 0.96
+    },
+    "audits": {
+      "largest-contentful-paint": {
+        "value": 575.2774999999999,
+        "unit": "millisecond"
+      },
+      "cumulative-layout-shift": {
+        "value": 0,
+        "unit": "unitless"
+      },
+      "total-blocking-time": {
+        "value": 18.999999999999943,
+        "unit": "millisecond"
+      }
+    },
+    "contrast": [
+      {
+        "node": {
+          "type": "node",
+          "lhId": "1-0-SPAN",
+          "path": "1,HTML,1,BODY,2,ELEVENLABS-CONVAI,a,#document-fragment,3,DIV,0,P,0,SPAN",
+          "selector": "div.overlay > p.whitespace-nowrap > span.opacity-30",
+          "boundingRect": {
+            "top": 978,
+            "bottom": 990,
+            "left": 1266,
+            "right": 1318,
+            "width": 52,
+            "height": 12
+          },
+          "snippet": "<span class=\"opacity-30\">",
+          "nodeLabel": "Powered by",
+          "explanation": "Fix any of the following:\n  Element has insufficient color contrast of 2.06 (foreground color: #aba592, background color: #f4ebd0, font size: 7.5pt (10px), font weight: normal). Expected contrast ratio of 4.5:1"
+        },
+        "subItems": {
+          "type": "subitems",
+          "items": [
+            {
+              "relatedNode": {
+                "type": "node",
+                "lhId": "1-1-DIV",
+                "path": "1,HTML,1,BODY,1,DIV,4,DIV",
+                "selector": "body.font-playfair > div.min-h-screen > div.flex-1",
+                "boundingRect": {
+                  "top": 88,
+                  "bottom": 3091,
+                  "left": 0,
+                  "right": 1425,
+                  "width": 1425,
+                  "height": 3003
+                },
+                "snippet": "<div class=\"flex-1 bg-[#F4EBD0] font-playfair flex flex-col\">",
+                "nodeLabel": "- Danh Nhân Văn Hóa -\nNguyễn Trãi\n\n\"Việc nhân nghĩa cốt ở yên dân\nQuân điếu phạ…"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "node": {
+          "type": "node",
+          "lhId": "1-2-A",
+          "path": "1,HTML,1,BODY,2,ELEVENLABS-CONVAI,a,#document-fragment,3,DIV,0,P,1,A",
+          "selector": "div.overlay > p.whitespace-nowrap > a.underline",
+          "boundingRect": {
+            "top": 978,
+            "bottom": 990,
+            "left": 1320,
+            "right": 1381,
+            "width": 61,
+            "height": 12
+          },
+          "snippet": "<a href=\"https://elevenlabs.io/agents\" target=\"_blank\" class=\"underline cursor-pointer pointer-events-auto focus-visible:outline-hidden …\">",
+          "nodeLabel": "ElevenAgents",
+          "explanation": "Fix any of the following:\n  Element has insufficient color contrast of 2.06 (foreground color: #aba592, background color: #f4ebd0, font size: 7.5pt (10px), font weight: normal). Expected contrast ratio of 4.5:1"
+        },
+        "subItems": {
+          "type": "subitems",
+          "items": [
+            {
+              "relatedNode": {
+                "type": "node",
+                "lhId": "1-1-DIV",
+                "path": "1,HTML,1,BODY,1,DIV,4,DIV",
+                "selector": "body.font-playfair > div.min-h-screen > div.flex-1",
+                "boundingRect": {
+                  "top": 88,
+                  "bottom": 3091,
+                  "left": 0,
+                  "right": 1425,
+                  "width": 1425,
+                  "height": 3003
+                },
+                "snippet": "<div class=\"flex-1 bg-[#F4EBD0] font-playfair flex flex-col\">",
+                "nodeLabel": "- Danh Nhân Văn Hóa -\nNguyễn Trãi\n\n\"Việc nhân nghĩa cốt ở yên dân\nQuân điếu phạ…"
+              }
+            }
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "source": "nguyentrai-p1-after-lighthouse-mobile-2.json",
+    "phase": "after-quiet-repeat",
+    "profile": "mobile",
+    "fetchTime": "2026-10-17T07:00:00.071Z",
+    "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/155.0.0.0 Safari/537.36",
+    "categories": {
+      "performance": 0.95,
+      "accessibility": 0.96
+    },
+    "audits": {
+      "largest-contentful-paint": {
+        "value": 2178.9026999999996,
+        "unit": "millisecond"
+      },
+      "cumulative-layout-shift": {
+        "value": 0,
+        "unit": "unitless"
+      },
+      "total-blocking-time": {
+        "value": 227.0243250000001,
+        "unit": "millisecond"
+      }
+    },
+    "contrast": [
+      {
+        "node": {
+          "type": "node",
+          "lhId": "1-0-SPAN",
+          "path": "1,HTML,1,BODY,2,ELEVENLABS-CONVAI,a,#document-fragment,3,DIV,0,P,0,SPAN",
+          "selector": "div.overlay > p.whitespace-nowrap > span.opacity-30",
+          "boundingRect": {
+            "top": 822,
+            "bottom": 834,
+            "left": 231,
+            "right": 283,
+            "width": 52,
+            "height": 12
+          },
+          "snippet": "<span class=\"opacity-30\">",
+          "nodeLabel": "Powered by",
+          "explanation": "Fix any of the following:\n  Element has insufficient color contrast of 2.1 (foreground color: #b3b1ae, background color: #fffdf8, font size: 7.5pt (10px), font weight: normal). Expected contrast ratio of 4.5:1"
+        },
+        "subItems": {
+          "type": "subitems",
+          "items": [
+            {
+              "relatedNode": {
+                "type": "node",
+                "lhId": "1-1-ARTICLE",
+                "path": "1,HTML,1,BODY,1,DIV,4,DIV,0,MAIN,1,DIV,0,SECTION,0,DIV,1,DIV,0,ARTICLE",
+                "selector": "section#tong-quan-va-gop-y > div.bg-white > div.grid > article.rounded-2xl",
+                "boundingRect": {
+                  "top": 784,
+                  "bottom": 1074,
+                  "left": 49,
+                  "right": 341,
+                  "width": 292,
+                  "height": 290
+                },
+                "snippet": "<article class=\"rounded-2xl border border-[#D4C4A8] bg-[#FFFDF8] p-6\">",
+                "nodeLabel": "Tổng quan dự án\nPhần 1: Tiếng vọng từ tình yêu thiên nhiên\nPhần 2: Tiếng vọng t…"
+              }
+            }
+          ]
+        }
+      }
+    ]
+  }
+]

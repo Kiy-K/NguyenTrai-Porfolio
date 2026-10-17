@@ -1,0 +1,74 @@
+[
+  {
+    "viewport": {
+      "width": 1440,
+      "height": 1000
+    },
+    "auth": "pending",
+    "gate": "passed"
+  },
+  {
+    "viewport": {
+      "width": 1440,
+      "height": 1000
+    },
+    "auth": "rejected",
+    "gate": "passed"
+  },
+  {
+    "viewport": {
+      "width": 1440,
+      "height": 1000
+    },
+    "auth": "offline",
+    "gate": "passed"
+  },
+  {
+    "viewport": {
+      "width": 1440,
+      "height": 1000
+    },
+    "auth": "accepted",
+    "workflow": "passed",
+    "saves": 2,
+    "deletes": 2,
+    "errors": [],
+    "recoveryDownload": true
+  },
+  {
+    "viewport": {
+      "width": 390,
+      "height": 844
+    },
+    "auth": "pending",
+    "gate": "passed"
+  },
+  {
+    "viewport": {
+      "width": 390,
+      "height": 844
+    },
+    "auth": "rejected",
+    "gate": "passed"
+  },
+  {
+    "viewport": {
+      "width": 390,
+      "height": 844
+    },
+    "auth": "offline",
+    "gate": "passed"
+  },
+  {
+    "viewport": {
+      "width": 390,
+      "height": 844
+    },
+    "auth": "accepted",
+    "workflow": "passed",
+    "saves": 2,
+    "deletes": 2,
+    "errors": [],
+    "recoveryDownload": true
+  }
+]

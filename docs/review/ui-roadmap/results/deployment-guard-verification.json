@@ -1,0 +1,15 @@
+{
+  "checkedAt": "2026-10-17T09:44:00Z",
+  "since": "2026-10-17T09:39:50Z",
+  "deploymentsObserved": 0,
+  "mechanism": "vercel.json git.deploymentEnabled false for exact review refs",
+  "reviewRefs": [
+    "review-ui-p0-foundation",
+    "review-ui-public-polish",
+    "review-admin-sections",
+    "review-ui-a11y-audit",
+    "review-ui-roadmap-integrated"
+  ],
+  "mainRuntimeConfigurationChanged": false,
+  "noMergeOrDeployAuthorized": true
+}

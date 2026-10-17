@@ -1,0 +1,79 @@
+{
+  "observedAt": "2026-10-17T12:27:59.947Z",
+  "revision": "4e9084beccc4e22974971cf064997324c252a655",
+  "origin": "http://127.0.0.1:3340",
+  "result": [
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 1000
+      },
+      "auth": "pending",
+      "gate": "passed"
+    },
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 1000
+      },
+      "auth": "rejected",
+      "gate": "passed"
+    },
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 1000
+      },
+      "auth": "offline",
+      "gate": "passed"
+    },
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 1000
+      },
+      "auth": "accepted",
+      "workflow": "passed",
+      "saves": 2,
+      "deletes": 2,
+      "errors": [],
+      "recoveryDownload": true
+    },
+    {
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "auth": "pending",
+      "gate": "passed"
+    },
+    {
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "auth": "rejected",
+      "gate": "passed"
+    },
+    {
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "auth": "offline",
+      "gate": "passed"
+    },
+    {
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "auth": "accepted",
+      "workflow": "passed",
+      "saves": 2,
+      "deletes": 2,
+      "errors": [],
+      "recoveryDownload": true
+    }
+  ]
+}
