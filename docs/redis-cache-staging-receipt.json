@@ -1,0 +1,23 @@
+{
+  "staging": true,
+  "nodeVersion": "v24.22.0",
+  "neonTargetFingerprint": "e94c75a80341e7997e2327baefd5d2697d264f0b586def8e323c57e942a5565a",
+  "productionBuild": true,
+  "appInstances": 2,
+  "source": "dedicated staging Neon",
+  "redis": "dedicated scratch Upstash",
+  "missMs": 1762,
+  "hitMs": 1322,
+  "cacheTtlMs": 55841,
+  "publicIdsAndMediaVerified": true,
+  "adminFreshAndAuthVerified": true,
+  "postDeleteCrossInstanceInvalidationVerified": true,
+  "redisFailureDirectNeonVerified": true,
+  "neonUnavailableWarmHitStatus": 200,
+  "neonOutageStatus": 500,
+  "pageCacheControl": "private, no-cache, no-store, max-age=0, must-revalidate",
+  "sectionCacheControl": "private, no-cache, no-store, max-age=0, must-revalidate",
+  "cdn": "local production server; Vercel CDN not exercised",
+  "baselineRestored": true,
+  "applicationSourceCommit": "5061f8b0ee99749cf6aea99d4c0e6481c282b3ff"
+}

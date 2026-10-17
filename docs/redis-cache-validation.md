@@ -60,14 +60,71 @@ node --test tests/redis-cache.integration.cjs
 Do not set these to application Redis. The test leaves only TTL-bound cache keys
 under a synthetic database namespace. No flush or persistent-record deletion.
 
-## Full application staging gate
+## Completed isolated application staging
 
-Pending dedicated staging Neon configuration and an isolated app origin. Existing
-local `.env.local` Redis matches the historical production target and was never
-used. The old `.env.development.local` was removed at the owner's request so it
-can be replaced with staging configuration; secrets stay outside commits/logs.
-The PR remains a draft until the full gate has evidence. No production deployment
-is proposed by this report.
+The owner supplied a different Neon endpoint. Read-only identity checks found no
+`portfolio` schema/tables; only synthetic application fixtures were created there.
+The old production configuration was removed/replaced at the owner's request;
+the staging file is ignored and mode 0600. Production `.env.local` was preserved.
+
+Two production-build Next.js instances and a third database-authentication outage
+instance ran locally on Node 24.22.0, backed by that dedicated Neon and the
+separate disposable Upstash database. The tracked
+`tests/cache-app-staging.integration.cjs` passed through actual HTTP routes:
+
+- Public list/detail/section filtering and unchanged IDs/Cloudinary/Mux fields.
+- Authenticated fresh reads of all four synthetic records, anonymous 401, and
+  no-store API responses. Product/section HTML returned `private, no-cache,
+  no-store, max-age=0, must-revalidate`.
+- Real authenticated POST and confirmed DELETE, with the other app instance
+  observing invalidation. The original synthetic baseline was restored in a
+  finally block; credentials/feedback were unchanged.
+- A deliberate wrong Redis cache-key type caused a successful direct Neon read.
+- An instance with invalid **staging** Neon authentication served the valid warm
+  cache (200), then returned 500 after invalidation. No database password changed.
+- Final Node 24 run: miss 1762ms, hit 1322ms, remaining Redis TTL 55841ms. These
+  are individual remote-development-network samples, not production percentiles.
+  The warm hit on the deliberately unavailable database independently confirms
+  the cache path avoids a successful Neon read.
+
+Receipt: [redis-cache-staging-receipt.json](redis-cache-staging-receipt.json).
+All temporary app servers were stopped; synthetic staging fixtures remain for
+inspection. Production data, passwords, environments and deployments were untouched.
+
+To reproduce, start two copies of the built app with the same dedicated staging
+Neon/Redis and a known synthetic `ADMIN_AUTH_PEPPER`. Seed exactly the four
+synthetic IDs used by the test (`cache-stage-public`, `cache-stage-legacy`,
+`cache-stage-draft`, `cache-stage-archive`) with published/missing/draft/archived
+statuses; include both legacy video and Mux references on the public product.
+A third copy uses invalid **staging connection authentication** at the same
+endpoint, with the same Redis. Supply only explicit test configuration:
+`TEST_ISOLATED_STAGING=1`, `TEST_REDIS_DISPOSABLE=1`, `TEST_REDIS_REST_URL`,
+`TEST_REDIS_REST_TOKEN`, `STAGING_DATABASE_URL`, `STAGING_EXPECTED_NEON_HOST`,
+`STAGING_APP_URL_A`, `STAGING_APP_URL_B`, `STAGING_NEON_OUTAGE_APP_URL`,
+`STAGING_AUTH_PEPPER`, and optional `STAGING_RECEIPT_PATH`, then run
+`node tests/cache-app-staging.integration.cjs`. The script never auto-loads local
+production credentials, rejects the known production target, requires a pinned
+staging hostname and exact synthetic ID set, and restores the synthetic baseline.
+
+The first launcher attempt was rejected by the assertions because Next.js reset
+in-process environment injection. Restarting a child process with explicit env
+inheritance fixed the **test launcher**; no product code was changed. Local
+mutation requests used Next's canonical `localhost` Origin. Failed staging runs
+were not counted as passing evidence.
+
+## Vercel CDN and deployment gate
+
+The isolated application staging gate above is complete. Actual Vercel CDN
+`x-vercel-cache` behavior was **not** measured: no Vercel deployment was made.
+The cache audit found no product `CDN-Cache-Control` or
+`Vercel-CDN-Cache-Control` override in application/config source. The unrelated
+preview API's CDN cache is preserved. Vercel documents that targeted CDN headers
+have precedence over Cache-Control; see [Vercel cache-control rules](https://vercel.com/docs/caching/cache-control-headers).
+The product APIs explicitly send no-store and dynamic HTML sends private/no-store.
+Keep the PR draft until the isolated Vercel preview/header receipt and owner
+release review are complete. No production deployment is proposed.
+
+For a later isolated Vercel preview, retain these verification steps:
 
 With an isolated Neon branch/database, dedicated Redis and a staging deployment:
 
