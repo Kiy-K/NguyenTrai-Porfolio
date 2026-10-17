@@ -8,7 +8,8 @@ export default function BackButton({ fallbackUrl = '/', label = 'Quay lại' }: 
 
   const handleBack = () => {
     if (typeof window !== 'undefined') {
-      if (window.history.length > 1) {
+      const cameFromThisSite = document.referrer && new URL(document.referrer).origin === window.location.origin;
+      if (window.history.length > 1 && (!document.referrer || cameFromThisSite)) {
         router.back();
       } else {
         router.push(fallbackUrl);

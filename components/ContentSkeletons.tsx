@@ -84,7 +84,7 @@ export function AuthSkeleton() {
             <SkeletonBlock className="h-4 w-3/4" />
           </div>
         </LoadingRegion>
-        <p className="mt-6 text-sm text-[#5C4033]">Đang xác thực quản trị…</p>
+        <p aria-hidden="true" className="mt-6 text-sm text-[#5C4033]">Đang xác thực quản trị…</p>
       </section>
     </main>
   );
