@@ -42,7 +42,7 @@ Copy `.env.example` to `.env.local` and set values as needed.
 ### AI providers
 
 - `GEMINI_API_KEY` (primary for summary/title if present)
-- `MISTRAL_API_KEY` (fallback for summary/title and required for `/api/search-projects`)
+- `MISTRAL_API_KEY` (fallback for summary/title)
 - `AI_MODEL` (present in env template, not consumed by route handlers currently)
 
 ### Observability
@@ -104,7 +104,6 @@ Admin currently stores `section` as section name.
 - `POST /api/upload` (Cloudinary)
 - `POST /api/suggest-title` (Gemini -> Mistral fallback)
 - `POST /api/get-summary` (Gemini -> Mistral fallback)
-- `POST /api/search-projects` (Mistral only)
 - `POST /api/mux/upload-url`
 - `GET /api/mux/asset/[uploadId]`
 
@@ -137,7 +136,6 @@ Player behavior in detail page:
 
 - `/api/get-summary`
 - `/api/suggest-title`
-- `/api/search-projects`
 
 ## Contributor Notes
 

@@ -1,8 +1,14 @@
 # Nguyen Trai: UI/UX, Search and AI Summary Removal Roadmap
 
-**Status:** Proposed, awaiting owner review  
+**Status:** P0 implemented locally in two independent review branches; release approval pending
 **Baseline:** `main` at `1c74f3d` (2026-10-17), after PRs #26, #27 and #28  
 **Principle:** Small, testable PRs. Preserve the historical identity and production reliability.
+
+## Implementation status (2026-10-17)
+
+- P0a: `feat/search-minisearch` — local MiniSearch replacement, search API removal, 87 passing tests, lint/typecheck/build, independent review, desktop/mobile/offline Playwright and measured search/bundle results. See [search validation](ui-p0-search-validation.md).
+- P0b: `refactor/remove-ai-summary` — independent branch from the same baseline; summary component/API/callers removed while authored content remains. See that branch's `docs/ui-p0-summary-validation.md` for its validation.
+- Both changes are local and unmerged. No push, deployment, production write or environment change was performed. Review/release gates below remain in force; P1–P4 are not claimed complete.
 
 ## Objectives and non-goals
 

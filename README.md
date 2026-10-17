@@ -11,7 +11,7 @@ Preserve and promote the historical legacy of Nguyễn Trãi while raising aware
 - Public site with:
   - Home page and 9 themed section pages
   - Product/article detail pages
-  - Search, sort, tag filtering, AI-assisted semantic search
+  - Local MiniSearch full-text search, sort and tag filtering
   - AI summarization per card and detail page
 - Admin page (`/admin`) to:
   - Create entries
@@ -30,7 +30,7 @@ Preserve and promote the historical legacy of Nguyễn Trãi while raising aware
 - Upstash RediSearch schema/index for feedback querying
 - Cloudinary (media upload + Cloudinary video fallback player)
 - Mux (direct video upload + playback)
-- Gemini and/or Mistral APIs (AI title suggestion, summarization, semantic search)
+- Gemini and/or Mistral APIs (AI title suggestion and summarization)
 - Braintrust SDK (LLM trace logging for Gemini and Mistral calls)
 - Vercel Analytics + Speed Insights + OpenTelemetry instrumentation
 
@@ -86,7 +86,7 @@ Used by `/api/upload` and Cloudinary video player fallback.
 ### AI Providers
 
 - `GEMINI_API_KEY` (used first if present for summary/title)
-- `MISTRAL_API_KEY` (fallback for summary/title; required for semantic search)
+- `MISTRAL_API_KEY` (fallback for summary/title)
 - `AI_MODEL` (declared in env, not currently used by route handlers)
 
 ### Observability
@@ -179,7 +179,6 @@ In admin, the `<select>` stores section names. Keep this behavior in mind if you
 - `POST /api/upload` upload file to Cloudinary
 - `POST /api/suggest-title` AI title suggestions
 - `POST /api/get-summary` AI summary
-- `POST /api/search-projects` Mistral semantic matching over visible products
 - `POST /api/mux/upload-url` create Mux direct upload URL
 - `GET /api/mux/asset/[uploadId]` poll Mux upload/asset status
 - `POST /api/admin/auth/bootstrap` owner-controlled atomic admin provisioning

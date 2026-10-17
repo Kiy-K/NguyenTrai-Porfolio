@@ -220,42 +220,6 @@ Returns 3 Vietnamese title suggestions for a partially typed title.
 - `400` if `text` missing
 - `500` if providers unavailable or parsing fails
 
-## `POST /api/search-projects`
-
-Semantic ID matching over supplied project snippets.
-
-### Request body
-
-```json
-{
-  "query": "...",
-  "projects": [
-    {
-      "id": "...",
-      "title": "...",
-      "description": "..."
-    }
-  ]
-}
-```
-
-### Provider behavior
-
-- Mistral only (`MISTRAL_API_KEY` required)
-- Model instructed to return JSON array of relevant IDs
-- If `BRAINTRUST_API_KEY` is set, logs LLM trace spans to Braintrust
-
-### Success
-
-```json
-{ "matchedIds": ["id1", "id2"] }
-```
-
-### Errors
-
-- `400` if query missing
-- `500` if key missing, provider fails, or network error
-
 ## `POST /api/mux/upload-url`
 
 Creates a one-time Mux direct upload URL.

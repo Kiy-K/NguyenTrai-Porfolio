@@ -16,7 +16,7 @@ Core stack:
 - Upstash RediSearch schema/index for feedback reads
 - Cloudinary for image upload and video fallback
 - Mux for direct video uploads and playback
-- Gemini and/or Mistral for AI title suggestion, summarization, and semantic search
+- Gemini and/or Mistral for AI title suggestion and summarization
 
 ## Setup Commands
 
@@ -79,7 +79,6 @@ APIs:
 - `POST /api/upload`
 - `POST /api/suggest-title`
 - `POST /api/get-summary`
-- `POST /api/search-projects`
 - `POST /api/mux/upload-url`
 - `GET /api/mux/asset/[uploadId]`
 - `POST /api/admin/auth/bootstrap`
@@ -125,7 +124,6 @@ AI providers:
 
 - `POST /api/suggest-title`: Gemini first, Mistral fallback
 - `POST /api/get-summary`: Gemini first, Mistral fallback
-- `POST /api/search-projects`: Mistral only
 
 ## Security and Operational Constraints
 
