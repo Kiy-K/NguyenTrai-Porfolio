@@ -24,6 +24,14 @@ No production calls, environment changes, data copies or rollback executions.
   number of changed records and repeated source/pause checks. The deliberate
   per-record checks favor recovery safety; writes stay paused throughout.
 
+- After dedicated staging was supplied, the actual CLI `dry-run` also passed
+  against a confirmed-empty staging Neon seeded only with synthetic fixtures and
+  the separate scratch Redis. It exported four Neon products versus two Redis
+  products, planned three changes, retained a three-row feedback union and wrote
+  an exclusive 0600 plan under an operator-owned 0700 `/var/tmp` directory.
+  No Redis/Neon writes occurred; source/schema identity and canonical comparison
+  used the real provider SDKs. The synthetic private backup remains outside Git.
+
 Untested: a full recovery rehearsal against a dedicated Neon clone, production
 search-index readiness, owner login, environment switch and deployment. Those
 remain operator approval/verification gates in `neon-migration.md`. Synthetic
