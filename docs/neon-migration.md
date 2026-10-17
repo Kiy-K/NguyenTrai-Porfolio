@@ -131,32 +131,96 @@ never delete credential records, reset products, or expose hashes to solve it.
 
 ### Rollback reconciliation (Neon → Redis)
 
-No reconcile tool exists yet; build and test it before it is needed. The
-existing tooling only reads Redis and writes Neon. Requirements:
+`scripts/reconcile-redis.cjs` is standalone and never changes environments, deploys,
+changes passwords, or deletes Redis records. The default command is `dry-run`;
+explicit arguments are required. It uses only the process environment, **never**
+auto-loads `.env.local`. Use the owner `DATABASE_URL` for schema verification;
+`APP_DATABASE_URL` remains the runtime role. Pin the exact Neon host/database
+and Redis hostname. Keep connection URLs/tokens/peppers out of shell history,
+logs and review artifacts; load them with your approved secret manager.
 
-1. Set DATA_WRITE_PAUSED=1 and verify the live pause marker, as for the
-   original export. Neon is the source of truth until the switch.
-2. Write a protected export of the Neon state (content, credential record,
-   all feedback) outside Git (0700/0600), with counts and a canonical digest.
-   Two reads must match.
-3. Compare with Redis and copy only what differs. Never delete Redis keys or
-   overwrite anything that is not a Neon record:
-   - `admin:credentials:v1`: write the Neon hash fields. The Redis hash is
-     stale since the 2026-10-13 password reset; the old hash stays in the
-     2026-10-12 protected backup.
-   - `feedback:record:<id>`: add each Neon feedback row missing from Redis,
-     with the payload as hash string fields. Existing Redis feedback is kept.
-   - `portfolio_data_v4`: write the Neon content only if it differs
-     canonically (jsonb reorders keys; compare canonical digests).
-   - Leave `feedback_idx_v1`, sessions, rate limits and dedupe keys alone.
-4. Re-read Redis and confirm canonical equality with the Neon export: counts,
-   credential hash, every feedback payload, content digest, media references.
-5. Set PERSISTENCE_BACKEND=redis, deploy while paused, verify, then unpause.
-   Owner login checks the copied credential.
+The protected plan contains both complete snapshots, including credential
+hashes, plus their intended union and target identities. It is sensitive.
+Canonical SHA-256 digests cover complete payloads, credentials, product IDs and
+all Cloudinary/Mux fields. Hash scalar fields normalize to strings, as required
+by Redis. Duplicate product IDs, extra state, unknown permanent Redis keys,
+conflicting feedback, or credential fields absent from Neon abort. Destination-only
+feedback is retained, so the final feedback set is the verified union, not a
+lossy Neon-only replacement. Hash fields are never removed. Stable differences
+in content/credentials are expected; an owner approves them through the exact
+plan digest. New destination changes after export are conflicts.
 
-Records that exist only in Neon as of 2026-10-13: the reset credential hash and
-two synthetic feedback records (`16c6a75b-…`, `a556b80b-…`). Content is still
-equal to the 2026-10-12 backup.
+#### Operator procedure and approval boundaries
+
+1. **Owner approval A:** authorize the specific recovery window, canonical
+   production origin, release IDs, Neon endpoint/database and Redis hostname.
+   Confirm all historical deployments, workers and external writers are quiesced.
+   Deploy `DATA_WRITE_PAUSED=1` with Neon still selected and allow in-flight
+   requests to settle. Independently verify the canonical origin returns 503
+   and `X-Data-Write-Paused: 1` on the bootstrap guard. A configured flag alone
+   is not proof. Keep peppers and session settings unchanged.
+2. Create an operator-owned directory outside **every** Git repository, mode
+   0700 (including outside `/tmp` if it is a repository). Retain existing
+   migration backups. With identities and secret environment loaded, run:
+
+   ```bash
+   node scripts/reconcile-redis.cjs dry-run /private/recovery/rollback.json expected-neon-host/neondb expected-redis-host
+   ```
+
+   This reads each store twice, requires stable digests, exports a new exclusive
+   0600 plan, and reports only counts/digests/identities. No Redis or Neon writes.
+   Without a write pause a dry-run may fail on concurrent changes; it is not a
+   snapshot guarantee across active writers. Never print or attach the plan.
+3. Privately review both snapshots and every content/credential difference.
+   Compare feedback IDs/payloads and media/ID digests to the original import
+   receipt. Retain the printed approval digest, release IDs and timestamps in a
+   nonsensitive receipt. Unexpected differences require owner investigation,
+   never hand-edit the plan or reset records to bypass a conflict.
+4. **Owner approval B:** authorize applying this exact plan digest. With
+   `DATA_WRITE_PAUSED=1` and `MIGRATION_APP_URL=https://canonical-production-origin`
+   still set, run:
+
+   ```bash
+   node scripts/reconcile-redis.cjs apply /private/recovery/rollback.json expected-neon-host/neondb expected-redis-host APPROVED_PLAN_SHA256
+   node scripts/reconcile-redis.cjs verify /private/recovery/rollback.json expected-neon-host/neondb expected-redis-host
+   ```
+
+   Apply checks the live pause and unchanged Neon source before every record,
+   uses atomic Redis compare-and-set, then rechecks pause, source and the full
+   expected union. Only content, credential hash fields and missing Neon feedback
+   are written. Sessions, rate limits, dedupe and `feedback_idx_v1` are untouched.
+5. **Owner approval C:** only after verified digests/counts, authorize selecting
+   `PERSISTENCE_BACKEND=redis` and deploying the compatible release while still
+   paused. Verify public content, every ID/media reference, the credential digest,
+   feedback visibility through the Redis search path, and existing sessions.
+   The tool preserves the search index; if it is missing or not indexing restored
+   hashes, stop for a separately reviewed repair before unpausing.
+6. **Owner approval D:** authorize unpausing the verified Redis release. Owner
+   tests login without sharing the password. Check an identified synthetic
+   feedback round trip and record its ID. Retain protected backups and the
+   nonsensitive verification/release receipt. Never destroy the Neon recovery
+   source as part of rollback.
+
+#### Partial failure, retry and verification
+
+There is no cross-store transaction. Writes are record-by-record, each atomically
+compared against its current approved baseline. The pause and quiesced writers
+are required for the entire window, including backend deployment. An error,
+timeout, process interruption or lost response leaves writes **paused**, Neon
+selected and backups intact. Do not deploy Redis or unpause on a failed exit.
+Rerun `dry-run` inspection through the existing plan with `verify` (which fails
+until complete), then rerun the **same** `apply` and approval digest. Already
+reconciled records are skipped; missing records are retried. A changed Neon
+source, unexpected Redis value, extra record or private-file violation blocks
+retry and requires owner investigation and a newly exported/reviewed plan.
+The tool cannot prevent an external writer resuming after verification; keep
+all writers quiesced until the approved switch is complete.
+
+Synthetic checks: `npm test`; real Redis semantics: set dedicated
+`TEST_REDIS_REST_URL`, `TEST_REDIS_REST_TOKEN`, `TEST_REDIS_DISPOSABLE=1` for a
+throwaway database and run `node --test tests/redis-rollback.integration.cjs`.
+Never point those variables at application Redis. Integration leaves synthetic
+application records in that disposable database for inspection; no flush is used.
 
 Full dependency audit still reports six high/two moderate findings in development
 tooling; production dependency audit passes. CI reports the full audit and blocks
