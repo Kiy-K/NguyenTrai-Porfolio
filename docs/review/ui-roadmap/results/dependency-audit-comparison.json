@@ -1,0 +1,64 @@
+{
+  "baselineRef": "05638a4",
+  "baseline": {
+    "info": 0,
+    "low": 0,
+    "moderate": 2,
+    "high": 6,
+    "critical": 0,
+    "total": 8
+  },
+  "review": {
+    "info": 0,
+    "low": 0,
+    "moderate": 2,
+    "high": 6,
+    "critical": 0,
+    "total": 8
+  },
+  "newAffectedPackages": [],
+  "affectedPackages": [
+    {
+      "name": "@next/eslint-plugin-next",
+      "severity": "high",
+      "range": ">=14.3.0-canary.0"
+    },
+    {
+      "name": "@tailwindcss/typography",
+      "severity": "moderate",
+      "range": "<=0.0.0-insiders.fda8ce5 || >=0.5.5"
+    },
+    {
+      "name": "brace-expansion",
+      "severity": "high",
+      "range": "<=1.1.20"
+    },
+    {
+      "name": "braces",
+      "severity": "high",
+      "range": "*"
+    },
+    {
+      "name": "eslint-config-next",
+      "severity": "high",
+      "range": ">=14.3.0-canary.0"
+    },
+    {
+      "name": "fast-glob",
+      "severity": "high",
+      "range": "*"
+    },
+    {
+      "name": "micromatch",
+      "severity": "high",
+      "range": ">=0.2.0"
+    },
+    {
+      "name": "postcss-selector-parser",
+      "severity": "moderate",
+      "range": "<7.1.6"
+    }
+  ],
+  "productionAuditTotal": 0,
+  "dependencyChangesDuringReviewPreparation": false
+}

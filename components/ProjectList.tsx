@@ -65,7 +65,7 @@ export default function ProjectList({ products }: ProjectListProps) {
           <input
             type="search"
             aria-label="Tìm kiếm tác phẩm"
-            className="block w-full pl-12 pr-4 py-3 border border-[#D4C4A8] rounded-sm leading-5 bg-white placeholder-[#8B3A3A]/60 focus:outline-none focus:ring-1 focus:ring-[#B8860B] focus:border-[#B8860B] transition-all shadow-sm font-playfair text-[#2C1E16]"
+            className="block w-full pl-12 pr-4 py-3 border border-[#D4C4A8] rounded-sm leading-5 bg-white placeholder-[#5C4033] focus:outline-none focus:ring-1 focus:ring-[#B8860B] focus:border-[#B8860B] transition-all shadow-sm font-playfair text-[#2C1E16]"
             placeholder="Tìm theo tên, thẻ hoặc nội dung..."
             value={searchQuery}
             onChange={handleSearchChange}
@@ -75,7 +75,7 @@ export default function ProjectList({ products }: ProjectListProps) {
         <div className="flex flex-col sm:flex-row gap-4">
           <div className="relative min-w-[180px]">
             <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-              <ArrowUpDown className="h-5 w-5 text-[#8B3A3A]" />
+              <ArrowUpDown className="h-5 w-5 text-[#8B3A3A]" aria-hidden="true" />
             </div>
             <select
               aria-label="Sắp xếp tác phẩm"
@@ -105,7 +105,7 @@ export default function ProjectList({ products }: ProjectListProps) {
                 key={tag}
                 onClick={() => toggleTag(tag)}
                 aria-pressed={selectedTags.includes(tag)}
-                className={`px-4 py-1.5 text-sm font-playfair rounded-full border transition-all duration-300 ${
+                className={`px-4 py-2 min-h-10 text-sm font-playfair rounded-full border transition-all duration-300 ${
                   selectedTags.includes(tag)
                     ? 'bg-[#8B3A3A] text-white border-[#8B3A3A] shadow-sm'
                     : 'bg-white text-[#5C4033] border-[#D4C4A8] hover:border-[#B8860B] hover:text-[#8B3A3A]'

@@ -1,14 +1,24 @@
 # Nguyen Trai: UI/UX, Search and AI Summary Removal Roadmap
 
-**Status:** P0 implemented locally in two independent review branches; release approval pending
+**Status:** P0–P2 implemented locally; local P3 audit complete; release approval pending
 **Baseline:** `main` at `1c74f3d` (2026-10-17), after PRs #26, #27 and #28  
 **Principle:** Small, testable PRs. Preserve the historical identity and production reliability.
 
-## Implementation status (2026-10-17)
+## Implementation status and GitHub review handoff
 
-- P0a: `feat/search-minisearch` — local MiniSearch replacement, search API removal, 87 passing tests, lint/typecheck/build, independent review, desktop/mobile/offline Playwright and measured search/bundle results. See [search validation](ui-p0-search-validation.md).
-- P0b: `refactor/remove-ai-summary` — independent branch from the same baseline; summary component/API/callers removed while authored content remains. See that branch's `docs/ui-p0-summary-validation.md` for its validation.
-- Both changes are local and unmerged. No push, deployment, production write or environment change was performed. Review/release gates below remain in force; P1–P4 are not claimed complete.
+The original completed source is preserved at `perf/a11y-audit` (`b862a2f`). Latest fetched main remains `05638a4`, including merged roadmap #29. Review-only branches preserve the same implementation without merging main or deploying:
+
+| Review branch | Base | Focus |
+| --- | --- | --- |
+| [`review-ui-public-polish` (#30)](https://github.com/Kiy-K/NguyenTrai-Porfolio/pull/30) | `review-ui-p0-foundation` | P1 public UI, regression test, before/after screenshots |
+| [`review-admin-sections` (#31)](https://github.com/Kiy-K/NguyenTrai-Porfolio/pull/31) | `main` | P2 admin split, workflow tests, before/after screenshots |
+| `review-ui-a11y-audit` | [`review-ui-public-polish` (#30)](https://github.com/Kiy-K/NguyenTrai-Porfolio/pull/30) | P3 validation report, safe observations, review/release gates |
+
+The P0 foundation is a dependency ref, not a replacement approval for the pending canonical MiniSearch and AI-summary changes. It contains their already-reviewed combined source. [Compatibility notes](review/ui-roadmap/p0-compatibility.md) record the six P0 documentation conflicts and the clean admin/P0 simulations. Retarget P1/P3 only after P0 is incorporated into main and revalidate.
+
+P1 and P2 source/independent review checks are complete. Fresh focused suites pass 90 tests each; the original complete integration passed 99 tests plus lint/typecheck/build and public/admin/offline-search browser checks. See [P1 evidence](ui-p1-public-validation.md), [independent P2 evidence](https://github.com/Kiy-K/NguyenTrai-Porfolio/blob/review-admin-sections/docs/ui-p2-admin-validation.md), and [P3 report](ui-p3-a11y-performance.md).
+
+Remaining gates: canonical P0 acceptance; updated-main integration checks; owner approval before merge/release; post-release read-only verification and field performance. Existing third-party attribution contrast remains 2.06–2.1:1. P4 remains deferred for lack of evidence. No main merge, deploy, environment change or production mutation was performed. Five named review refs explicitly disable automatic Vercel deployment.
 
 ## Objectives and non-goals
 
@@ -27,13 +37,13 @@ Do not rewrite Next.js, replace Neon/Redis, change media providers, deploy autom
 - PR #27: shared 60-second public Redis cache-aside, with authenticated fresh reads and invalidation.
 - PR #28: streamed, layout-matched skeletons for public content/admin authentication/link previews; production deployed.
 
-## P0 — Retire public AI search and AI summaries (NEXT)
+## P0 — Retire public AI search and AI summaries
 
 ### P0a — Replace AI search with MiniSearch
 
 **Decision:** Use [MiniSearch](https://github.com/lucaong/minisearch), an in-memory JavaScript full-text search library with prefix matches, typo tolerance and field boosts. At the current scale (~31 products at the last verified inventory), a local index is sufficient. [Fuse.js](https://www.fusejs.io/) is a simpler fallback if MiniSearch is demonstrably worse; do not introduce hosted search, embeddings, Orama vector search or Pagefind's build-time indexing.
 
-**Existing code:** `components/ProjectList.tsx` currently combines substring matching with a debounced public POST to `/api/search-projects`. `app/api/search-projects/route.ts` calls Mistral using a client-supplied project array. This is unnecessary and can fail without API keys.
+**Planning baseline:** `components/ProjectList.tsx` combined substring matching with a debounced public POST to `/api/search-projects`. `app/api/search-projects/route.ts` called Mistral using a client-supplied project array. This was unnecessary and could fail without API keys.
 
 **Implementation PR A (separate from this document):**
 1. Add a small, typed, pure search adapter around MiniSearch; index **public products only**. Build the index once per change in the received product list (e.g. `useMemo`). Do not index credentials, admin records or private feedback.
@@ -50,7 +60,7 @@ Do not rewrite Next.js, replace Neon/Redis, change media providers, deploy autom
 
 **Decision:** Retire on-demand summaries rather than hiding the button or replacing it with another summarizer. Editorial `description` and `fullDescription` belong to the original articles and must stay.
 
-**Existing code:** `components/SummarizeButton.tsx` calls `POST /api/get-summary`, which currently routes to Gemini or Mistral. The component is imported and rendered by `components/ProjectCard.tsx`, `components/ProductCard.tsx`, and `app/(public)/products/[id]/page.tsx`.
+**Planning baseline:** `components/SummarizeButton.tsx` called `POST /api/get-summary`, routing to Gemini or Mistral. It was imported by `components/ProjectCard.tsx`, `components/ProductCard.tsx`, and `app/(public)/products/[id]/page.tsx`; those controls, component and API are now removed.
 
 **Implementation PR B (independent, reviewable, no migration):**
 1. Remove the summary button/UI from all public cards and product details, including imports, wrapper spacing and comments; preserve the normal description, article body, card links, share controls and media.

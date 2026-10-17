@@ -1,0 +1,61 @@
+{
+  "observedAt": "2026-10-17T12:27:46.523Z",
+  "revision": "39ed5cf37d381bfa0382c0e299020bde0f425467",
+  "origin": "http://127.0.0.1:3330",
+  "result": [
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 1000
+      },
+      "route": "/",
+      "title": "Nguyễn Trãi - Danh nhân văn hóa thế giới",
+      "screenshot": "after-home-1440.png"
+    },
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 1000
+      },
+      "route": "/sections/tu-tuong-nhan-nghia",
+      "title": "Nguyễn Trãi - Danh nhân văn hóa thế giới",
+      "screenshot": "after-section-1440.png"
+    },
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 1000
+      },
+      "route": "/products/p0-1",
+      "title": "Nguyễn Trãi - Danh nhân văn hóa thế giới",
+      "screenshot": "after-detail-1440.png"
+    },
+    {
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "route": "/",
+      "title": "Nguyễn Trãi - Danh nhân văn hóa thế giới",
+      "screenshot": "after-home-390.png"
+    },
+    {
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "route": "/sections/tu-tuong-nhan-nghia",
+      "title": "Nguyễn Trãi - Danh nhân văn hóa thế giới",
+      "screenshot": "after-section-390.png"
+    },
+    {
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "route": "/products/p0-1",
+      "title": "Nguyễn Trãi - Danh nhân văn hóa thế giới",
+      "screenshot": "after-detail-390.png"
+    }
+  ]
+}

@@ -1,0 +1,66 @@
+const { origin, artifact, receipt, checkout } = require('./common.cjs');
+const path = require('node:path');
+const { chromium } = require('playwright');
+const assert = require('node:assert/strict'), fs = require('node:fs');
+(async () => {
+    const browser = await chromium.launch({ headless: true, args: ['--no-sandbox'] });
+    const results = [];
+    for (const viewport of [{ width: 1440, height: 1000 }, { width: 390, height: 844 }]) {
+        const context = await browser.newContext({ viewport });
+        const errors = [], forbidden = [], external = [];
+        await context.route('**/*', r => { const url = new URL(r.request().url()); if (/search-projects|get-summary|mistral|generativelanguage/.test(url.href))
+            forbidden.push(url.href); if (url.origin !== origin) {
+            external.push(url.href);
+            return r.abort();
+        } return r.continue(); });
+        const page = await context.newPage();
+        page.on('pageerror', e => errors.push(e.message));
+        await page.goto(origin + '/sections/tu-tuong-nhan-nghia', { waitUntil: 'networkidle' });
+        assert.match(await page.title(), /Nguy|Trãi/i);
+        await page.getByRole('heading', { name: 'Tư tưởng nhân nghĩa', exact: true }).waitFor();
+        assert.equal(await page.locator('h3').count(), 10);
+        assert.equal(await page.getByRole('button', { name: 'Riêng tư', exact: true }).count(), 0);
+        assert.equal(await page.getByText('Bài viết chuyên mục khác', { exact: true }).count(), 0);
+        const input = page.getByRole('searchbox', { name: 'Tìm kiếm tác phẩm' }), sort = page.getByLabel('Sắp xếp tác phẩm');
+        await page.screenshot({ path: artifact(`nguyentrai-p0a-${viewport.width}.png`) });
+        await page.getByRole('button', { name: 'Trang 3', exact: true }).click();
+        assert.equal(await page.getByRole('button', { name: 'Trang 3', exact: true }).getAttribute('aria-current'), 'page');
+        await input.focus();
+        await input.pressSequentially('nguyen trai');
+        await page.getByRole('status').filter({ hasText: '11 tác phẩm' }).waitFor();
+        assert.match(await page.locator('h3').first().innerText(), /Nguyễn Trãi/);
+        assert.equal(await page.getByRole('button', { name: 'Trang 1', exact: true }).getAttribute('aria-current'), 'page');
+        await sort.selectOption('title-desc');
+        assert.match(await page.locator('h3').first().innerText(), /31$/);
+        await page.getByRole('button', { name: 'Lịch sử', exact: true }).click();
+        await page.getByRole('status').filter({ hasText: '6 tác phẩm' }).waitFor();
+        await input.fill('no such match');
+        await page.getByText('Không tìm thấy tác phẩm nào phù hợp.', { exact: true }).waitFor();
+        await page.getByRole('button', { name: 'Xóa bộ lọc' }).click();
+        assert.equal(await input.inputValue(), '');
+        assert.equal(await sort.inputValue(), 'relevance');
+        await context.setOffline(true);
+        await input.fill('nguyem trai');
+        await page.getByRole('status').filter({ hasText: '11 tác phẩm' }).waitFor();
+        assert.equal(await page.locator('h3').count(), 10);
+        await page.screenshot({ path: artifact(`nguyentrai-p0a-search-${viewport.width}.png`) });
+        await context.setOffline(false);
+        const overflow = await page.evaluate(() => document.documentElement.scrollWidth > window.innerWidth);
+        assert.equal(overflow, false);
+        assert.equal(await page.locator('nextjs-portal').count(), 0);
+        assert.deepEqual(errors, []);
+        assert.deepEqual(forbidden, []);
+        const removed = await context.request.post(origin + '/api/search-projects', { data: { query: 'test' } });
+        assert.equal(removed.status(), 404);
+        const name = await page.locator('h3').first().innerText();
+        await page.locator('h3').first().click();
+        await page.getByRole('heading', { level: 1, name, exact: true }).waitFor();
+        await page.getByText('Nội dung do tác giả viết: Bảo tồn di sản qua nhiều thế hệ.', { exact: true }).waitFor();
+        await page.screenshot({ path: artifact(`nguyentrai-p0a-detail-${viewport.width}.png`) });
+        results.push({ checks: ['accent-folded query: 11 matches', 'title-desc: 31 first', 'tag intersection: 6 matches', 'no-results/reset', 'offline typo query: 11 matches', 'retired endpoint: 404'], viewport, url: page.url(), title: await page.title(), errors, forbidden, overflow, externalBlocked: external.length });
+        await context.close();
+    }
+    receipt('search-browser.json', results);
+    console.log(JSON.stringify(results, null, 2));
+    await browser.close();
+})().catch(e => { console.error(e); process.exit(1); });

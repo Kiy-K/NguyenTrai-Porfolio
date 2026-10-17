@@ -1,0 +1,454 @@
+{
+  "observedAt": "2026-10-17T12:28:31.675Z",
+  "revision": "39ed5cf37d381bfa0382c0e299020bde0f425467",
+  "nodeVersion": "v26.10.0",
+  "origin": "http://127.0.0.1:3330",
+  "result": [
+    {
+      "profile": "mobile",
+      "lighthouseVersion": "13.5.0",
+      "settings": {
+        "output": "json",
+        "maxWaitForFcp": 30000,
+        "maxWaitForLoad": 45000,
+        "pauseAfterFcpMs": 1000,
+        "pauseAfterLoadMs": 1000,
+        "networkQuietThresholdMs": 1000,
+        "cpuQuietThresholdMs": 1000,
+        "formFactor": "mobile",
+        "throttling": {
+          "rttMs": 150,
+          "throughputKbps": 1638.4,
+          "requestLatencyMs": 562.5,
+          "downloadThroughputKbps": 1474.5600000000002,
+          "uploadThroughputKbps": 675,
+          "cpuSlowdownMultiplier": 4
+        },
+        "throttlingMethod": "simulate",
+        "screenEmulation": {
+          "mobile": true,
+          "width": 390,
+          "height": 844,
+          "deviceScaleFactor": 1,
+          "disabled": false
+        },
+        "emulatedUserAgent": "Mozilla/5.0 (Linux; Android 11; moto g power (2022)) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Mobile Safari/537.36",
+        "auditMode": false,
+        "gatherMode": false,
+        "clearStorageTypes": [
+          "file_systems",
+          "shader_cache",
+          "service_workers",
+          "cache_storage"
+        ],
+        "disableStorageReset": false,
+        "debugNavigation": false,
+        "channel": "node",
+        "usePassiveGathering": false,
+        "disableFullPageScreenshot": false,
+        "skipAboutBlank": false,
+        "blankPage": "about:blank",
+        "ignoreStatusCode": false,
+        "locale": "en-US",
+        "blockedUrlPatterns": [
+          "*vercel*"
+        ],
+        "additionalTraceCategories": null,
+        "extraHeaders": null,
+        "precomputedLanternData": null,
+        "onlyAudits": null,
+        "onlyCategories": [
+          "performance",
+          "accessibility"
+        ],
+        "skipAudits": null
+      },
+      "scores": {
+        "performance": 0.95,
+        "accessibility": 0.96
+      },
+      "audits": {
+        "largest-contentful-paint": {
+          "id": "largest-contentful-paint",
+          "title": "Largest Contentful Paint",
+          "description": "Largest Contentful Paint marks the time at which the largest text or image is painted. [Learn more about the Largest Contentful Paint metric](https://developer.chrome.com/docs/lighthouse/performance/lighthouse-largest-contentful-paint/)",
+          "score": 0.95,
+          "scoreDisplayMode": "numeric",
+          "numericValue": 2178.7479000000003,
+          "numericUnit": "millisecond",
+          "displayValue": "2.2 s",
+          "scoringOptions": {
+            "p10": 2500,
+            "median": 4000
+          }
+        },
+        "cumulative-layout-shift": {
+          "id": "cumulative-layout-shift",
+          "title": "Cumulative Layout Shift",
+          "description": "Cumulative Layout Shift measures the movement of visible elements within the viewport. [Learn more about the Cumulative Layout Shift metric](https://web.dev/articles/cls).",
+          "score": 1,
+          "scoreDisplayMode": "numeric",
+          "numericValue": 0,
+          "numericUnit": "unitless",
+          "displayValue": "0",
+          "scoringOptions": {
+            "p10": 0.1,
+            "median": 0.25
+          },
+          "details": {
+            "type": "debugdata",
+            "items": [
+              {
+                "cumulativeLayoutShiftMainFrame": 0,
+                "newEngineResult": {
+                  "cumulativeLayoutShift": 0,
+                  "cumulativeLayoutShiftMainFrame": 0
+                },
+                "newEngineResultDiffered": false
+              }
+            ]
+          }
+        },
+        "total-blocking-time": {
+          "id": "total-blocking-time",
+          "title": "Total Blocking Time",
+          "description": "Sum of all time periods between FCP and Time to Interactive, when task length exceeded 50ms, expressed in milliseconds. [Learn more about the Total Blocking Time metric](https://developer.chrome.com/docs/lighthouse/performance/lighthouse-total-blocking-time/).",
+          "score": 0.88,
+          "scoreDisplayMode": "numeric",
+          "numericValue": 214.0630250000006,
+          "numericUnit": "millisecond",
+          "displayValue": "210 ms",
+          "scoringOptions": {
+            "p10": 200,
+            "median": 600
+          }
+        },
+        "color-contrast": {
+          "id": "color-contrast",
+          "title": "Background and foreground colors do not have a sufficient contrast ratio.",
+          "description": "Low-contrast text is difficult or impossible for many users to read. [Learn how to provide sufficient color contrast](https://dequeuniversity.com/rules/axe/4.13/color-contrast).",
+          "score": 0,
+          "scoreDisplayMode": "binary",
+          "details": {
+            "type": "table",
+            "headings": [
+              {
+                "key": "node",
+                "valueType": "node",
+                "subItemsHeading": {
+                  "key": "relatedNode",
+                  "valueType": "node"
+                },
+                "label": "Failing Elements"
+              }
+            ],
+            "items": [
+              {
+                "node": {
+                  "type": "node",
+                  "lhId": "1-0-SPAN",
+                  "path": "1,HTML,1,BODY,2,ELEVENLABS-CONVAI,a,#document-fragment,3,DIV,0,P,0,SPAN",
+                  "selector": "div.overlay > p.whitespace-nowrap > span.opacity-30",
+                  "boundingRect": {
+                    "top": 822,
+                    "bottom": 834,
+                    "left": 231,
+                    "right": 283,
+                    "width": 52,
+                    "height": 12
+                  },
+                  "snippet": "<span class=\"opacity-30\">",
+                  "nodeLabel": "Powered by",
+                  "explanation": "Fix any of the following:\n  Element has insufficient color contrast of 2.1 (foreground color: #b3b1ae, background color: #fffdf8, font size: 7.5pt (10px), font weight: normal). Expected contrast ratio of 4.5:1"
+                },
+                "subItems": {
+                  "type": "subitems",
+                  "items": [
+                    {
+                      "relatedNode": {
+                        "type": "node",
+                        "lhId": "1-1-ARTICLE",
+                        "path": "1,HTML,1,BODY,1,DIV,4,DIV,0,MAIN,1,DIV,0,SECTION,0,DIV,1,DIV,0,ARTICLE",
+                        "selector": "section#tong-quan-va-gop-y > div.bg-white > div.grid > article.rounded-2xl",
+                        "boundingRect": {
+                          "top": 784,
+                          "bottom": 1074,
+                          "left": 49,
+                          "right": 341,
+                          "width": 292,
+                          "height": 290
+                        },
+                        "snippet": "<article class=\"rounded-2xl border border-[#D4C4A8] bg-[#FFFDF8] p-6\">",
+                        "nodeLabel": "Tổng quan dự án\nPhần 1: Tiếng vọng từ tình yêu thiên nhiên\nPhần 2: Tiếng vọng t…"
+                      }
+                    }
+                  ]
+                }
+              }
+            ],
+            "debugData": {
+              "type": "debugdata",
+              "impact": "serious",
+              "tags": [
+                "cat.color",
+                "wcag2aa",
+                "wcag143",
+                "TTv5",
+                "TT13.c",
+                "EN-301-549",
+                "EN-9.1.4.3",
+                "ACT",
+                "RGAAv4",
+                "RGAA-3.2.1"
+              ]
+            }
+          }
+        }
+      }
+    },
+    {
+      "profile": "desktop",
+      "lighthouseVersion": "13.5.0",
+      "settings": {
+        "output": "json",
+        "maxWaitForFcp": 30000,
+        "maxWaitForLoad": 45000,
+        "pauseAfterFcpMs": 1000,
+        "pauseAfterLoadMs": 1000,
+        "networkQuietThresholdMs": 1000,
+        "cpuQuietThresholdMs": 1000,
+        "formFactor": "desktop",
+        "throttling": {
+          "rttMs": 40,
+          "throughputKbps": 10240,
+          "requestLatencyMs": 0,
+          "downloadThroughputKbps": 0,
+          "uploadThroughputKbps": 0,
+          "cpuSlowdownMultiplier": 1
+        },
+        "throttlingMethod": "simulate",
+        "screenEmulation": {
+          "mobile": false,
+          "width": 1440,
+          "height": 1000,
+          "deviceScaleFactor": 1,
+          "disabled": false
+        },
+        "emulatedUserAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36",
+        "auditMode": false,
+        "gatherMode": false,
+        "clearStorageTypes": [
+          "file_systems",
+          "shader_cache",
+          "service_workers",
+          "cache_storage"
+        ],
+        "disableStorageReset": false,
+        "debugNavigation": false,
+        "channel": "node",
+        "usePassiveGathering": false,
+        "disableFullPageScreenshot": false,
+        "skipAboutBlank": false,
+        "blankPage": "about:blank",
+        "ignoreStatusCode": false,
+        "locale": "en-US",
+        "blockedUrlPatterns": [
+          "*vercel*"
+        ],
+        "additionalTraceCategories": null,
+        "extraHeaders": null,
+        "precomputedLanternData": null,
+        "onlyAudits": null,
+        "onlyCategories": [
+          "performance",
+          "accessibility"
+        ],
+        "skipAudits": null
+      },
+      "scores": {
+        "performance": 1,
+        "accessibility": 0.96
+      },
+      "audits": {
+        "largest-contentful-paint": {
+          "id": "largest-contentful-paint",
+          "title": "Largest Contentful Paint",
+          "description": "Largest Contentful Paint marks the time at which the largest text or image is painted. [Learn more about the Largest Contentful Paint metric](https://developer.chrome.com/docs/lighthouse/performance/lighthouse-largest-contentful-paint/)",
+          "score": 1,
+          "scoreDisplayMode": "numeric",
+          "numericValue": 569.1871249999999,
+          "numericUnit": "millisecond",
+          "displayValue": "0.6 s",
+          "scoringOptions": {
+            "p10": 1200,
+            "median": 2400
+          }
+        },
+        "cumulative-layout-shift": {
+          "id": "cumulative-layout-shift",
+          "title": "Cumulative Layout Shift",
+          "description": "Cumulative Layout Shift measures the movement of visible elements within the viewport. [Learn more about the Cumulative Layout Shift metric](https://web.dev/articles/cls).",
+          "score": 1,
+          "scoreDisplayMode": "numeric",
+          "numericValue": 0,
+          "numericUnit": "unitless",
+          "displayValue": "0",
+          "scoringOptions": {
+            "p10": 0.1,
+            "median": 0.25
+          },
+          "details": {
+            "type": "debugdata",
+            "items": [
+              {
+                "cumulativeLayoutShiftMainFrame": 0,
+                "newEngineResult": {
+                  "cumulativeLayoutShift": 0,
+                  "cumulativeLayoutShiftMainFrame": 0
+                },
+                "newEngineResultDiffered": false
+              }
+            ]
+          }
+        },
+        "total-blocking-time": {
+          "id": "total-blocking-time",
+          "title": "Total Blocking Time",
+          "description": "Sum of all time periods between FCP and Time to Interactive, when task length exceeded 50ms, expressed in milliseconds. [Learn more about the Total Blocking Time metric](https://developer.chrome.com/docs/lighthouse/performance/lighthouse-total-blocking-time/).",
+          "score": 1,
+          "scoreDisplayMode": "numeric",
+          "numericValue": 11.000000000000114,
+          "numericUnit": "millisecond",
+          "displayValue": "10 ms",
+          "scoringOptions": {
+            "p10": 150,
+            "median": 350
+          }
+        },
+        "color-contrast": {
+          "id": "color-contrast",
+          "title": "Background and foreground colors do not have a sufficient contrast ratio.",
+          "description": "Low-contrast text is difficult or impossible for many users to read. [Learn how to provide sufficient color contrast](https://dequeuniversity.com/rules/axe/4.13/color-contrast).",
+          "score": 0,
+          "scoreDisplayMode": "binary",
+          "details": {
+            "type": "table",
+            "headings": [
+              {
+                "key": "node",
+                "valueType": "node",
+                "subItemsHeading": {
+                  "key": "relatedNode",
+                  "valueType": "node"
+                },
+                "label": "Failing Elements"
+              }
+            ],
+            "items": [
+              {
+                "node": {
+                  "type": "node",
+                  "lhId": "1-0-SPAN",
+                  "path": "1,HTML,1,BODY,2,ELEVENLABS-CONVAI,a,#document-fragment,3,DIV,0,P,0,SPAN",
+                  "selector": "div.overlay > p.whitespace-nowrap > span.opacity-30",
+                  "boundingRect": {
+                    "top": 978,
+                    "bottom": 990,
+                    "left": 1266,
+                    "right": 1318,
+                    "width": 52,
+                    "height": 12
+                  },
+                  "snippet": "<span class=\"opacity-30\">",
+                  "nodeLabel": "Powered by",
+                  "explanation": "Fix any of the following:\n  Element has insufficient color contrast of 2.06 (foreground color: #aba592, background color: #f4ebd0, font size: 7.5pt (10px), font weight: normal). Expected contrast ratio of 4.5:1"
+                },
+                "subItems": {
+                  "type": "subitems",
+                  "items": [
+                    {
+                      "relatedNode": {
+                        "type": "node",
+                        "lhId": "1-1-DIV",
+                        "path": "1,HTML,1,BODY,1,DIV,4,DIV",
+                        "selector": "body.font-playfair > div.min-h-screen > div.flex-1",
+                        "boundingRect": {
+                          "top": 88,
+                          "bottom": 3091,
+                          "left": 0,
+                          "right": 1425,
+                          "width": 1425,
+                          "height": 3003
+                        },
+                        "snippet": "<div class=\"flex-1 bg-[#F4EBD0] font-playfair flex flex-col\">",
+                        "nodeLabel": "- Danh Nhân Văn Hóa -\nNguyễn Trãi\n\n\"Việc nhân nghĩa cốt ở yên dân\nQuân điếu phạ…"
+                      }
+                    }
+                  ]
+                }
+              },
+              {
+                "node": {
+                  "type": "node",
+                  "lhId": "1-2-A",
+                  "path": "1,HTML,1,BODY,2,ELEVENLABS-CONVAI,a,#document-fragment,3,DIV,0,P,1,A",
+                  "selector": "div.overlay > p.whitespace-nowrap > a.underline",
+                  "boundingRect": {
+                    "top": 978,
+                    "bottom": 990,
+                    "left": 1320,
+                    "right": 1381,
+                    "width": 61,
+                    "height": 12
+                  },
+                  "snippet": "<a href=\"https://elevenlabs.io/agents\" target=\"_blank\" class=\"underline cursor-pointer pointer-events-auto focus-visible:outline-hidden …\">",
+                  "nodeLabel": "ElevenAgents",
+                  "explanation": "Fix any of the following:\n  Element has insufficient color contrast of 2.06 (foreground color: #aba592, background color: #f4ebd0, font size: 7.5pt (10px), font weight: normal). Expected contrast ratio of 4.5:1"
+                },
+                "subItems": {
+                  "type": "subitems",
+                  "items": [
+                    {
+                      "relatedNode": {
+                        "type": "node",
+                        "lhId": "1-1-DIV",
+                        "path": "1,HTML,1,BODY,1,DIV,4,DIV",
+                        "selector": "body.font-playfair > div.min-h-screen > div.flex-1",
+                        "boundingRect": {
+                          "top": 88,
+                          "bottom": 3091,
+                          "left": 0,
+                          "right": 1425,
+                          "width": 1425,
+                          "height": 3003
+                        },
+                        "snippet": "<div class=\"flex-1 bg-[#F4EBD0] font-playfair flex flex-col\">",
+                        "nodeLabel": "- Danh Nhân Văn Hóa -\nNguyễn Trãi\n\n\"Việc nhân nghĩa cốt ở yên dân\nQuân điếu phạ…"
+                      }
+                    }
+                  ]
+                }
+              }
+            ],
+            "debugData": {
+              "type": "debugdata",
+              "impact": "serious",
+              "tags": [
+                "cat.color",
+                "wcag2aa",
+                "wcag143",
+                "TTv5",
+                "TT13.c",
+                "EN-301-549",
+                "EN-9.1.4.3",
+                "ACT",
+                "RGAAv4",
+                "RGAA-3.2.1"
+              ]
+            }
+          }
+        }
+      }
+    }
+  ]
+}
