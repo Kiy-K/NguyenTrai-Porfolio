@@ -6,7 +6,7 @@ Historical measurement snapshot: 2026-10-17, source commit [`b862a2f`](https://g
 
 Next.js 16.4.0 webpack production build, Node 24, Chromium 155 (Playwright build 1247) from the existing cache, Lighthouse 13.5.0. Synthetic 31-product catalog, read-only local Redis responder, writes paused, database/AI keys blank. Browser mutation/provider calls in admin tests are intercepted locally. Playwright blocks external traffic; Lighthouse allows the existing third-party widget and blocks Vercel analytics. These are different test profiles, reported separately.
 
-Build/test commands: `npm test`, `npm run lint`, `npm run typecheck`, `npm run build -- --webpack`. Build with storage/AI variables blank and `PERSISTENCE_BACKEND=redis`. Temporary harnesses:
+Build/test commands: `npm test`, `npm run lint`, `npm run typecheck`, `npm run build -- --webpack`. Build with storage/AI variables blank and `PERSISTENCE_BACKEND=redis`. The original run used temporary harnesses listed below; their sanitized, portable replacements and the synthetic fixture are now committed in [scripts/ui-review](../scripts/ui-review/README.md). Use that guide to reproduce both snapshots from a clean checkout. Historical temporary paths identify the original run only:
 
 - `/tmp/nguyentrai-p0-build.cjs <checkout>` builds with those no-service settings.
 - `/tmp/nguyentrai-p0-server.cjs <checkout> 3330` starts the built app and synthetic responder.
@@ -68,11 +68,11 @@ The final integrated local suite has 99 passing tests, with lint/typecheck/build
 
 P4 remains evidence-gated: the current catalog fits a small local index; extracted admin components remove the immediate maintenance pressure without TanStack Query. There is no evidence here to add hosted search or to delete legacy Redis data. No optional infrastructure/dependency work was performed. Any code rollback would revert the relevant scoped commit and rebuild; data/media require no migration under these changes. Production rollback still requires owner approval.
 
-## Published draft-review evidence
+## Published review evidence
 
 The report above retains the original measurement snapshot, not a claim that new metrics were measured while publishing. The integrated `b862a2f` source is preserved on `review-ui-roadmap-integrated` with only the review-ref deployment guard added. Current main remains `05638a4` and includes roadmap PR #29. No main merge or deployment was performed.
 
-Three focused drafts separate public polish, independent admin refactoring and this report. P1 targets `review-ui-p0-foundation`, since the canonical P0 commits are pending locally rather than open GitHub PRs. P3 targets the P1 review branch; the independent admin PR targets main. The P0 foundation resolves six original documentation conflicts while preserving both removals. See [P0 compatibility](review/ui-roadmap/p0-compatibility.md).
+Three focused PRs separate public polish, independent admin refactoring and this report; all have been marked ready for review. P1 targets `review-ui-p0-foundation`, since the canonical P0 commits are pending locally rather than open GitHub PRs. P3 targets the P1 review branch; the independent admin PR targets main. The P0 foundation resolves six original documentation conflicts while preserving both removals. See [P0 compatibility](review/ui-roadmap/p0-compatibility.md).
 
 [Committed public before/after screenshots](review/ui-roadmap/screenshots/) and [public check receipts](review/ui-roadmap/results/) are inherited from the P1 base. Admin before/after screenshots and fresh receipts are in the [independent admin review branch](https://github.com/Kiy-K/NguyenTrai-Porfolio/tree/review-admin-sections/docs/review/ui-roadmap). [Portable Lighthouse summaries](review/ui-roadmap/results/lighthouse-summary.json), [vitals](review/ui-roadmap/results/vitals-before.json), [quiet after vitals](review/ui-roadmap/results/vitals-after-quiet.json), [CDN safe receipt](review/ui-roadmap/results/cdn-readonly.json), and the original integrated 99-test/build receipts are committed here. No private content payloads or service credentials are included.
 
@@ -80,10 +80,22 @@ Fresh branch checks: P1 **90 tests**, P2 independently on main **90 tests**, bot
 
 Release gates: accept canonical P0, retarget/rebase the P1/P3 stack against updated main and rerun the combined suite; obtain owner approval before merge/deploy; perform post-release read-only validation and field measurements. Native dialog behavior remains Chromium-only and live Cloudinary/Mux uploads are untested. The external-widget contrast failure remains **2.06–2.1:1** (accessibility score 96). Mobile performance was 95 → 93 under competing jobs, then 95 in a quiet repeat; no speedup or statistically established regression is claimed. P4 remains deferred. No automatic deployment is allowed for the five named review refs in `vercel.json`; main/runtime settings are unchanged.
 
-Draft source reviews: [P1 public polish #30](https://github.com/Kiy-K/NguyenTrai-Porfolio/pull/30) and [P2 admin sections #31](https://github.com/Kiy-K/NguyenTrai-Porfolio/pull/31). Both are drafts and mergeable against their stated bases at creation. Fresh production-only dependency audit reports zero advisories; [safe audit summary](review/ui-roadmap/results/production-audit-summary.json). GitHub CI completion is a remaining gate until its checks finish.
+Draft source reviews: [P1 public polish #30](https://github.com/Kiy-K/NguyenTrai-Porfolio/pull/30) and [P2 admin sections #31](https://github.com/Kiy-K/NguyenTrai-Porfolio/pull/31). Both were drafts and mergeable against their stated bases at creation; they are now ready for review. Fresh production-only dependency audit reports zero advisories; [safe audit summary](review/ui-roadmap/results/production-audit-summary.json). CI passed at publication; review-fix heads must also pass before merge.
 
 ### Review publication checks
 
 The five review refs were pushed with their exact `git.deploymentEnabled` entries set to false. A Vercel read-only query after draft creation observed **zero deployments** since push preparation; [guard verification receipt](review/ui-roadmap/results/deployment-guard-verification.json). No Vercel project/runtime setting was edited.
 
 GitHub reported existing default-branch dependency alerts. A fresh full npm audit was compared against an isolated latest-main snapshot: the same eight affected development packages (six high, two moderate) appear on both sides, with **no newly affected packages**; the production-only audit is zero. [Comparison receipt](review/ui-roadmap/results/dependency-audit-comparison.json). Packaging made no dependency changes. Remediation remains separate from this UI review; P4 is not expanded or implemented.
+
+
+## Review corrections and reproduction rerun
+
+The public focus outline uses a dedicated darker gold (`#A67A0A`): **3.26:1 on parchment**, **4.15:1 on dark navigation**, **3.88:1 on white**. The original decorative palette remains intact. [P1 corrected validation](ui-p1-public-validation.md#review-correction-keyboard-focus-contrast) records 91 tests and desktop/mobile rendered keyboard-focus screenshots. The original 90/99-test receipts above remain dated historical evidence.
+
+[Portable harness and full instructions](../scripts/ui-review/README.md) include the synthetic catalog, credential-isolated build/server, public/menu/contrast assertions, offline-search assertions, intercepted admin workflows, before/after screenshots, interaction-vitals collector and pinned Lighthouse runner. Browser assertions block nonlocal origins; Lighthouse retains its separately documented widget-enabled profile. No application dependency was added. Admin uses the independent main-based checkout, with the same external harness.
+
+New rerun receipts are separately named `reproduction-*` in [results](review/ui-roadmap/results/), preserving the original observations. These validate the committed reproduction path, not a statistically controlled speed comparison or release approval. No main merge, deployment, data mutation or P4 work is part of this correction. The existing third-party widget contrast limitation and Chromium-only/live-provider coverage limits remain.
+
+
+The correction rerun used Node **26.10.0** (the historical snapshot above used Node 24), the same pinned Chromium/Lighthouse tools and the same synthetic fixture. Lighthouse observed **95 mobile / 100 desktop**, accessibility **96** in both profiles; the widget contrast failure persists. Section lab observations: LCP **156 ms desktop / 108 ms mobile**, CLS **0**, INP **24 ms** in both. These new samples validate the runner, not a matched performance comparison with the historical Node 24 run. Public tests are **91/91**; the preserved full integrated source plus focus correction is **100/100**; the harness self-test, lint and typecheck pass. [Rerun check receipts](review/ui-roadmap/results/reproduction-checks.txt), [integrated test receipt](review/ui-roadmap/results/reproduction-integrated-tests.txt).
