@@ -31,7 +31,7 @@ test('admin controls remain hidden until session validation succeeds', async () 
       react: {
         useState(initial) {
           const index = stateIndex++;
-          stateValues[index] ??= index === 0 ? true : initial;
+          stateValues[index] ??= initial;
           return [stateValues[index], value => {
             stateChanges.push([index, value]);
             stateValues[index] = value;
@@ -43,6 +43,9 @@ test('admin controls remain hidden until session validation succeeds', async () 
       'next/navigation': { useRouter: () => ({ replace: path => redirects.push(path) }) },
       'next/image': { default: () => null },
       '@/lib/constants': constants,
+      '@/components/admin/ArticleForm': { default: () => require('react').createElement('form') },
+      '@/components/admin/FeedbackPanel': { default: () => null },
+      '@/components/admin/SecurityActions': { default: () => null },
       '@/components/Navigation': { default: () => null },
       '@/components/Footer': { default: () => null },
       '@/components/MuxVideoPlayer': { default: () => null },
@@ -58,9 +61,9 @@ test('admin controls remain hidden until session validation succeeds', async () 
     try {
       const initialUI = AdminPage();
       assert.doesNotMatch(renderToStaticMarkup(initialUI), /<(form|input|textarea)\b/);
-      const cleanup = effects[1]();
+      const cleanup = effects[0]();
       await new Promise(resolve => setImmediate(resolve));
-      assert.equal(stateChanges.some(([index, value]) => index === 1 && value === false), outcome === 'accepted', outcome);
+      assert.equal(stateChanges.some(([index, value]) => index === 0 && value === false), outcome === 'accepted', outcome);
       assert.deepEqual(redirects, ['rejected', 'network'].includes(outcome) ? ['/admin/login'] : []);
       if (outcome === 'accepted') {
         stateIndex = 0;

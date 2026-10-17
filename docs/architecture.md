@@ -154,6 +154,8 @@ At render time, detail page supports multiple videos and prefers Mux playback fo
 
 ## Rendering and Client Behavior
 
+- The admin page validates the no-store session response before mounting form, media, feedback or security-action components. Save/delete share a pending lock. Media progress follows completed files/XHR bytes; cancellation and unmount invalidate late video responses. Native confirmation dialogs preserve typed deletion and the recovery download. Server session/IP/origin/rate-limit enforcement is unchanged.
+
 - Product/section routes use dynamic rendering; the homepage remains static.
 - Global `AutoReloader` triggers `router.refresh()` every 30 minutes for long-open tabs.
 - Public routes share navigation in `app/(public)/layout.tsx`, so it remains mounted and usable across route fallbacks. Navigation is sticky and auto-hides on downward scroll.
