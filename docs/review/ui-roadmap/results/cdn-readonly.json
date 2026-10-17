@@ -1,0 +1,55 @@
+{
+  "observedAt": "2026-10-17T07:01:12.889Z",
+  "origin": "https://nguyen-trai-porfolio.vercel.app",
+  "method": "GET only; payloads discarded; no authentication",
+  "requests": [
+    {
+      "route": "/api/products",
+      "sample": 1,
+      "status": 200,
+      "cacheControl": "no-store",
+      "vercelCache": "MISS",
+      "durationMs": 5357.679192
+    },
+    {
+      "route": "/api/products",
+      "sample": 2,
+      "status": 200,
+      "cacheControl": "no-store",
+      "vercelCache": "MISS",
+      "durationMs": 199.10902799999985
+    },
+    {
+      "route": "/sections/tu-tuong-nhan-nghia",
+      "sample": 1,
+      "status": 200,
+      "cacheControl": "private, no-cache, no-store, max-age=0, must-revalidate",
+      "vercelCache": "MISS",
+      "durationMs": 1843.9211769999993
+    },
+    {
+      "route": "/sections/tu-tuong-nhan-nghia",
+      "sample": 2,
+      "status": 200,
+      "cacheControl": "private, no-cache, no-store, max-age=0, must-revalidate",
+      "vercelCache": "MISS",
+      "durationMs": 1126.0173490000006
+    },
+    {
+      "route": "/products/[public-id]",
+      "sample": 1,
+      "status": 200,
+      "cacheControl": "private, no-cache, no-store, max-age=0, must-revalidate",
+      "vercelCache": "MISS",
+      "durationMs": 318.96816299999955
+    },
+    {
+      "route": "/products/[public-id]",
+      "sample": 2,
+      "status": 200,
+      "cacheControl": "private, no-cache, no-store, max-age=0, must-revalidate",
+      "vercelCache": "MISS",
+      "durationMs": 94.88277899999957
+    }
+  ]
+}

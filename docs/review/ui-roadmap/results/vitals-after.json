@@ -1,0 +1,22 @@
+[
+  {
+    "viewport": {
+      "width": 1440,
+      "height": 1000
+    },
+    "lcp": 132,
+    "cls": 0,
+    "interactionDuration": 24,
+    "inp": 24
+  },
+  {
+    "viewport": {
+      "width": 390,
+      "height": 844
+    },
+    "lcp": 368,
+    "cls": 0,
+    "interactionDuration": 24,
+    "inp": 16
+  }
+]
