@@ -1,7 +1,6 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { ChevronRight } from 'lucide-react';
-import SummarizeButton from '@/components/SummarizeButton';
 import ShareButton from '@/components/ShareButton';
 
 interface ProjectCardProps {
@@ -76,8 +75,6 @@ export default function ProjectCard({
             {description}
           </p>
         </div>
-        
-        <SummarizeButton text={description} compact={true} />
         
         <div className="mt-auto pt-4 border-t border-[#D4C4A8] flex items-center justify-between text-sm font-bold text-[#8B3A3A] uppercase tracking-wider font-playfair">
           <Link href={href} className="group/link inline-flex items-center hover:text-[#B8860B] transition-colors">

@@ -4,7 +4,6 @@ import { notFound } from 'next/navigation';
 import Image from 'next/image';
 import { getProduct } from '@/lib/data';
 import { ProductVideo } from '@/data/products';
-import SummarizeButton from '@/components/SummarizeButton';
 import ShareButton from '@/components/ShareButton';
 import VideoPlayer from '@/components/VideoPlayer';
 import MuxVideoPlayer from '@/components/MuxVideoPlayer';
@@ -144,11 +143,6 @@ async function ProductContent({ id }: { id: string }) {
               <h2 className="text-2xl font-bold text-[#2C1E16] mb-6 font-playfair border-b border-[#D4C4A8] pb-2">Về tác phẩm này</h2>
               <div className="text-[#2C1E16] leading-loose text-lg">
                 <RichTextWithEmbeds text={product.fullDescription || product.description} />
-              </div>
-              
-              {/* AI Summarization Feature */}
-              <div className="mt-8">
-                <SummarizeButton text={product.fullDescription || product.description} />
               </div>
             </div>
 

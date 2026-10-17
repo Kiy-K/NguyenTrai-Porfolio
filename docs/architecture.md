@@ -94,7 +94,6 @@ See [cache validation](redis-cache-validation.md) for evidence and staging gates
   - `POST /api/feedback`
 - AI:
   - `POST /api/suggest-title`
-  - `POST /api/get-summary`
 - Media:
   - `POST /api/upload` (Cloudinary)
   - `POST /api/mux/upload-url`
@@ -140,11 +139,6 @@ At render time, detail page supports multiple videos and prefers Mux playback fo
 - Provider order: Gemini first, then Mistral fallback.
 - Route enforces JSON-like output and parses defensively.
 
-### Summarization (`/api/get-summary`)
-
-- Used in cards and detail page.
-- Provider order: Gemini first, then Mistral fallback.
-
 ### Public search
 
 `ProjectList` builds a browser-local MiniSearch index once per received product-list change. Only public products (published or legacy absent status) are indexed, scoped to the section selected by the server. Fields are title (boost 6), tags (3), section (2) and description (1); original objects and accented display text remain unchanged.
@@ -184,7 +178,6 @@ This can be overridden via `OTEL_PROPAGATE_CONTEXT_URLS`.
 
 `lib/braintrust.ts` adds optional LLM-level tracing spans for Gemini and Mistral calls in:
 
-- `/api/get-summary`
 - `/api/suggest-title`
 
 Enable it with `BRAINTRUST_API_KEY` (and optional `BRAINTRUST_PROJECT_NAME`).

@@ -160,34 +160,6 @@ Returns Cloudinary upload result JSON (includes `secure_url`).
 - `429` if rate limit exceeded
 - `500` on Cloudinary failure
 
-## `POST /api/get-summary`
-
-Generates a Vietnamese 2-3 sentence summary.
-
-### Request body
-
-```json
-{ "text": "..." }
-```
-
-### Provider behavior
-
-- Uses Gemini when `GEMINI_API_KEY` is configured
-- Falls back to Mistral when Gemini key is unavailable
-- Returns `500` if neither provider is configured
-- If `BRAINTRUST_API_KEY` is set, logs LLM trace spans to Braintrust
-
-### Success
-
-```json
-{ "summary": "..." }
-```
-
-### Errors
-
-- `400` if `text` missing
-- `500` provider/config/runtime errors
-
 ## `POST /api/suggest-title`
 
 Returns 3 Vietnamese title suggestions for a partially typed title.
