@@ -27,7 +27,7 @@ export function ProjectListSkeleton() {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
         {Array.from({ length: 6 }, (_, index) => (
           <div key={index} className="border border-[#D4C4A8] rounded-sm overflow-hidden bg-white">
-            <SkeletonBlock className="h-56 w-full" />
+            <SkeletonBlock className="aspect-[16/10] w-full" />
             <div className="p-6 space-y-4">
               <SkeletonBlock className="h-6 w-3/4" />
               <SkeletonBlock className="h-6 w-20" />
@@ -36,7 +36,6 @@ export function ProjectListSkeleton() {
                 <SkeletonBlock className="h-4 w-full" />
                 <SkeletonBlock className="h-4 w-2/3" />
               </div>
-              <SkeletonBlock className="h-12 w-full" />
               <div className="border-t border-[#D4C4A8] pt-4">
                 <SkeletonBlock className="h-5 w-32" />
               </div>
@@ -93,7 +92,7 @@ export function AuthSkeleton() {
 export function HomeSkeleton() {
   return (
     <LoadingRegion label="Đang tải trang…">
-      <div className="text-center mt-12 mb-24 p-6 sm:p-12 space-y-8">
+      <div className="text-center mt-4 sm:mt-12 mb-12 sm:mb-24 p-4 sm:p-12 space-y-8">
         <SkeletonBlock className="h-6 w-56 mx-auto" />
         <SkeletonBlock className="h-20 w-3/4 max-w-lg mx-auto" />
         <SkeletonBlock className="h-80 w-full max-w-md mx-auto" />

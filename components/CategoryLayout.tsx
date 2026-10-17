@@ -24,7 +24,7 @@ const getIconForSection = (id: string) => {
 export default function CategoryLayout() {
   return (
     <div className="w-full max-w-5xl mx-auto relative z-10" id="chuyen-muc">
-      <div className="bg-white rounded-3xl shadow-md p-8 mb-16 border border-[#D4C4A8]">
+      <div className="bg-white rounded-3xl shadow-md p-4 sm:p-8 mb-16 border border-[#D4C4A8]">
         <h2 className="text-xl font-bold text-[#8B3A3A] mb-6 font-playfair uppercase tracking-widest text-center">
           1. Chọn Chuyên Mục
         </h2>
@@ -34,12 +34,12 @@ export default function CategoryLayout() {
             <Link
               key={section.id}
               href={section.path}
-              className="group relative flex flex-col items-center justify-center p-6 rounded-2xl border-2 transition-all duration-[800ms] ease-[cubic-bezier(0.25,0.1,0.25,1)] overflow-hidden bg-white border-[#D4C4A8] text-[#5C4033] hover:border-[#8B3A3A] hover:text-[#8B3A3A] hover:bg-[#FFFDF8] hover:shadow-[0_12px_40px_rgba(139,58,58,0.12)] hover:-translate-y-2"
+              className="group relative flex flex-col items-center justify-center min-w-0 p-4 sm:p-6 rounded-2xl border-2 transition-all duration-200 ease-[cubic-bezier(0.25,0.1,0.25,1)] overflow-hidden bg-white border-[#D4C4A8] text-[#5C4033] hover:border-[#8B3A3A] hover:text-[#8B3A3A] hover:bg-[#FFFDF8] hover:shadow-[0_12px_40px_rgba(139,58,58,0.12)] motion-safe:hover:-translate-y-1"
             >
-              <div className="transform transition-transform duration-[800ms] ease-[cubic-bezier(0.25,0.1,0.25,1)] group-hover:scale-110 group-hover:-translate-y-1">
+              <div className="transform transition-transform duration-200 ease-[cubic-bezier(0.25,0.1,0.25,1)] motion-safe:group-hover:scale-105 motion-safe:group-hover:-translate-y-0.5">
                 {getIconForSection(section.id)}
               </div>
-              <span className="text-sm font-bold font-playfair text-center leading-tight relative z-10">
+              <span className="text-sm font-bold font-playfair text-center leading-snug break-words relative z-10">
                 {section.name}
               </span>
             </Link>
