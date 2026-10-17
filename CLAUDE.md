@@ -71,14 +71,14 @@ Feedback uses Redis hashes/RediSearch before cutover, or Neon `portfolio.feedbac
 
 ### Read path
 
-- `lib/data.ts` exports `getProducts()` via `unstable_cache` (30 minutes, tag: `products`)
+- `lib/data.ts` exports public `getProducts()` through the 60-second Redis cache for Neon; see `docs/architecture.md` for consistency and outage behavior.
 - `getProduct(id)` reads from `getProducts()`
 
 ### Write path
 
 - `POST /api/products` appends one product
 - `DELETE /api/products` resets to empty array
-- Both call `revalidatePath('/', 'layout')`
+- Both invalidate the Redis public cache after the Neon mutation succeeds.
 - Product writes may include `videos[]` for multiple videos; legacy single-video fields are still accepted.
 
 ### Rendering routes

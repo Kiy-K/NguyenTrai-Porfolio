@@ -12,7 +12,7 @@ import RichTextWithEmbeds from '@/components/RichTextWithEmbeds';
 import SmartEmbed from '@/components/SmartEmbed';
 import { parseTextWithUrls } from '@/lib/url-parser';
 
-export const revalidate = 1800; // Cache for 30 minutes
+export const dynamic = 'force-dynamic';
 
 function buildVideoList(product: {
   videos?: ProductVideo[];

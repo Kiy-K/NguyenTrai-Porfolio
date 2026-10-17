@@ -9,7 +9,7 @@ afterEach(() => { process.env = { ...env }; });
 const ownerToken = 'test-owner-token-'.repeat(4);
 
 function authWith(redis) {
-  const persistence = loadTs('lib/persistence.ts', { '@/lib/redis': { redis }, '@neondatabase/serverless': { neon: () => { throw new Error('Unexpected PostgreSQL access'); } } });
+  const persistence = loadTs('lib/persistence.ts', { '@/lib/product-cache': { invalidateProductCache: async () => {} }, '@/lib/redis': { redis }, '@neondatabase/serverless': { neon: () => { throw new Error('Unexpected PostgreSQL access'); } } });
   return loadTs('lib/admin-auth.ts', {
     '@/lib/persistence': persistence, '@/lib/redis': { redis }, 'next/headers': { cookies: async () => ({ get: () => undefined }) },
   });

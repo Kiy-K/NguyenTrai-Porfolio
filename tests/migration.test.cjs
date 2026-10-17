@@ -8,7 +8,7 @@ afterEach(() => { process.env = { ...env }; });
 function storage(redis = {}, rows = []) {
   const queries = [];
   const sql = async (parts, ...params) => { queries.push({ text: parts.join('?'), params }); return rows.shift() || []; };
-  const store = loadTs('lib/persistence.ts', { '@/lib/redis': { redis }, '@neondatabase/serverless': { neon: () => sql } });
+  const store = loadTs('lib/persistence.ts', { '@/lib/product-cache': { invalidateProductCache: async () => {} }, '@/lib/redis': { redis }, '@neondatabase/serverless': { neon: () => sql } });
   return { store, queries };
 }
 
@@ -49,7 +49,7 @@ test('runtime connection prefers the least-privilege APP_DATABASE_URL over the o
   process.env.PERSISTENCE_BACKEND = 'postgres';
   process.env.DATABASE_URL = 'postgresql://owner:o@localhost/test';
   const urls = [];
-  const connect = () => loadTs('lib/persistence.ts', { '@/lib/redis': { redis: {} }, '@neondatabase/serverless': { neon: url => { urls.push(url); return async () => [{ payload: { products: [] } }]; } } });
+  const connect = () => loadTs('lib/persistence.ts', { '@/lib/product-cache': { invalidateProductCache: async () => {} }, '@/lib/redis': { redis: {} }, '@neondatabase/serverless': { neon: url => { urls.push(url); return async () => [{ payload: { products: [] } }]; } } });
   await connect().readContent();
   process.env.APP_DATABASE_URL = 'postgresql://portfolio_app:a@localhost/test';
   await connect().readContent();

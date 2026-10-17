@@ -1,5 +1,6 @@
 import { neon } from '@neondatabase/serverless';
 import { redis } from '@/lib/redis';
+import { invalidateProductCache } from '@/lib/product-cache';
 import type { Product } from '@/data/products';
 
 const CONTENT_KEY = 'portfolio_data_v4';
@@ -38,6 +39,7 @@ export async function writeContent(content: Content): Promise<void> {
   const sql = database();
   const rows = await sql`UPDATE portfolio.state SET payload = ${JSON.stringify(content)}::jsonb WHERE key = ${CONTENT_KEY} RETURNING key`;
   if (!rows.length) throw new Error('Imported content is missing');
+  await invalidateProductCache();
 }
 
 export async function appendProduct(product: Product): Promise<void> {
@@ -53,6 +55,7 @@ export async function appendProduct(product: Product): Promise<void> {
     SET payload = jsonb_set(payload, '{products}', COALESCE(payload->'products', '[]'::jsonb) || ${JSON.stringify([product])}::jsonb)
     WHERE key = ${CONTENT_KEY} RETURNING key`;
   if (!rows.length) throw new Error('Imported content is missing');
+  await invalidateProductCache();
 }
 
 export async function readCredentials(): Promise<HashRecord | null> {

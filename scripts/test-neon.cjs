@@ -18,7 +18,7 @@ async function main() {
   testSql.transaction = (...args) => sql.transaction(...args);
   process.env.PERSISTENCE_BACKEND = 'postgres';
   const noRedis = new Proxy({}, { get: () => () => { throw new Error('Unexpected Redis access'); } });
-  const store = loadTs('lib/persistence.ts', { '@/lib/redis': { redis: noRedis }, '@neondatabase/serverless': { neon: () => testSql } });
+  const store = loadTs('lib/persistence.ts', { '@/lib/product-cache': { invalidateProductCache: async () => {} }, '@/lib/redis': { redis: noRedis }, '@neondatabase/serverless': { neon: () => testSql } });
   const auth = loadTs('lib/admin-auth.ts', { '@/lib/redis': { redis: noRedis }, '@/lib/persistence': store, 'next/headers': {} });
   const snapshot = {
     version: 1,

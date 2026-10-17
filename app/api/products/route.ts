@@ -2,7 +2,6 @@ import { NextResponse } from 'next/server';
 import { getProducts } from '@/lib/data';
 import { appendProduct, readContent, writeContent } from '@/lib/persistence';
 import { CLEAR_ALL_CONFIRMATION } from '@/lib/constants';
-import { revalidatePath } from 'next/cache';
 import { getActiveAdminSession, getClientIpFromHeaders } from '@/lib/admin-auth';
 import { enforceSameOrigin, enforceDataWriteAvailability } from '@/lib/request-security';
 import { consumeRateLimit } from '@/lib/rate-limit';
@@ -38,12 +37,21 @@ const productInputSchema = z.object({
 });
 
 // GET /api/products - Lấy danh sách tất cả sản phẩm
-export async function GET() {
+export const dynamic = 'force-dynamic';
+const noStore = { 'Cache-Control': 'no-store' };
+
+export async function GET(request: Request) {
   try {
+    if (new URL(request.url).searchParams.get('fresh') === '1') {
+      const ip = getClientIpFromHeaders(request.headers);
+      if (!await getActiveAdminSession(ip)) return NextResponse.json({ error: 'Unauthorized' }, { status: 401, headers: noStore });
+      const products = (await readContent())?.products ?? [];
+      return NextResponse.json({ products }, { headers: noStore });
+    }
     const products = await getProducts();
-    return NextResponse.json({ products });
+    return NextResponse.json({ products }, { headers: noStore });
   } catch (error) {
-    return NextResponse.json({ error: 'Không thể tải sản phẩm' }, { status: 500 });
+    return NextResponse.json({ error: 'Không thể tải sản phẩm' }, { status: 500, headers: noStore });
   }
 }
 
@@ -93,8 +101,6 @@ export async function DELETE(request: Request) {
     // Reset the portfolio_data_v4 key to an empty array
     await writeContent({ products: [] });
 
-    // Revalidate paths to ensure fresh data
-    revalidatePath('/', 'layout');
 
     return NextResponse.json(
       { success: true, message: 'Đã xóa toàn bộ dữ liệu', deleted: removed },
@@ -144,8 +150,6 @@ export async function POST(request: Request) {
 
     await appendProduct(newProduct);
     
-    // Revalidate paths to ensure fresh data
-    revalidatePath('/', 'layout');
     
     return NextResponse.json({ success: true, product: newProduct }, { status: 201 });
   } catch (error) {
