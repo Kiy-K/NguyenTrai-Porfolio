@@ -8,6 +8,7 @@
   --color-parchment: #F4EBD0;
   --color-ink: #2C1E16;
   --color-gold: #B8860B;
+  --color-focus: #A67A0A;
   --color-accent: #8B3A3A;
 }
 
@@ -21,7 +22,7 @@
   }
 
   :is(a, button, input, textarea, select):focus-visible {
-    outline: 2px solid var(--color-gold);
+    outline: 2px solid var(--color-focus);
     outline-offset: 4px;
   }
 

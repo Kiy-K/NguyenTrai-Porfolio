@@ -35,3 +35,14 @@ Fresh focused-branch checks: **90 tests**, lint, typecheck and webpack build pas
 [All home/section/detail before-and-after screenshots](review/ui-roadmap/screenshots/) cover both viewport sizes; [keyboard-focused mobile drawer](review/ui-roadmap/screenshots/mobile-menu.png). Images use synthetic content and the local portrait. Public baseline is combined P0 (`97da608`); source after is P1 (`930e043`, replayed for review).
 
 The `vercel.json` rule disables automatic deployments only for the five named review refs. It does not disable main or alter runtime settings. Keep the guard while these drafts are reviewed; any deploy remains separately authorized. P4 stays deferred. The third-party ElevenLabs attribution contrast failure (2.06–2.1:1) is unchanged; the P3 draft reports that limitation and the noisy mobile performance samples.
+
+
+## Review correction: keyboard focus contrast
+
+The focus outline now uses a dedicated `#A67A0A` token instead of changing the historical gold palette. Its WCAG relative-luminance contrast is **3.26:1 on parchment**, **4.15:1 on dark ink**, and **3.88:1 on white**. A regression test checks all three surfaces. Desktop/mobile keyboard checks wait for the outline color transition to settle and verify the rendered `:focus-visible` state.
+
+Fresh focused validation: **91 tests**, lint, typecheck and webpack build pass. [Test receipt](review/ui-roadmap/results/p1-focus-tests.txt), [typecheck receipt](review/ui-roadmap/results/p1-focus-types.txt), [build receipt](review/ui-roadmap/results/p1-focus-build.txt). Chromium keyboard/menu/layout checks pass at both viewport sizes. The earlier 90-test receipts remain historical; the added contrast test accounts for the difference.
+
+| Keyboard focus, mobile | Keyboard focus, desktop |
+| --- | --- |
+| ![Focused back control on parchment](review/ui-roadmap/screenshots/focus-section-390.png) | ![Focused back control on parchment](review/ui-roadmap/screenshots/focus-section-1440.png) |
