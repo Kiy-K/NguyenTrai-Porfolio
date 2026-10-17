@@ -53,3 +53,18 @@ Use `#article-title`, `#article-description`, `#article-section`, `#article-team
 Browser gates above are complete for mocked local services. Real-provider error behavior remains covered only at the existing component/server boundaries; live provider uploads were not performed. Do not send these test mutations to production. Real Cloudinary/Mux/Redis/Neon integration calls and production behavior are outside this local UI validation.
 
 Rollback is the scoped UI diff; no content migration or data rewrite is involved. The recovery download retains the existing browser-download semantics; this task does not add a restore UI. Native modal lifecycle has component regression coverage; Escape and opener restoration also passed in Chromium. Firefox/Safari were not exercised.
+
+## GitHub review reconciliation
+
+`review-admin-sections` is independently replayed on latest `origin/main` (`05638a4`, including merged roadmap #29). This focused branch deliberately includes neither P0 MiniSearch nor summary removal. Fresh branch validation passes **90 tests**, lint, typecheck and webpack build. The original 92-test snapshot above included the two P0b tests; the integrated source `b862a2f` had 99 tests. Counts differ by included suites, not failures. [Portable focused check receipts](review/ui-roadmap/results/).
+
+Synthetic read-only before/after captures use main versus this focused admin source, identical mocked accepted authentication, no form mutations, and settled finite animations:
+
+| Viewport | Before | After |
+| --- | --- | --- |
+| 390×844 | ![Before mobile admin](review/ui-roadmap/screenshots/before-admin-390.png) | ![After mobile admin](review/ui-roadmap/screenshots/after-admin-390.png) |
+| 1440×1000 | ![Before desktop admin](review/ui-roadmap/screenshots/before-admin-1440.png) | ![After desktop admin](review/ui-roadmap/screenshots/after-admin-1440.png) |
+
+[Clear-all confirmation](review/ui-roadmap/screenshots/admin-confirm-390.png) is synthetic; no production mutation was performed. Existing workflow evidence above covers error/recovery states, byte progress and cancellation.
+
+Merge-tree simulation finds no conflicts against either original P0 branch (`f79e574`, `b037912`). This PR can be reviewed against main independently. `vercel.json` disables automatic deployments only for the named review branches; main/runtime settings remain unchanged. No merge or deployment is authorized. P4 remains deferred. The unchanged third-party attribution contrast limitation (2.06–2.1:1) is documented in the separate P3 audit; it is not introduced by the admin extraction.
