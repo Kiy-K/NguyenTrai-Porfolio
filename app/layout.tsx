@@ -19,7 +19,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({children}: {children: React.ReactNode}) {
   return (
-    <html lang="vi" className={`${playfair.variable}`}>
+    <html lang="vi" data-scroll-behavior="smooth" className={`${playfair.variable}`}>
       <body suppressHydrationWarning className="font-playfair bg-[#F4EBD0] text-[#2C1E16]">
         <AutoReloader />
         {children}

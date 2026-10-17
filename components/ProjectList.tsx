@@ -188,11 +188,10 @@ export default function ProjectList({ products }: ProjectListProps) {
       {filteredProducts.length > 0 ? (
         <>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-            {filteredProducts.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE).map((product, index) => (
+            {filteredProducts.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE).map((product) => (
               <div 
                 key={product.id} 
-                className="animate-in fade-in slide-in-from-bottom-6 duration-[1200ms] ease-out fill-mode-both"
-                style={{ animationDelay: `${index * 150}ms` }}
+                className="motion-safe:animate-in motion-safe:fade-in duration-300"
               >
                 <ProjectCard 
                   id={product.id}

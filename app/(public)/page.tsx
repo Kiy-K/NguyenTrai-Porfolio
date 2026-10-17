@@ -1,4 +1,3 @@
-import Navigation from '@/components/Navigation';
 import Footer from '@/components/Footer';
 import CategoryLayout from '@/components/CategoryLayout';
 import HeroImage from '@/components/HeroImage';
@@ -9,8 +8,7 @@ export const revalidate = 1800; // Cache for 30 minutes
 
 export default async function Home() {
   return (
-    <div className="min-h-screen bg-[#F4EBD0] font-playfair flex flex-col">
-      <Navigation />
+    <div className="flex-1 bg-[#F4EBD0] font-playfair flex flex-col">
       
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 flex-grow w-full relative">
         {/* Hero Section */}

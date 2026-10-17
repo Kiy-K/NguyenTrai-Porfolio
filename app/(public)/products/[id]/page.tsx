@@ -1,8 +1,9 @@
+import { Suspense } from 'react';
+import { ProductSkeleton } from '@/components/ContentSkeletons';
 import { notFound } from 'next/navigation';
 import Image from 'next/image';
 import { getProduct } from '@/lib/data';
 import { ProductVideo } from '@/data/products';
-import Navigation from '@/components/Navigation';
 import SummarizeButton from '@/components/SummarizeButton';
 import ShareButton from '@/components/ShareButton';
 import VideoPlayer from '@/components/VideoPlayer';
@@ -63,9 +64,21 @@ function buildVideoList(product: {
 }
 
 export default async function ProductDetail({ params }: { params: Promise<{ id: string }> }) {
-  const resolvedParams = await params;
-  // Lấy dữ liệu sản phẩm từ Redis
-  const product = await getProduct(resolvedParams.id);
+  const { id } = await params;
+  return (
+    <div className="flex-1 bg-[#F4EBD0] font-playfair">
+      <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div className="mb-8"><BackButton /></div>
+        <Suspense fallback={<ProductSkeleton />}>
+          <ProductContent id={id} />
+        </Suspense>
+      </main>
+    </div>
+  );
+}
+
+async function ProductContent({ id }: { id: string }) {
+  const product = await getProduct(id);
 
   if (!product) {
     notFound();
@@ -77,16 +90,7 @@ export default async function ProductDetail({ params }: { params: Promise<{ id: 
     parseTextWithUrls(productText).find((segment) => segment.type === 'url')?.value ?? null;
 
   return (
-    <div className="min-h-screen bg-[#F4EBD0] font-playfair">
-      <Navigation />
-      
-      <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        {/* Back button */}
-        <div className="mb-8 animate-in fade-in slide-in-from-left-4 duration-500">
-          <BackButton />
-        </div>
-
-        <div className="bg-white rounded-sm shadow-sm border border-[#D4C4A8] overflow-hidden relative animate-in fade-in slide-in-from-bottom-8 duration-700">
+        <div className="bg-white rounded-sm shadow-sm border border-[#D4C4A8] overflow-hidden relative">
           {/* Main Media */}
           {mainEmbedUrl ? (
             <div className="w-full bg-[#F4EBD0] border-b border-[#D4C4A8] p-4 sm:p-6">
@@ -193,7 +197,5 @@ export default async function ProductDetail({ params }: { params: Promise<{ id: 
             )}
           </div>
         </div>
-      </main>
-    </div>
   );
 }

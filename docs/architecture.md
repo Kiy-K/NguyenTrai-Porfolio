@@ -156,7 +156,10 @@ At render time, detail page supports multiple videos and prefers Mux playback fo
 
 - Product/section routes use dynamic rendering; the homepage remains static.
 - Global `AutoReloader` triggers `router.refresh()` every 30 minutes for long-open tabs.
-- Navigation is sticky and auto-hides on downward scroll.
+- Public routes share navigation in `app/(public)/layout.tsx`, so it remains mounted and usable across route fallbacks. Navigation is sticky and auto-hides on downward scroll.
+- Section listings and product bodies stream inside local React Suspense boundaries; their navigation, headings (for sections), and back controls render independently of content reads. Route `loading.tsx` files provide matching skeletons for initial navigation.
+- Skeleton shapes reserve responsive card/media space, appear after 160 ms, and stop pulsing with reduced motion. Vietnamese status announcements remain separate from decorative placeholders.
+- Link previews retain a usable link and a reserved media/details area during loading, success, and failure. Admin loading shows a neutral placeholder until session validation succeeds, including while redirecting after failure. Upload and submission progress indicators remain action-specific.
 
 ## Security Model
 
