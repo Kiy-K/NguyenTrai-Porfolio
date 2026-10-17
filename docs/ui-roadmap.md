@@ -10,9 +10,9 @@ The original completed source is preserved at `perf/a11y-audit` (`b862a2f`). Lat
 
 | Review branch | Base | Focus |
 | --- | --- | --- |
-| `review-ui-public-polish` | `review-ui-p0-foundation` | P1 public UI, regression test, before/after screenshots |
-| `review-admin-sections` | `main` | P2 admin split, workflow tests, before/after screenshots |
-| `review-ui-a11y-audit` | `review-ui-public-polish` | P3 validation report, safe observations, review/release gates |
+| [`review-ui-public-polish` (#30)](https://github.com/Kiy-K/NguyenTrai-Porfolio/pull/30) | `review-ui-p0-foundation` | P1 public UI, regression test, before/after screenshots |
+| [`review-admin-sections` (#31)](https://github.com/Kiy-K/NguyenTrai-Porfolio/pull/31) | `main` | P2 admin split, workflow tests, before/after screenshots |
+| `review-ui-a11y-audit` | [`review-ui-public-polish` (#30)](https://github.com/Kiy-K/NguyenTrai-Porfolio/pull/30) | P3 validation report, safe observations, review/release gates |
 
 The P0 foundation is a dependency ref, not a replacement approval for the pending canonical MiniSearch and AI-summary changes. It contains their already-reviewed combined source. [Compatibility notes](review/ui-roadmap/p0-compatibility.md) record the six P0 documentation conflicts and the clean admin/P0 simulations. Retarget P1/P3 only after P0 is incorporated into main and revalidate.
 
