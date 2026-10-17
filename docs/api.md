@@ -8,7 +8,7 @@ These APIs power a historical education platform focused on preserving Nguyễn 
 
 ## `GET /api/products`
 
-Returns all products from cached reads from the selected persistence backend.
+Returns public products through the selected persistence read path.
 
 ### Success
 
@@ -21,6 +21,14 @@ Returns all products from cached reads from the selected persistence backend.
 ### Errors
 
 - `500` if read fails unexpectedly
+
+Public lists exclude draft, archived and unknown statuses; legacy missing status
+is public. All product GET success/error responses use `Cache-Control: no-store`.
+Neon public reads use the application Redis cache (max 60s), with direct Neon
+fallback on cache failure. Database failures return errors when no valid cached
+snapshot exists. `GET /api/products?fresh=1` requires the existing IP-bound admin
+session and returns uncached persisted products, including drafts; unauthenticated
+requests receive 401. It never puts private products in the public cache.
 
 ## `POST /api/products`
 

@@ -50,8 +50,8 @@ Redis is required for sessions/rate limits. Redis-selected reads may return empt
 - Canonical logical content key: `portfolio_data_v4`; selected backend operations live in `lib/persistence.ts`.
 - Stored JSON shape: `{ products: Product[] }`
 - Product type source: `data/products.ts`
-- Cached reads in `lib/data.ts` using `unstable_cache` (30 minutes, `products` tag)
-- Product mutations revalidate via `revalidatePath('/', 'layout')`
+- Public Neon reads use the 60-second Redis cache in `lib/product-cache.ts`; see `docs/architecture.md` for the consistency contract.
+- Successful Neon content mutations invalidate the shared Redis cache; product/section pages are dynamic and product APIs use no-store.
 
 Important behavior:
 

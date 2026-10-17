@@ -88,8 +88,10 @@ npm run start
 
 ## Caching Notes
 
-- Product reads are cached for 30 minutes (`unstable_cache`).
-- Mutation endpoints call `revalidatePath('/', 'layout')`.
+- Public product reads use the namespaced 60-second Redis cache; Neon remains the source.
+- Successful Neon mutations invalidate it across instances. Redis cache failures fall back to direct Neon reads; a failed invalidation leaves at most the read-start +60s staleness bound.
+- Admins can use authenticated `GET /api/products?fresh=1` for uncached content.
+- Product APIs are no-store; product/section pages are dynamic. See [architecture](architecture.md) and [staging gates](redis-cache-validation.md).
 - A client auto-refresh runs every 30 minutes to refresh stale tabs.
 
 ## Troubleshooting

@@ -33,23 +33,45 @@ Feedback keeps the same fields/source keys in the selected backend:
 
 ### Read strategy
 
-`lib/data.ts` uses `unstable_cache` to memoize `getProducts()` for 30 minutes:
+`lib/data.ts` reads public products through `lib/product-cache.ts` when Neon is
+selected. Neon owns persistent content. Redis stores only the public product
+list, with 60-second maximum TTL; the cache namespace includes a hash of the
+normalized Neon endpoint/database. Undefined legacy status and `published` are
+public; draft/archive/unknown statuses are excluded before caching or returning.
+Credentials and feedback use their existing uncached persistence paths.
 
-- cache key: `products-cache`
-- tags: `products`
-- revalidate: `1800` seconds
-
-`getProduct(id)` resolves from the cached product list.
+Product and section pages are dynamic. Product APIs send `Cache-Control:
+no-store`, so the application Redis cache controls server freshness. The static
+homepage contains no products. There is no `unstable_cache`, products tag, ISR
+product cache, or product mutation `revalidatePath` layer. `getProduct(id)` uses
+the public list. Authenticated `GET /api/products?fresh=1` bypasses Redis content
+caching and returns fresh persisted content (including drafts) with no-store.
 
 ### Write strategy
 
-`POST /api/products` and `DELETE /api/products` update the selected backend and call:
+Successful Neon `writeContent` and `appendProduct` mutations atomically replace
+the Redis cache epoch and remove its payload. Every public cache read runs a
+Lua script on the Redis write path to get the epoch/payload and Redis-clock
+read-start deadline. Publication compares that epoch and uses only the remaining
+TTL. All instances share the fence; old reads cannot repopulate after successful
+invalidation. Keys expire (data ≤60s, epoch 120s), including metadata.
 
-```ts
-revalidatePath('/', 'layout')
-```
+A Redis cache outage reads Neon directly. Failed publication returns the loaded
+source result; failed invalidation does not turn an already committed write into
+an API failure. If invalidation fails, stale responses are bounded to 60 seconds
+from the original source read's start, including delayed fills. In-flight source
+requests may return their earlier snapshot. Neon failures propagate as errors;
+the persistent Redis content key is never a fallback for Neon. A valid cache hit
+can serve its public snapshot until expiry during a Neon outage.
 
-to force fresh reads for server-rendered views.
+The cache uses a separate SDK client with a 2-second timeout, retries disabled,
+and automatic pipelining disabled; session/rate-limit clients are unaffected.
+No process-local cache or per-client read-your-writes assumption is needed.
+Direct SQL/operator mutations must explicitly invalidate or allow the TTL bound.
+The explicit operator-selected Redis rollback backend remains supported without
+this public cache; a source change is never selected automatically.
+
+See [cache validation](redis-cache-validation.md) for evidence and staging gates.
 
 ## Route Architecture
 
@@ -132,7 +154,7 @@ At render time, detail page supports multiple videos and prefers Mux playback fo
 
 ## Rendering and Client Behavior
 
-- Core routes export `revalidate = 1800`.
+- Product/section routes use dynamic rendering; the homepage remains static.
 - Global `AutoReloader` triggers `router.refresh()` every 30 minutes for long-open tabs.
 - Navigation is sticky and auto-hides on downward scroll.
 

@@ -153,9 +153,10 @@ In admin, the `<select>` stores section names. Keep this behavior in mind if you
 
 ## Caching and Revalidation
 
-- `getProducts()` uses `unstable_cache` with a 30-minute TTL and tag `products`.
-- Main route pages set `revalidate = 1800`.
-- Product mutations trigger `revalidatePath('/', 'layout')`.
+- Public Neon reads use a namespaced Redis cache with a maximum 60-second TTL.
+- Product/section pages are dynamic and product APIs return no-store.
+- Successful Neon mutations invalidate the shared cache; Redis failure reads Neon directly.
+- Authenticated `GET /api/products?fresh=1` bypasses the content cache. See [architecture](docs/architecture.md) for the concurrency and outage contract.
 - `AutoReloader` does a client-side `router.refresh()` every 30 minutes.
 
 ## Routes
