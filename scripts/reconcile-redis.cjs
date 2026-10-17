@@ -30,7 +30,13 @@ function records(snapshot) {
   return [{ key: CONTENT, type: 'string', value: snapshot.content }, { key: CREDENTIALS, type: 'hash', value: snapshot.credentials },
     ...snapshot.feedback.map(row => ({ key: row.sourceKey, type: 'hash', value: row.payload }))];
 }
+function requireOrigin(origin) {
+  let url;
+  try { url = new URL(origin); } catch { fail('MIGRATION_APP_URL must identify the production HTTPS origin'); }
+  if (url.protocol !== 'https:' || url.username || url.password || url.pathname !== '/' || url.search || url.hash) fail('MIGRATION_APP_URL must identify the production HTTPS origin');
+}
 function createPlan(neon, redis, identity) {
+  requireOrigin(identity?.origin);
   neon = normalize(neon); redis = normalize(redis);
   const feedback = new Map(redis.feedback.map(row => [row.sourceKey, row]));
   for (const row of neon.feedback) {
@@ -77,11 +83,15 @@ async function reconcile({ plan, readNeon, readRedis, cas, verifyPause, apply = 
     await checkSource();
     await cas(record);
   }
+  return { ...await verifyReconciliation({ plan, readNeon, readRedis, verifyPause }), applied: pending.length };
+}
+async function verifyReconciliation({ plan, readNeon, readRedis, verifyPause }) {
+  validatePlan(plan);
   await verifyPause();
-  await checkSource();
-  const actual = normalize(await readRedis());
-  if (!same(actual, plan.body.expected)) fail('Redis verification failed; keep writes paused and retry');
-  return { verified: true, applied: pending.length, approval: plan.approval, ...summary(plan.body) };
+  if (!same(normalize(await readNeon()), plan.body.neon)) fail('Neon source changed; export a new plan');
+  if (!same(normalize(await readRedis()), plan.body.expected)) fail('Redis verification failed; keep writes paused and retry');
+  await verifyPause();
+  return { verified: true, approval: plan.approval, ...summary(plan.body) };
 }
 function summary(body) {
   const report = snapshot => ({ digest: payloadDigest(snapshot), products: snapshot.content.products.length, feedback: snapshot.feedback.length,
@@ -162,6 +172,7 @@ async function main() {
   const [command = 'dry-run', file, expectedNeon, expectedRedis, approval, ...extra] = process.argv.slice(2);
   if (!['dry-run', 'apply', 'verify'].includes(command) || !file || !expectedNeon || !expectedRedis || extra.length || command !== 'apply' && approval) fail('Usage: dry-run|verify <private-file> <neon-host/database> <redis-host> | apply <private-file> <neon-host/database> <redis-host> <approval-digest>');
   // Deliberately use only the process environment; never auto-load production/local credentials.
+  requireOrigin(process.env.MIGRATION_APP_URL);
   const url = process.env.DATABASE_URL;
   if (!url) fail('DATABASE_URL is required');
   const redisUrl = new URL(process.env.UPSTASH_REDIS_REST_URL);
@@ -184,15 +195,14 @@ async function main() {
     if (!same(plan.body.identity, identity)) fail('Backup target or production origin mismatch');
   }
   const verifyPause = async () => {
-    if (process.env.DATA_WRITE_PAUSED !== '1') fail('Apply requires DATA_WRITE_PAUSED=1 and verified production pause');
+    if (process.env.DATA_WRITE_PAUSED !== '1') fail('Reconciliation requires DATA_WRITE_PAUSED=1 and verified production pause');
     await migration.verifyWritePause(process.env.MIGRATION_APP_URL);
   };
   if (command === 'verify') {
-    if (!same(await readNeon(), plan.body.neon) || !same(await readRedis(), plan.body.expected)) fail('Final verification failed');
-    console.log(JSON.stringify({ verified: true, approval: plan.approval, ...summary(plan.body) }));
+    console.log(JSON.stringify(await verifyReconciliation({ plan, readNeon, readRedis, verifyPause })));
   } else console.log(JSON.stringify(await reconcile({ plan, readNeon, readRedis, cas: record => redisCas(redis, record), verifyPause, apply: command === 'apply', approval })));
 }
-module.exports = { createPlan, reconcile, writeBackup, readBackup, normalize, collectNeon, redisCas, rawAdapter, CAS };
+module.exports = { createPlan, reconcile, verifyReconciliation, writeBackup, readBackup, normalize, collectNeon, redisCas, rawAdapter, CAS };
 if (require.main === module) main().catch(error => {
   console.error(error instanceof RecoveryError ? error.message : `Recovery failed (${error.name || 'UnknownError'}); details suppressed; keep writes paused.`);
   process.exitCode = 1;

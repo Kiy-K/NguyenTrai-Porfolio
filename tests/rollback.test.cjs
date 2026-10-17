@@ -49,6 +49,7 @@ test('destination-only feedback is preserved and verified in the union', async (
   const s = setup(); s.before.feedback.push({ sourceKey: 'feedback:old', payload: { id: 'old', createdAtUnix: '1' } });
   const plan = recovery.createPlan(s.source, s.before, identity);
   assert.equal(plan.body.expected.feedback.length, 3);
+  assert.deepEqual(plan.body.expected.feedback.find(row => row.sourceKey === 'feedback:old'), s.before.feedback.at(-1));
 });
 
 test('apply requires exact approval, live pause and unchanged source before writes', async () => {
@@ -58,7 +59,8 @@ test('apply requires exact approval, live pause and unchanged source before writ
     if (mode === 'pause') options.verifyPause = async () => { throw Error('pause absent'); };
     if (mode === 'source') s.source.content.products = [];
     if (mode === 'tamper') options.plan.body.expected.content.products = [];
-    await assert.rejects(recovery.reconcile(options)); assert.equal(s.writes(), 0);
+    const expected = { approval: /explicit approval/i, pause: /pause absent/, source: /source changed/i, tamper: /digest verification/i };
+    await assert.rejects(recovery.reconcile(options), expected[mode]); assert.equal(s.writes(), 0);
   }
 });
 
@@ -130,4 +132,80 @@ test('Neon collection uses a read-only consistent snapshot and rejects extra sta
 test('empty Neon feedback hashes fail at planning before any writes', () => {
   const s = setup(); s.source.feedback.push({ sourceKey: 'feedback:record:empty', payload: {} });
   assert.throws(() => recovery.createPlan(s.source, s.before, identity), /empty/i);
+});
+
+
+test('final verification refuses an absent pause before reading either store', async () => {
+  const s = setup(); let reads = 0;
+  await assert.rejects(recovery.verifyReconciliation({
+    plan: s.plan, readNeon: async () => { reads++; return s.source; },
+    readRedis: async () => { reads++; return s.plan.body.expected; },
+    verifyPause: async () => { throw Error('pause absent'); },
+  }), /pause absent/);
+  assert.equal(reads, 0);
+});
+
+test('final verification rejects a pause lifted during either store read', async () => {
+  for (const phase of ['neon', 'redis']) {
+    const s = setup(); let paused = true;
+    await assert.rejects(recovery.verifyReconciliation({
+      plan: s.plan,
+      readNeon: async () => { if (phase === 'neon') paused = false; return s.source; },
+      readRedis: async () => { if (phase === 'redis') paused = false; return s.plan.body.expected; },
+      verifyPause: async () => { if (!paused) throw Error('pause lifted'); },
+    }), /pause lifted/);
+  }
+});
+
+test('apply cannot report success if its pause is lifted in the final Redis read', async () => {
+  const s = setup(); let paused = true;
+  await assert.rejects(recovery.reconcile({
+    ...s.options, apply: true, approval: s.plan.approval,
+    readRedis: async () => { if (s.writes() === 3) paused = false; return structuredClone(s.current()); },
+    verifyPause: async () => { if (!paused) throw Error('pause lifted'); },
+  }), /pause lifted/);
+});
+
+test('a complete paused verification checks both guards and returns verified digests', async () => {
+  const s = setup(); let checks = 0;
+  const result = await recovery.verifyReconciliation({
+    plan: s.plan, readNeon: async () => s.source, readRedis: async () => s.plan.body.expected,
+    verifyPause: async () => { checks++; },
+  });
+  assert.equal(checks, 2); assert.equal(result.verified, true); assert.equal(result.expected.digest, payloadDigest(s.plan.body.expected));
+});
+
+test('planning rejects missing or noncanonical production origins before exporting a plan', () => {
+  const s = setup();
+  for (const origin of [undefined, '', 'http://app.test', 'https://app.test/path', 'https://user:secret@app.test', 'https://app.test/?query=1']) {
+    assert.throws(() => recovery.createPlan(s.source, s.before, { ...identity, origin }), /MIGRATION_APP_URL/);
+  }
+});
+
+test('standalone verify requires the pause and checks it again after both reads', () => {
+  const { spawnSync } = require('node:child_process');
+  const { destinationFingerprint } = require('../scripts/migrate-neon.cjs');
+  const directory = fs.mkdtempSync('/var/tmp/rollback-cli-'); fs.chmodSync(directory, 0o700);
+  const file = path.join(directory, 'plan.json');
+  const url = 'postgresql://synthetic:synthetic@neon.test/db';
+  const s = setup();
+  const plan = recovery.createPlan(s.source, s.before, { ...identity, neon: destinationFingerprint(url) });
+  try {
+    recovery.writeBackup(file, plan);
+    for (const mode of ['absent', 'lifted', 'paused']) {
+      const result = spawnSync(process.execPath, ['--require', path.resolve('tests/helpers/rollback-cli-preload.cjs'),
+        path.resolve('scripts/reconcile-redis.cjs'), 'verify', file, 'neon.test/db', 'redis.test'], {
+        encoding: 'utf8', timeout: 10000,
+        env: { ...process.env, DATABASE_URL: url, UPSTASH_REDIS_REST_URL: 'https://redis.test',
+          MIGRATION_APP_URL: identity.origin, DATA_WRITE_PAUSED: mode === 'absent' ? '0' : '1',
+          ROLLBACK_CLI_FIXTURE: file, ROLLBACK_CLI_PAUSE_LOST: mode === 'lifted' ? '1' : '0' },
+      });
+      const events = JSON.parse(fs.readFileSync(path.join(directory, 'trace.json'), 'utf8'));
+      assert.equal(result.status, mode === 'paused' ? 0 : 1, result.stderr);
+      if (mode === 'absent') { assert.match(result.stderr, /DATA_WRITE_PAUSED=1/); assert.deepEqual(events, []); }
+      else assert.deepEqual(events, ['pause', 'neon', 'redis', 'pause']);
+      if (mode === 'paused') assert.equal(JSON.parse(result.stdout).verified, true);
+      else assert.equal(result.stdout.includes('"verified":true'), false);
+    }
+  } finally { fs.rmSync(directory, { recursive: true, force: true }); }
 });

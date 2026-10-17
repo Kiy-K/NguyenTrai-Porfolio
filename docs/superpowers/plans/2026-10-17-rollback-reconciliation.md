@@ -15,3 +15,9 @@ Review focus: interrupted command response after a successful write; credential 
 PR 2 follows only after PR 1 is reviewable, in a separate branch based on main. Its plan will audit all public/admin readers and cache layers, then test a bounded TTL consistency contract before implementation. Isolated staging validation is a deployment gate.
 
 Validation evidence: `docs/rollback-validation.md`. Independent review completed; empty-hash finding fixed with a failing regression first. All production actions remain unexecuted.
+
+Review follow-up: final apply/verify reads share pause checks before and after;
+missing export origins reject early. The standalone CLI and safety guard now have
+regressions. Real integration requires an empty disposable target and cleans all
+owned keys in finally. Updated evidence: 64 Node 24 tests, lint/typecheck/production
+build, independent review and real Upstash test passed; database empty afterward.

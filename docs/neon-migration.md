@@ -164,13 +164,16 @@ plan digest. New destination changes after export are conflicts.
    migration backups. With identities and secret environment loaded, run:
 
    ```bash
+   export MIGRATION_APP_URL=https://canonical-production-origin
    node scripts/reconcile-redis.cjs dry-run /private/recovery/rollback.json expected-neon-host/neondb expected-redis-host
    ```
 
    This reads each store twice, requires stable digests, exports a new exclusive
    0600 plan, and reports only counts/digests/identities. No Redis or Neon writes.
    Without a write pause a dry-run may fail on concurrent changes; it is not a
-   snapshot guarantee across active writers. Never print or attach the plan.
+   snapshot guarantee across active writers. `MIGRATION_APP_URL` must be a valid
+   HTTPS origin at export and remain identical for apply/verify; origin-less old
+   plans must be exported again and approved again. Never print or attach the plan.
 3. Privately review both snapshots and every content/credential difference.
    Compare feedback IDs/payloads and media/ID digests to the original import
    receipt. Retain the printed approval digest, release IDs and timestamps in a
@@ -181,13 +184,15 @@ plan digest. New destination changes after export are conflicts.
    still set, run:
 
    ```bash
+   export DATA_WRITE_PAUSED=1
    node scripts/reconcile-redis.cjs apply /private/recovery/rollback.json expected-neon-host/neondb expected-redis-host APPROVED_PLAN_SHA256
    node scripts/reconcile-redis.cjs verify /private/recovery/rollback.json expected-neon-host/neondb expected-redis-host
    ```
 
    Apply checks the live pause and unchanged Neon source before every record,
-   uses atomic Redis compare-and-set, then rechecks pause, source and the full
-   expected union. Only content, credential hash fields and missing Neon feedback
+   uses atomic Redis compare-and-set, then verifies the source and full expected
+   union with live pause checks before and after the reads. Standalone `verify`
+   enforces the same pause checks; both commands require `DATA_WRITE_PAUSED=1`. Only content, credential hash fields and missing Neon feedback
    are written. Sessions, rate limits, dedupe and `feedback_idx_v1` are untouched.
 5. **Owner approval C:** only after verified digests/counts, authorize selecting
    `PERSISTENCE_BACKEND=redis` and deploying the compatible release while still
@@ -208,8 +213,9 @@ compared against its current approved baseline. The pause and quiesced writers
 are required for the entire window, including backend deployment. An error,
 timeout, process interruption or lost response leaves writes **paused**, Neon
 selected and backups intact. Do not deploy Redis or unpause on a failed exit.
-Rerun `dry-run` inspection through the existing plan with `verify` (which fails
-until complete), then rerun the **same** `apply` and approval digest. Already
+Run `verify` against the existing plan (it fails until complete), then rerun the
+**same** `apply` and approval digest while the live pause remains verified.
+`dry-run` always exports a new exclusive file; it cannot inspect an existing plan. Already
 reconciled records are skipped; missing records are retried. A changed Neon
 source, unexpected Redis value, extra record or private-file violation blocks
 retry and requires owner investigation and a newly exported/reviewed plan.
@@ -217,10 +223,15 @@ The tool cannot prevent an external writer resuming after verification; keep
 all writers quiesced until the approved switch is complete.
 
 Synthetic checks: `npm test`; real Redis semantics: set dedicated
-`TEST_REDIS_REST_URL`, `TEST_REDIS_REST_TOKEN`, `TEST_REDIS_DISPOSABLE=1` for a
-throwaway database and run `node --test tests/redis-rollback.integration.cjs`.
-Never point those variables at application Redis. Integration leaves synthetic
-application records in that disposable database for inspection; no flush is used.
+`TEST_REDIS_REST_URL`, `TEST_REDIS_REST_TOKEN`, `TEST_REDIS_DISPOSABLE=1` for an
+exclusively assigned, empty throwaway database and run
+`node --test tests/redis-rollback.integration.cjs`. The test rejects the configured
+application endpoint and every nonempty database before its first write. Never
+point those variables at application Redis or share the test database with other
+writers. The test removes only its own fixed synthetic keys in `finally` and
+checks that the database is empty afterward; no flush is used. If connectivity
+prevents cleanup, a later run refuses the nonempty database: inspect those
+synthetic keys privately or use a new disposable database, never bypass the guard.
 
 Full dependency audit still reports six high/two moderate findings in development
 tooling; production dependency audit passes. CI reports the full audit and blocks

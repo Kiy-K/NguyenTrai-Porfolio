@@ -6,7 +6,7 @@ No production calls, environment changes, data copies or rollback executions.
 - Regression tests written before implementation; absent module failed first.
 - Independent reviewer identified unrepresentable empty feedback hashes; its
   regression failed, then passed after planning rejected them before writes.
-- Node 24.22.0: `npm test` — 54 assertions passed; `npm run lint` and
+- Node 24.22.0: `npm test` — 54 tests passed; `npm run lint` and
   `npm run typecheck` passed; `npm run build -- --webpack` passed.
 - Default Turbopack build fails in this environment when its CSS worker tries
   to bind an internal port (`Operation not permitted`). Webpack production
@@ -29,7 +29,8 @@ No production calls, environment changes, data copies or rollback executions.
   the separate scratch Redis. It exported four Neon products versus two Redis
   products, planned three changes, retained a three-row feedback union and wrote
   an exclusive 0600 plan under an operator-owned 0700 `/var/tmp` directory.
-  No Redis/Neon writes occurred; source/schema identity and canonical comparison
+  The dry-run itself performed no Redis/Neon writes; fixture seeding was separate.
+  Source/schema identity and canonical comparison
   used the real provider SDKs. The synthetic private backup remains outside Git.
 
 Untested: a full recovery rehearsal against a dedicated Neon clone, production
@@ -38,3 +39,24 @@ remain operator approval/verification gates in `neon-migration.md`. Synthetic
 SQL-boundary tests check read-only repeatable-read exports; no production Neon
 schema was created for this PR. Preserve protected backups and live pause until
 all final recovery checks pass.
+
+## Review fixes — 2026-10-17
+
+- Shared final verification now checks the live pause before and after the Neon/
+  Redis reads in both apply and standalone verify. Missing/invalid origins fail
+  before provider I/O or export. The CLI regression executes the actual command
+  with fake provider boundaries and proves it cannot report success with an
+  absent pause or a pause lifted during the reads.
+- New regressions failed before implementation: apply accepted a pause lifted
+  during its final read; planning accepted a missing origin. Guard and CLI tests
+  now pass, including destination-only feedback equality and exact failure modes.
+- Disposable integration setup rejects the application Redis endpoint and any
+  nonempty database before writes. Its full fixture and sentinel clean up in
+  finally blocks. Unit checks cover misconfiguration and failed assertions.
+- Node 24.22.0: 64 tests, lint, typecheck and Webpack production build passed.
+  Independent review of these fixes found no material issues.
+- The real SDK/Lua integration passed against a new, exclusively assigned empty
+  temporary Upstash database: 50.5s total, 34.1s measured reconciliation/verification
+  portion. Cleanup and a separate read-only DBSIZE check both confirmed zero
+  remaining keys. No application Redis/Neon, passwords, environments or deployment
+  settings were changed. No production rollback, merge or deployment was run.
