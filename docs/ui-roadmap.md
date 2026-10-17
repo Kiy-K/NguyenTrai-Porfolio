@@ -1,4 +1,4 @@
-# Nguyen Trai: UI/UX and Search Roadmap
+# Nguyen Trai: UI/UX, Search and AI Summary Removal Roadmap
 
 **Status:** Proposed, awaiting owner review  
 **Baseline:** `main` at `1c74f3d` (2026-10-17), after PRs #26, #27 and #28  
@@ -8,6 +8,7 @@
 
 - Make the public site pleasant and predictable on mobile and desktop, with consistent typography, spacing, media and feedback.
 - Replace public-facing AI search with a dedicated **local full-text search library**. Search must work without AI API keys, paid search infrastructure or user-content transmission to a model.
+- **Remove AI-generated article summaries entirely**, including public buttons, their component and their API. Keep authored article descriptions and full text unchanged.
 - Improve admin workflows without changing their security boundary.
 - Measure improvements before adding more state-management or caching frameworks.
 
@@ -20,22 +21,39 @@ Do not rewrite Next.js, replace Neon/Redis, change media providers, deploy autom
 - PR #27: shared 60-second public Redis cache-aside, with authenticated fresh reads and invalidation.
 - PR #28: streamed, layout-matched skeletons for public content/admin authentication/link previews; production deployed.
 
-## P0 — Replace AI search with MiniSearch (NEXT)
+## P0 — Retire public AI search and AI summaries (NEXT)
+
+### P0a — Replace AI search with MiniSearch
 
 **Decision:** Use [MiniSearch](https://github.com/lucaong/minisearch), an in-memory JavaScript full-text search library with prefix matches, typo tolerance and field boosts. At the current scale (~31 products at the last verified inventory), a local index is sufficient. [Fuse.js](https://www.fusejs.io/) is a simpler fallback if MiniSearch is demonstrably worse; do not introduce hosted search, embeddings, Orama vector search or Pagefind's build-time indexing.
 
 **Existing code:** `components/ProjectList.tsx` currently combines substring matching with a debounced public POST to `/api/search-projects`. `app/api/search-projects/route.ts` calls Mistral using a client-supplied project array. This is unnecessary and can fail without API keys.
 
-**Implementation PR (separate from this document):**
+**Implementation PR A (separate from this document):**
 1. Add a small, typed, pure search adapter around MiniSearch; index **public products only**. Build the index once per change in the received product list (e.g. `useMemo`). Do not index credentials, admin records or private feedback.
 2. Index title, tags, description and optional section. Use explicit boosts so an exact title match normally ranks above tags and descriptions. Keep the original product object untouched for display/navigation.
 3. Normalize **both** indexed text and query for Vietnamese: Unicode decomposition, combining mark removal, lowercasing, `đ/Đ` normalization; preserve original accented text in the UI. Test `Nguyễn Trãi` / `nguyen trai` and `nhân nghĩa` / `nhan nghia`.
 4. Support word-prefix matching and bounded fuzzy tolerance; avoid overly broad one-letter typo matches and overly permissive OR ranking. Define deterministic tie-breaks; make relevance the default order when a nonempty query is present, while preserving explicit alphabetical sorting.
 5. Preserve section and tag filters, pagination and no-results/reset behavior. Reset to page one when query, sort or filters change. Use stable IDs and accessible search labels.
-6. Remove the search-specific AI request/state/spinner/`Sparkles` indicator and its AI placeholder. Delete the unused `/api/search-projects` route **after** verifying references/tests; update architecture/operations docs and any observability references. Do not remove unrelated summary/title endpoints or model dependencies without a separate review.
+6. Remove the search-specific AI request/state/spinner/`Sparkles` indicator and its AI placeholder. Delete the unused `/api/search-projects` route **after** verifying references/tests; update architecture/operations docs and any observability references. AI summary removal is a separate P0b PR; leave AI title suggestions and shared provider dependencies untouched unless independently reviewed.
 7. Keep search local to the browser; zero AI calls, zero new search API endpoints, zero additional server-side services. Search must still work offline when the already-loaded product list is present.
 
 **Acceptance gate:** Regression tests cover no-key/offline search, Vietnamese accent folding (`đ` included), prefix and minor typos, title-vs-description ranking, tags, published-only results, deterministic sorting and pagination. Playwright checks keyboard/mobile search and zero requests to `/api/search-projects` or AI providers. Compare against the current UX using representative queries; record index size, bundle delta and latency samples. Run lint, typecheck, unit tests and production build.
+
+### P0b — Remove AI summarization entirely
+
+**Decision:** Retire on-demand summaries rather than hiding the button or replacing it with another summarizer. Editorial `description` and `fullDescription` belong to the original articles and must stay.
+
+**Existing code:** `components/SummarizeButton.tsx` calls `POST /api/get-summary`, which currently routes to Gemini or Mistral. The component is imported and rendered by `components/ProjectCard.tsx`, `components/ProductCard.tsx`, and `app/(public)/products/[id]/page.tsx`.
+
+**Implementation PR B (independent, reviewable, no migration):**
+1. Remove the summary button/UI from all public cards and product details, including imports, wrapper spacing and comments; preserve the normal description, article body, card links, share controls and media.
+2. Verify all imports/callers, then delete the now-unused `components/SummarizeButton.tsx` and `app/api/get-summary/route.ts` instead of leaving a callable endpoint. Keep unrelated routes (`/api/suggest-title`) unchanged for now; do not expand scope to AI title suggestions without separate approval.
+3. Remove summary-specific documentation and telemetry references (e.g. `docs/architecture.md`, `docs/operations.md`, `lib/braintrust.ts` references if no longer used); retain shared instrumentation and dependencies still needed by other features. Remove unused packages only after dependency/reference verification, not by assumption.
+4. If any test or fixture expects summaries, update it deliberately. No generation, no background summaries, no AI API keys and no data rewrite; existing authored `description` fields are **not** generated summaries.
+5. Keep the final layout coherent: closing the summary panel should not leave blank cards, mismatched heights or broken responsive skeleton transitions.
+
+**Acceptance gate:** Source/reference scan shows no `SummarizeButton` import or call to `/api/get-summary`; public UI contains no `Tóm tắt bằng AI` control; removed endpoint is no longer exposed; card/detail pages render existing article text and media unchanged. Test desktop/mobile navigation and layout, run lint, typecheck, tests and production build. No production mutation or rollout without explicit owner approval.
 
 ## P1 — Public visual polish (small UI PRs)
 
@@ -50,7 +68,7 @@ Do not rewrite Next.js, replace Neon/Redis, change media providers, deploy autom
 
 - Split the roughly 1,200-line `app/admin/page.tsx` into small form/media/feedback/security-action components, preserving current behavior and exact authentication requirements.
 - Improve actionable validation, save/error/success feedback, upload progress and destructive-action wording. Keep upload progress as actual progress, not a fake skeleton.
-- Evaluate whether the AI title/summarization affordances should be hidden while no providers are configured; **do not** reintroduce AI search or enable AI keys.
+- AI title suggestions remain a separate, deferred feature. Review their visibility when no provider is configured, but do not reintroduce AI search/summaries or enable AI keys.
 - Preserve confirmation and recovery behavior for bulk delete; never allow admin controls to appear before session validation.
 
 **Acceptance gate:** Existing admin/security tests plus Playwright checks for pending/rejected/offline/accepted authentication, form validation, media state, feedback read and clear-all confirmation. No production data writes for the test suite.
@@ -76,16 +94,17 @@ Do not rewrite Next.js, replace Neon/Redis, change media providers, deploy autom
 | Order | Branch/PR topic | Scope | Dependencies |
 | --- | --- | --- | --- |
 | 1 | `feat/search-minisearch` | Replace AI search; tests; docs | none |
-| 2 | `ui/public-polish` | Typography, spacing, interactions | search PR reviewed |
-| 3 | `refactor/admin-sections` | Admin components and UX | independent tests |
-| 4 | `perf/a11y-audit` | Measurement + targeted fixes | approved UI releases |
-| 5 | optional `experiment/tanstack-admin` | Small reversible spike only | proven need |
+| 2 | `refactor/remove-ai-summary` | Delete summary UI, component and endpoint; update docs/tests | separate from search PR |
+| 3 | `ui/public-polish` | Typography, spacing, interactions | P0 PRs reviewed |
+| 4 | `refactor/admin-sections` | Admin components and UX | independent tests |
+| 5 | `perf/a11y-audit` | Measurement + targeted fixes | approved UI releases |
+| 6 | optional `experiment/tanstack-admin` | Small reversible spike only | proven need |
 
 One isolated concern per PR. Each PR must show changed-file scope, tests, before/after behavior, risk and rollback. Lint/typecheck/tests/build and independent review are required. No merge, production deploy, environment change or destructive operation without explicit owner approval.
 
 ## Sources
 
-- Current repository: `components/ProjectList.tsx`, `app/api/search-projects/route.ts`, `app/admin/page.tsx`, `docs/architecture.md`.
+- Current repository: `components/ProjectList.tsx`, `app/api/search-projects/route.ts`, `components/SummarizeButton.tsx`, `app/api/get-summary/route.ts`, `components/ProjectCard.tsx`, `components/ProductCard.tsx`, `app/(public)/products/[id]/page.tsx`, `app/admin/page.tsx`, `docs/architecture.md`.
 - [MiniSearch project/docs](https://github.com/lucaong/minisearch) for local full-text, fuzzy, prefix and field boosts.
 - [Fuse.js documentation](https://www.fusejs.io/fuzzy-search.html) for the considered fallback.
 - [Pagefind documentation](https://pagefind.app/docs/) for why build-time indexing is not the default here.
