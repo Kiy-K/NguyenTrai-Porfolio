@@ -22,7 +22,7 @@ export default async function SectionPage({ params }: { params: Promise<{ id: st
   return (
     <div className="flex-1 bg-[#F4EBD0] font-playfair flex flex-col">
       
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 flex-grow w-full relative">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-16 flex-grow w-full relative">
         <div className="w-full">
           {/* Section Title */}
           <div className="flex flex-col items-start sm:items-center sm:justify-center gap-4 mb-12 relative">
@@ -30,7 +30,7 @@ export default async function SectionPage({ params }: { params: Promise<{ id: st
               <BackButton fallbackUrl="/" label="Về trang chủ" />
             </div>
             <div className="text-center w-full sm:px-40">
-              <h1 className="text-4xl font-bold text-[#2C1E16] font-playfair mb-4">
+              <h1 className="text-3xl sm:text-4xl font-bold text-[#2C1E16] font-playfair leading-tight break-words mb-4">
                 {section.name}
               </h1>
               <div className="w-16 h-[2px] bg-[#B8860B] mx-auto"></div>
