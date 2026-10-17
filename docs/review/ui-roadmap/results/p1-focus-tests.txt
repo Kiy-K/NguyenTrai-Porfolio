@@ -1,0 +1,112 @@
+
+> ai-studio-applet@0.1.0 test
+> node --test tests/*.test.cjs
+
+✔ content placeholders announce loading once and hide decorative shapes (161.186166ms)
+✔ admin controls remain hidden until session validation succeeds (381.424723ms)
+✔ back control falls back for external arrivals and preserves app history (3.761386ms)
+✔ canonical digests preserve payloads and ignore object-key order (2.569305ms)
+✔ snapshot validation rejects raw identity fields, duplicate keys and malformed payloads (0.680441ms)
+✔ inventory follows SCAN pages, deduplicates keys and excludes temporary state (1.211263ms)
+✔ inventory stops on unknown permanent keys instead of dropping data (0.562437ms)
+✔ import uses one locked transaction and propagates conflict failure (2.323625ms)
+✔ export/import pause verification requires the production guard marker (27.415644ms)
+✔ protected backups cannot resolve inside the repository, including through symlinks (4.242205ms)
+✔ destination pins the endpoint and database and rejects schema ownership collisions (2.027596ms)
+✔ production PostgreSQL builds fail closed without a separate least-privilege APP_DATABASE_URL (1.120279ms)
+✔ destination verification compares index and constraint definitions, not just names (6.237644ms)
+✔ write pause prevents authorized credential provisioning before mutation (143.517881ms)
+✔ Redis remains the default and existing content is preserved (49.456204ms)
+✔ unknown backend and missing PostgreSQL configuration fail closed (18.415524ms)
+✔ runtime connection prefers the least-privilege APP_DATABASE_URL over the owner DATABASE_URL (28.273897ms)
+✔ PostgreSQL reads require imported content and never fall back to Redis (19.766547ms)
+✔ PostgreSQL provisioning uses atomic insert and reports only a winning insert (11.646841ms)
+✔ PostgreSQL append is one atomic JSONB update, preserving other content fields (10.306503ms)
+✔ PostgreSQL credential updates merge fields and cannot initialize a missing key (15.714143ms)
+✔ write pause blocks POST app/api/products/route.ts before I/O (63.361738ms)
+✔ write pause blocks DELETE app/api/products/route.ts before I/O (20.038962ms)
+✔ write pause blocks POST app/api/feedback/route.ts before I/O (47.558964ms)
+✔ write pause blocks POST app/api/admin/auth/login/route.ts before I/O (10.384585ms)
+✔ PostgreSQL rejects malformed imported content instead of returning an empty page (8.808344ms)
+✔ mobile navigation uses a labelled native modal and synchronizes open/close state (170.412288ms)
+✔ keyboard focus outline contrasts with light content and dark navigation (1.388045ms)
+✔ preview errors are never stored in shared caches (361.225001ms)
+✔ preview fails closed without fetching when the rate limiter is unavailable (20.153353ms)
+✔ public product API is no-store and uses only public cache reads (271.255935ms)
+✔ fresh product reads require auth and bypass public cache including drafts (49.474285ms)
+✔ fresh admin database outage returns a no-store error, never an empty list (13.829388ms)
+✔ every successful Neon content mutation invalidates; failed updates never do (13.256436ms)
+✔ data reads exclude unpublished content and propagate database errors without Next caching (12.745931ms)
+✔ cache hit avoids source reads and TTL expires exactly within 60 seconds (97.946788ms)
+✔ drafts, archives and unknown status never enter the public cache (41.477846ms)
+✔ independent instances share cache and invalidation after successful mutation (62.585404ms)
+✔ invalidation fences old reads across instances (49.054454ms)
+Public product cache invalidation failed; the 60-second bound applies.
+Public product cache read failed; reading the source.
+Public product cache read failed; reading the source.
+Public product cache invalidation failed; the 60-second bound applies.
+Public product cache setup failed; reading the source.
+Public product cache setup failed; reading the source.
+Public product cache fill failed.
+✔ failed invalidation and late fills cannot extend staleness beyond read start plus TTL (35.975747ms)
+✔ reads slower than TTL cannot populate the cache, even after epoch expiry (19.838028ms)
+✔ Redis failures fall back to source and Neon outages never become empty data (16.514048ms)
+✔ namespace separates databases and credentials do not appear in keys (18.661559ms)
+✔ cache constructor and fill failures preserve source results and committed writes (16.473851ms)
+✔ Vietnamese folding includes đ and decomposed accents (8.030233ms)
+✔ search is local without keys/network, public-only, and leaves originals untouched (2.667671ms)
+✔ prefixes and one-edit typos work, short fuzzy and permissive OR do not (0.990652ms)
+✔ title ranks ahead of description; tag intersections and section terms work (11.760707ms)
+✔ sorts deterministically by relevance, explicit title, then ID (0.585388ms)
+✔ bulk delete without the typed confirmation never touches storage (236.219239ms)
+✔ confirmed bulk delete returns the removed products for recovery (32.991348ms)
+✔ product creation stores only validated fields with a server-generated id (271.591303ms)
+✔ invalid product payloads are rejected before storage (46.683429ms)
+✔ list pagination resets on query, sort, tags and clear; shrunk lists stay visible (196.066626ms)
+✔ disposable Redis guard rejects the application endpoint before any I/O (2.281326ms)
+✔ disposable Redis guard refuses every nonempty database without mutating it (1.745586ms)
+✔ missing acknowledgement or unsafe URL fails before disposable Redis access (2.354555ms)
+✔ synthetic sentinel is removed even if its verification throws (0.37585ms)
+✔ default is read-only and canonical digests include IDs, media and credential hashes (22.775076ms)
+✔ feedback conflicts, duplicate product IDs and removed credential fields fail closed (1.265099ms)
+✔ destination-only feedback is preserved and verified in the union (1.589053ms)
+✔ apply requires exact approval, live pause and unchanged source before writes (2.857599ms)
+✔ unexpected destination changes fail before mutation (1.720297ms)
+✔ partial failure retries finish safely and repeated application is idempotent (5.812714ms)
+✔ lost successful response can be retried; verification catches corruption and moving sources (5.062364ms)
+✔ backup creates exclusive private files and refuses Git paths, tampering and unsafe permissions (7.612322ms)
+✔ raw Redis compare-and-set detects concurrent changes without touching transient keys (0.965067ms)
+✔ Neon collection uses a read-only consistent snapshot and rejects extra state (0.976083ms)
+✔ empty Neon feedback hashes fail at planning before any writes (0.803665ms)
+✔ final verification refuses an absent pause before reading either store (0.703735ms)
+✔ final verification rejects a pause lifted during either store read (1.578723ms)
+✔ apply cannot report success if its pause is lifted in the final Redis read (1.469098ms)
+✔ a complete paused verification checks both guards and returns verified digests (0.972975ms)
+✔ planning rejects missing or noncanonical production origins before exporting a plan (0.58902ms)
+✔ standalone verify requires the pause and checks it again after both reads (283.109285ms)
+✔ bootstrap rejects disabled before Redis access (154.479909ms)
+✔ bootstrap rejects missing token before Redis access (47.356804ms)
+✔ bootstrap rejects wrong token before Redis access (30.144433ms)
+✔ bootstrap rejects short configuration before Redis access (33.586391ms)
+✔ bootstrap retains same-origin validation (44.264713ms)
+✔ concurrent owner provisioning returns one password and preserves the winner (242.584227ms)
+✔ provisioning preserves existing legacy credentials (196.209419ms)
+✔ provisioning preserves existing partial records (66.260832ms)
+✔ provisioning storage failure never returns a generated password (71.153938ms)
+✔ redirects allow local admin paths and reject unsafe destinations (2.781264ms)
+✔ existing administrator login still issues a secure session cookie (72.174493ms)
+✔ both login page navigation callbacks validate the next parameter (14.301267ms)
+✔ existing IP-bound administrator sessions remain valid (20.006934ms)
+✔ legacy password recheck does not mutate credentials during the write pause (23.521172ms)
+✔ retired summary UI and endpoint are absent (0.995422ms)
+✔ cards retain authored description, media and navigation without summary controls (258.700712ms)
+ℹ tests 91
+ℹ suites 0
+ℹ pass 91
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1461.10459
+
+Command exit status: 0

@@ -34,3 +34,18 @@ test('mobile navigation uses a labelled native modal and synchronizes open/close
   tree = render();
   assert.equal(nodes(tree).find(n => n.props?.['aria-controls']).props['aria-expanded'], false);
 });
+
+test('keyboard focus outline contrasts with light content and dark navigation', () => {
+  const css = require('node:fs').readFileSync('app/globals.css', 'utf8');
+  const color = name => css.match(new RegExp(`--color-${name}:\\s*(#[0-9a-f]{6})`, 'i'))[1];
+  const luminance = hex => {
+    const rgb = hex.slice(1).match(/../g).map(value => parseInt(value, 16) / 255)
+      .map(value => value <= 0.04045 ? value / 12.92 : ((value + 0.055) / 1.055) ** 2.4);
+    return rgb.reduce((sum, value, i) => sum + value * [0.2126, 0.7152, 0.0722][i], 0);
+  };
+  assert.match(css, /outline: 2px solid var\(--color-focus\)/);
+  for (const background of [color('parchment'), color('ink'), '#FFFFFF']) {
+    const [dark, light] = [luminance(color('focus')), luminance(background)].sort((a, b) => a - b);
+    assert.ok((light + 0.05) / (dark + 0.05) >= 3, `focus contrast on ${background}`);
+  }
+});
