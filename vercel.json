@@ -1,0 +1,12 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "git": {
+    "deploymentEnabled": {
+      "review-ui-p0-foundation": false,
+      "review-ui-public-polish": false,
+      "review-admin-sections": false,
+      "review-ui-a11y-audit": false,
+      "review-ui-roadmap-integrated": false
+    }
+  }
+}
