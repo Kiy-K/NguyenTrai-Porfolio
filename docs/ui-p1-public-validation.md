@@ -1,6 +1,6 @@
 # P1 public polish — local validation, 2026-10-17
 
-Branch: `ui/public-polish`, stacked on reviewed P0 search and summary-removal changes. The original independent P0 branches remain available. No main merge, push, release, environment change or production write.
+Branch: `ui/public-polish`, stacked on reviewed P0 search and summary-removal changes. The original independent P0 branches remain available. The source commits were validated locally; this review branch is now published as a draft. No main merge, release, environment change or production write.
 
 ## Changes
 
@@ -20,3 +20,18 @@ Branch: `ui/public-polish`, stacked on reviewed P0 search and summary-removal ch
 Harness: `/tmp/nguyentrai-p1-browser.cjs`, using the synthetic read-only app at `http://127.0.0.1:3330` and existing cached Playwright. External browser traffic is blocked. The Browser plugin runtime described by the frontend testing skill is not installed. Performance/accessibility measurements are recorded separately in `docs/ui-p3-a11y-performance.md` on the downstream audit branch.
 
 Scope limits: embedded-media playback and real provider uploads were not exercised. Shared media rendering and providers remain unchanged. Native dialog behavior was tested in Chromium; Safari/Firefox are not claimed verified. Reverting the scoped UI commit requires no data migration; release/rollback still requires owner approval.
+
+## GitHub review evidence
+
+Review head: `review-ui-public-polish`; base: `review-ui-p0-foundation`. Latest main is `05638a4` with merged roadmap #29. The base contains the reviewed P0 commits plus a narrowly scoped Vercel no-deployment guard. Original local branches are preserved. Pending canonical P0 acceptance is a merge gate; retarget to main only after that foundation is incorporated and recheck conflicts.
+
+Fresh focused-branch checks: **90 tests**, lint, typecheck and webpack build pass. The earlier integrated `b862a2f` receipt has 99 tests because it also includes the independent admin suite. [Portable check logs](review/ui-roadmap/results/) replace temporary-path-only evidence.
+
+| Surface | Before | After |
+| --- | --- | --- |
+| Mobile home 390×844 | ![Before mobile home](review/ui-roadmap/screenshots/before-home-390.png) | ![After mobile home](review/ui-roadmap/screenshots/after-home-390.png) |
+| Desktop section 1440×1000 | ![Before desktop section](review/ui-roadmap/screenshots/before-section-1440.png) | ![After desktop section](review/ui-roadmap/screenshots/after-section-1440.png) |
+
+[All home/section/detail before-and-after screenshots](review/ui-roadmap/screenshots/) cover both viewport sizes; [keyboard-focused mobile drawer](review/ui-roadmap/screenshots/mobile-menu.png). Images use synthetic content and the local portrait. Public baseline is combined P0 (`97da608`); source after is P1 (`930e043`, replayed for review).
+
+The `vercel.json` rule disables automatic deployments only for the five named review refs. It does not disable main or alter runtime settings. Keep the guard while these drafts are reviewed; any deploy remains separately authorized. P4 stays deferred. The third-party ElevenLabs attribution contrast failure (2.06–2.1:1) is unchanged; the P3 draft reports that limitation and the noisy mobile performance samples.
