@@ -36,10 +36,10 @@ Validation commands use Node 24 and the root checkout's installed dependencies t
 node --test tests/*.test.cjs
 node node_modules/eslint/bin/eslint.js .
 node node_modules/typescript/bin/tsc --noEmit
-node /tmp/nguyentrai-p0-build.cjs /home/khoi/.codex/worktrees/675a/NguyenTrai-Porfolio
+node "$HARNESS/build.cjs"
 ```
 
-- Full tests: **92/92 passed**, including nine new admin workflow tests.
+- Historical integrated snapshot: **92/92 passed**, including nine new admin workflow tests. The standalone main-based review branch passes **90/90**; its receipt is linked below.
 - Full lint/typecheck: **passed** after final source changes.
 - Production build: **passed** with webpack, `PERSISTENCE_BACKEND=redis` and Redis/Neon/AI settings blank; no real provider/storage services. Expected missing-configuration warnings appeared. The temporary external `node_modules` symlink also causes standalone tracing warnings; this local output is not a release package.
 - Desktop/mobile Playwright at 1440×1000 and 390×844: passed pending/rejected/offline/accepted auth; whitespace validation; failed save preserving content; successful save; hashed feedback read; synthetic image upload; byte progress, cancellation and ready processing for mocked Mux; exact deletion phrase, Escape/opener restoration, failed deletion, successful deletion and parsed JSON recovery download. All mutation/provider requests were intercepted locally. No uncaught page errors or initial horizontal overflow.
@@ -68,3 +68,10 @@ Synthetic read-only before/after captures use main versus this focused admin sou
 [Clear-all confirmation](review/ui-roadmap/screenshots/admin-confirm-390.png) is synthetic; no production mutation was performed. Existing workflow evidence above covers error/recovery states, byte progress and cancellation.
 
 Merge-tree simulation finds no conflicts against either original P0 branch (`f79e574`, `b037912`). This PR can be reviewed against main independently. `vercel.json` disables automatic deployments only for the named review branches; main/runtime settings remain unchanged. No merge or deployment is authorized. P4 remains deferred. The unchanged third-party attribution contrast limitation (2.06–2.1:1) is documented in the separate P3 audit; it is not introduced by the admin extraction.
+
+
+## Portable reproduction after review
+
+Use the committed [UI review harness and setup instructions](https://github.com/Kiy-K/NguyenTrai-Porfolio/tree/review-ui-a11y-audit/scripts/ui-review) from the P3 branch. Set `HARNESS` to that directory's absolute path, then run its build/server commands **from this admin checkout** and execute `node "$HARNESS/admin.cjs"` in a second terminal with the same exports. No developer-specific worktree or `/tmp` source script is required. The shared synthetic fixture, credential isolation and intercepted auth/upload/mutation responses are included.
+
+The portable admin suite was rerun at 1440×1000 and 390×844: pending/rejected/offline/accepted auth, failed/successful save, hashed feedback, image preview, video byte progress/cancel/ready, exact confirmation and recovery JSON all pass. [Separate rerun receipt](https://github.com/Kiy-K/NguyenTrai-Porfolio/blob/review-ui-a11y-audit/docs/review/ui-roadmap/results/reproduction-admin-browser.json). Existing evidence above remains historical. No production mutations, merge, deploy, provider calls or P4 work occurred.
