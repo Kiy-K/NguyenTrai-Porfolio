@@ -1,6 +1,7 @@
 {
-  "observedAt": "2026-10-17T12:27:39.539Z",
-  "revision": "39ed5cf37d381bfa0382c0e299020bde0f425467",
+  "observedAt": "2026-10-22T12:27:06.649Z",
+  "revision": "45f36ada95e70ed7cbcba1f1e857513150930287",
+  "nodeVersion": "v26.10.0",
   "origin": "http://127.0.0.1:3330",
   "result": [
     {

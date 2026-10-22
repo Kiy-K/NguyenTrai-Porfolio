@@ -1,0 +1,21 @@
+31463fa50f7947f0e63e25e1ecb4b52c78ecdb27
+AGENTS.md
+CLAUDE.md
+README.md
+docs/architecture.md
+docs/operations.md
+docs/ui-roadmap.md
+
+Auto-merging AGENTS.md
+CONFLICT (content): Merge conflict in AGENTS.md
+Auto-merging CLAUDE.md
+CONFLICT (content): Merge conflict in CLAUDE.md
+Auto-merging README.md
+CONFLICT (content): Merge conflict in README.md
+Auto-merging docs/api.md
+Auto-merging docs/architecture.md
+CONFLICT (content): Merge conflict in docs/architecture.md
+Auto-merging docs/operations.md
+CONFLICT (content): Merge conflict in docs/operations.md
+Auto-merging docs/ui-roadmap.md
+CONFLICT (content): Merge conflict in docs/ui-roadmap.md

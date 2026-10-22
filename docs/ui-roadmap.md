@@ -6,19 +6,11 @@
 
 ## Implementation status and GitHub review handoff
 
-The original completed source is preserved at `perf/a11y-audit` (`b862a2f`). Latest fetched main remains `05638a4`, including merged roadmap #29. Review-only branches preserve the same implementation without merging main or deploying:
+Current review preparation (2026-10-22) uses main `cbf43ec` with roadmap #29 and P2 #31 merged. P1 #30 and P3 #32 were merged into the P0 foundation, not main. The draft `review-ui-roadmap-integration` now combines that stack with latest main without conflicts. Its application source matches original `b862a2f` except the reviewed focus-contrast correction. Original branches and local files are preserved.
 
-| Review branch | Base | Focus |
-| --- | --- | --- |
-| [`review-ui-public-polish` (#30)](https://github.com/Kiy-K/NguyenTrai-Porfolio/pull/30) | `review-ui-p0-foundation` | P1 public UI, regression test, before/after screenshots |
-| [`review-admin-sections` (#31)](https://github.com/Kiy-K/NguyenTrai-Porfolio/pull/31) | `main` | P2 admin split, workflow tests, before/after screenshots |
-| `review-ui-a11y-audit` | [`review-ui-public-polish` (#30)](https://github.com/Kiy-K/NguyenTrai-Porfolio/pull/30) | P3 validation report, safe observations, review/release gates |
+The existing focused reviews remain the source history: [P1 #30](https://github.com/Kiy-K/NguyenTrai-Porfolio/pull/30), [P2 #31](https://github.com/Kiy-K/NguyenTrai-Porfolio/pull/31), [P3 #32](https://github.com/Kiy-K/NguyenTrai-Porfolio/pull/32). The integration draft has independent P0/P1/P2/P3 review sections; P2 adds no further runtime diff against main. [Current integration evidence and gates](review/ui-roadmap/integration-review.md) supersede the older publication-state descriptions in the dated validation reports.
 
-The P0 foundation is a dependency ref, not a replacement approval for the pending canonical MiniSearch and AI-summary changes. It contains their already-reviewed combined source. [Compatibility notes](review/ui-roadmap/p0-compatibility.md) record the six P0 documentation conflicts and the clean admin/P0 simulations. Retarget P1/P3 only after P0 is incorporated into main and revalidate.
-
-P1 and P2 source/independent review checks are complete. Fresh focused suites pass 90 tests each; the original complete integration passed 99 tests plus lint/typecheck/build and public/admin/offline-search browser checks. See [P1 evidence](ui-p1-public-validation.md), [independent P2 evidence](https://github.com/Kiy-K/NguyenTrai-Porfolio/blob/review-admin-sections/docs/ui-p2-admin-validation.md), and [P3 report](ui-p3-a11y-performance.md).
-
-Remaining gates: canonical P0 acceptance; updated-main integration checks; owner approval before merge/release; post-release read-only verification and field performance. Existing third-party attribution contrast remains 2.06–2.1:1. P4 remains deferred for lack of evidence. No main merge, deploy, environment change or production mutation was performed. Five named review refs explicitly disable automatic Vercel deployment.
+P0 MiniSearch and AI-summary removal are included prerequisites requiring explicit review. [Compatibility notes](review/ui-roadmap/p0-compatibility.md) distinguish original branch documentation conflicts from the conflict-free resolved integration. No merge or deployment is part of this preparation. P4 remains deferred.
 
 ## Objectives and non-goals
 

@@ -1,5 +1,7 @@
 # UI roadmap: accessibility, performance and CDN evidence
 
+**Current handoff:** [2026-10-22 integration review](review/ui-roadmap/integration-review.md) records latest main, fresh receipts and release gates. Publication-state descriptions below are historical.
+
 Historical measurement snapshot: 2026-10-17, source commit [`b862a2f`](https://github.com/Kiy-K/NguyenTrai-Porfolio/commit/b862a2f). Local downstream branch: `perf/a11y-audit`, combining the independently reviewed P0/P1/P2 commits for final verification. Main and production were not changed. This report distinguishes local lab evidence from the existing release's read-only CDN observations; it is not post-release approval.
 
 ## Local environment and reproduction

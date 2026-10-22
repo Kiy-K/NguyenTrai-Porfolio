@@ -1,7 +1,8 @@
 {
-  "observedAt": "2026-10-17T12:27:59.947Z",
-  "revision": "4e9084beccc4e22974971cf064997324c252a655",
-  "origin": "http://127.0.0.1:3340",
+  "observedAt": "2026-10-22T12:27:23.706Z",
+  "revision": "45f36ada95e70ed7cbcba1f1e857513150930287",
+  "nodeVersion": "v26.10.0",
+  "origin": "http://127.0.0.1:3330",
   "result": [
     {
       "viewport": {

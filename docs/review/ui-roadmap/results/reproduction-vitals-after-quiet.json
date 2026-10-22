@@ -1,6 +1,7 @@
 {
-  "observedAt": "2026-10-17T12:27:42.027Z",
-  "revision": "39ed5cf37d381bfa0382c0e299020bde0f425467",
+  "observedAt": "2026-10-22T12:27:32.844Z",
+  "revision": "45f36ada95e70ed7cbcba1f1e857513150930287",
+  "nodeVersion": "v26.10.0",
   "origin": "http://127.0.0.1:3330",
   "result": [
     {
@@ -8,20 +9,20 @@
         "width": 1440,
         "height": 1000
       },
-      "lcp": 156,
+      "lcp": 232,
       "cls": 0,
-      "interactionDuration": 24,
-      "inp": 24
+      "interactionDuration": 40,
+      "inp": 40
     },
     {
       "viewport": {
         "width": 390,
         "height": 844
       },
-      "lcp": 108,
+      "lcp": 204,
       "cls": 0,
-      "interactionDuration": 24,
-      "inp": 24
+      "interactionDuration": 32,
+      "inp": 8
     }
   ]
 }
