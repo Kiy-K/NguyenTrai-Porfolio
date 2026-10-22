@@ -38,9 +38,9 @@
 [Upstash Redis] The 'url' property is missing or undefined in your Redis config.
 [Upstash Redis] The 'token' property is missing or undefined in your Redis config.
   Generating static pages using 15 workers (0/15) ...
-  Generating static pages using 15 workers (3/15) 
-  Generating static pages using 15 workers (7/15) 
-  Generating static pages using 15 workers (11/15) 
+  Generating static pages using 15 workers (3/15)
+  Generating static pages using 15 workers (7/15)
+  Generating static pages using 15 workers (11/15)
 ✓ Generating static pages using 15 workers (15/15) in 620ms
   Finalizing page optimization ...
   Collecting build traces ...
@@ -71,4 +71,3 @@ Route (app)                    Revalidate  Expire
 
 ○  (Static)   prerendered as static content
 ƒ  (Dynamic)  server-rendered on demand
-

@@ -83,4 +83,6 @@ No production route was fetched during this investigation, and no deploy, enviro
 
 Five [representative URL-redacted full traces](traces/) cover both mobile widget conditions and the release's score67/LCP11315ms outlier. [Trace hashes/redaction manifest](traces/manifest.json). Timing and task structure are retained; URL query strings/fragments are removed. Per-run diagnostics/network byte/timing summaries are committed for all38 samples.
 
+Committed text logs normalize terminal whitespace; original byte-for-byte logs remain in the archive.
+
 All38 original full Lighthouse reports/traces, the exact public frozen response bytes and synthetic regression artifacts are retained in **`/tmp/nguyentrai-issue-34-evidence.tar.gz`**. [Archive size/hash and retention note](artifact-manifest.json). This local archive is not uploaded to GitHub and must be preserved before `/tmp` cleanup. It permits exact snapshot replay without committing vendor asset code or public agent configuration bodies. [Reproduction commands](reproduce.md).
