@@ -1,0 +1,15 @@
+# Emergency Node24 security update — 2026-10-22
+
+Target Node **24.22.1** / bundled npm **11.19.1**, the [October21 security release](https://nodejs.org/en/blog/release/v24.22.1). It addresses Node DNS/TLS/Brotli/HTTP/crypto/permission issues and bundled dependency updates. This change is separately based on main, not the pending performance investigation PR.
+
+- `.nvmrc` and `mise.toml` pin24.22.1. Existing older runtimes remain installed for historical experiments; they are not selected for this repo.
+- `engines.node=24.x` selects Vercel's managed24major. npm `devEngines` rejects versions below24.22.1, other Node majors and npm below11 before install/ci/run. Use the repo's pinned runtime before `npm ci`. This is tooling enforcement, not a sandbox against direct `node` invocation.
+- CI switches from22 to the exact `.nvmrc` version. Official checkoutv7.0.1 and setup-nodev7.1.0 use verified immutable commit pins; checkout does not persist Git credentials. Workflow permissions stay read-only.
+- `sanitize-html` is patched from2.18.0 to **2.18.1** for [CVE-2026-113650](https://github.com/advisories/GHSA-c9rx-x947-fp3h). The regression uses the existing plain-text sanitization policy: deeply nested discarded iframe fallback throws with old2.18.0 and passes with2.18.1; Vietnamese authored text remains intact. No feedback/preview policy or identity-storage change.
+- Existing startup instrumentation privately logs `[runtime] node=<actual version>` for Node functions. This exposes no version header/endpoint or secret and lets deployment verification distinguish build and function runtime.
+
+[101-test run](tests.txt), [validation commands/exit statuses](validation.txt), [audit summary](audit-summary.json). Tests, lint, typecheck, isolated webpack production build and production audit pass. A negative check confirms Node24.21.0 is rejected before npm run. Independent standards/spec review found no blocker. Generated build/type files and untracked `.vercel/` are excluded.
+
+Production dependencies audit to zero advisories. Remaining7affected development packages (5high,2moderate) originate from existing braces3.0.3 and typography's postcss-selector-parser6 dependency. No compatible published braces patch exists; parser's fixed7.x would require a separately validated dependency change. No forced framework downgrade or unsafe major override is applied. Full audit remains visible in CI; the production gate remains blocking.
+
+The owner explicitly authorized merging and deploying this emergency update. Merge only the validated security change; the investigation PR, prior review backlog, widget contrast and P4 are not included. Preserve storage/auth/cache behavior. After merge, inspect the production deployment and private startup log for actual Node24.22.1+, then GET-only check public content/auth/retired routes, headers and runtime errors. Vercel manages minor/patch rollout, so configuration alone is not runtime proof. This preflight record does not claim deployment completion.

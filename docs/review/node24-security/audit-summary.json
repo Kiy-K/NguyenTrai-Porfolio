@@ -1,0 +1,59 @@
+{
+  "checkedAt": "2026-10-22",
+  "node": "24.22.1",
+  "npm": "11.19.1",
+  "allDependencies": {
+    "info": 0,
+    "low": 0,
+    "moderate": 2,
+    "high": 5,
+    "critical": 0,
+    "total": 7
+  },
+  "production": {
+    "total": 0,
+    "command": "npm audit --omit=dev --audit-level=high",
+    "exitCode": 0
+  },
+  "remainingDevelopmentAdvisories": [
+    {
+      "package": "@next/eslint-plugin-next",
+      "severity": "high",
+      "advisories": []
+    },
+    {
+      "package": "@tailwindcss/typography",
+      "severity": "moderate",
+      "advisories": []
+    },
+    {
+      "package": "braces",
+      "severity": "high",
+      "advisories": [
+        "https://github.com/advisories/GHSA-vfj7-8cjw-p6xm"
+      ]
+    },
+    {
+      "package": "eslint-config-next",
+      "severity": "high",
+      "advisories": []
+    },
+    {
+      "package": "fast-glob",
+      "severity": "high",
+      "advisories": []
+    },
+    {
+      "package": "micromatch",
+      "severity": "high",
+      "advisories": []
+    },
+    {
+      "package": "postcss-selector-parser",
+      "severity": "moderate",
+      "advisories": [
+        "https://github.com/advisories/GHSA-rj75-hqrm-r3gf"
+      ]
+    }
+  ]
+}
