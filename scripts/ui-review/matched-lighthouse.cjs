@@ -7,6 +7,7 @@ const { gzipSync } = require('node:zlib');
 const { execFileSync } = require('node:child_process');
 const { pathToFileURL } = require('node:url');
 const assert = require('node:assert/strict');
+const { isAdminTraffic, networkEntry } = require('./matched-metrics.cjs');
 const [action, profile = 'mobile', widget = 'on', sample = '1', animation = 'on'] = process.argv.slice(2);
 assert.ok(['capture', 'sample'].includes(action));
 assert.ok(['mobile', 'desktop'].includes(profile));
@@ -19,6 +20,10 @@ const cache = process.env.P31_ASSETS;
 assert.ok(cache, 'P31_ASSETS required');
 fs.mkdirSync(output, { recursive: true });
 fs.mkdirSync(cache, { recursive: true });
+if (action === 'capture') {
+  assert.equal(fs.readdirSync(cache).length, 0, 'New capture requires an empty asset directory');
+  assert.equal(fs.readdirSync(output).length, 0, 'New capture requires an empty output directory');
+}
 const digest = value => crypto.createHash('sha256').update(value).digest('hex');
 const safeURL = value => {
   try { const url = new URL(value); return url.origin + url.pathname; } catch { return String(value); }
@@ -29,12 +34,15 @@ const safeURL = value => {
   const { default: desktopConfig } = await import(pathToFileURL(path.join(path.dirname(require.resolve('lighthouse')), 'config/desktop-config.js')).href);
   const { launch } = await import(pathToFileURL(require.resolve('chrome-launcher')).href);
   const { default: puppeteer } = await import(pathToFileURL(require.resolve('puppeteer-core')).href);
+  const toolVersions = { puppeteer: require('puppeteer-core/package.json').version, chromeLauncher: require('chrome-launcher/package.json').version };
+  assert.deepEqual(toolVersions, { puppeteer: '25.14.0', chromeLauncher: '1.2.2' }, 'Use the pinned external tools');
   const chrome = await launch({ chromeFlags: ['--headless', '--no-sandbox', '--disable-background-networking'] });
   const browser = await puppeteer.connect({ browserURL: `http://127.0.0.1:${chrome.port}` });
   const page = await browser.newPage();
   const manifestPath = path.join(cache, 'manifest.json');
   const assets = fs.existsSync(manifestPath) ? JSON.parse(fs.readFileSync(manifestPath, 'utf8')) : {};
   const misses = new Set();
+  let blockedAdminRequests = 0;
   if (animation === 'off') await page.evaluateOnNewDocument(() => {
     const disable = () => {
       if (!document.head) return;
@@ -51,6 +59,7 @@ const safeURL = value => {
   page.on('request', async request => {
     try {
       const url = request.url();
+      if (isAdminTraffic(url)) { blockedAdminRequests++; return await request.abort(); }
       if (url.startsWith(origin + '/') || url.startsWith('data:') || url.startsWith('blob:')) return await request.continue();
       // Analytics and all writes are blocked in capture and replay alike. No conversation is started.
       if (request.method() !== 'GET' || /vercel|vitals\.vercel/i.test(url)) return await request.abort();
@@ -89,6 +98,7 @@ const safeURL = value => {
         width: profile === 'mobile' ? 390 : 1440, height: profile === 'mobile' ? 844 : 1000, deviceScaleFactor: 1, disabled: false } };
     const run = await lighthouse(origin + '/', options, profile === 'desktop' ? desktopConfig : undefined, page);
     assert.ok(run && !run.lhr.runtimeError, JSON.stringify(run?.lhr.runtimeError));
+    assert.equal(run.lhr.lighthouseVersion, '13.5.0', 'Use the pinned Lighthouse release');
     assert.equal(misses.size, 0, `Frozen asset miss: ${[...misses].join(', ')}`);
     const widgetRendered = await page.evaluate(() => Boolean(document.querySelector('elevenlabs-convai')?.shadowRoot));
     assert.equal(widgetRendered, widget === 'on', 'Widget ablation must actually differ');
@@ -98,10 +108,12 @@ const safeURL = value => {
     const record = { observedAt: new Date().toISOString(), revision: execFileSync('git', ['rev-parse', 'HEAD'], { encoding: 'utf8' }).trim(),
       nodeVersion: process.version, lighthouseVersion: run.lhr.lighthouseVersion, browser: await browser.version(),
       platform: { os: os.type(), release: os.release(), arch: os.arch(), cpu: os.cpus()[0].model, cores: os.cpus().length, loadBefore, loadAfter: os.loadavg() },
+      tools: toolVersions, collectorSourceSha256: digest(fs.readFileSync(__filename)), metricsHelperSha256: digest(fs.readFileSync(path.join(__dirname, 'matched-metrics.cjs'))),
+      adminPrefetchPolicy: 'blocked', blockedAdminRequests, networkTimingUnit: 'milliseconds since navigation start',
       profile, widget, widgetRendered, animation, sample: Number(sample), assetManifestSha256: digest(fs.readFileSync(manifestPath)),
       settings: run.lhr.configSettings, metrics, scores: Object.fromEntries(Object.entries(run.lhr.categories).map(([key, value]) => [key, value.score])),
       diagnostics: Object.fromEntries(['mainthread-work-breakdown', 'bootup-time', 'long-tasks', 'unused-javascript', 'third-party-summary', 'lcp-breakdown-insight', 'lcp-discovery-insight', 'color-contrast'].filter(key => audits[key]).map(key => [key, audits[key]])),
-      network: (audits['network-requests']?.details?.items || []).map(item => ({ url: safeURL(item.url), resourceType: item.resourceType, transferSize: item.transferSize, resourceSize: item.resourceSize, startTime: item.startTime, endTime: item.endTime, statusCode: item.statusCode })) };
+      network: (audits['network-requests']?.details?.items || []).map(networkEntry) };
     const stem = `${profile}-widget-${widget}-${sample}`;
     fs.writeFileSync(path.join(output, stem + '.json'), JSON.stringify(record, null, 2));
     // Full reports/traces contain only synthetic content and public frozen assets; retain separately for inspection.

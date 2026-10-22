@@ -1,8 +1,8 @@
-$ node /home/khoi/Projects/NguyenTrai-Porfolio/scripts/ui-review/public.cjs
+$ node $HARNESS/public.cjs
 AssertionError [ERR_ASSERTION]: Expected "actual" to be strictly unequal to:
 
 'hidden'
-    at /home/khoi/Projects/NguyenTrai-Porfolio/scripts/ui-review/public.cjs:37:20 {
+    at $HARNESS/public.cjs:37:20 {
   generatedMessage: true,
   code: 'ERR_ASSERTION',
   actual: 'hidden',

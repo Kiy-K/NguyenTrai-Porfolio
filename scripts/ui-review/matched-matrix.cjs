@@ -8,10 +8,11 @@ const animationAblation = process.argv[2] === 'animation-off';
 assert.ok(!process.argv[2] || animationAblation, 'Only animation-off is supported');
 const output = process.env.P31_OUTPUT;
 assert.ok(output && process.env.P31_BASELINE && process.env.P31_RELEASE && process.env.P31_ASSETS);
+fs.mkdirSync(output, { recursive: true });
+assert.equal(fs.readdirSync(output).length, 0, 'Use a new empty matrix output directory');
 const targets = { baseline: process.env.P31_BASELINE, release: process.env.P31_RELEASE };
 const expected = { baseline: '97da6087a6969975fbb360c3ec966ac6c723fb6d', release: 'a86a991899a84f4ceaa72b2931049331466ff061' };
 for (const [label, cwd] of Object.entries(targets)) assert.equal(execFileSync('git', ['rev-parse', 'HEAD'], { cwd, encoding: 'utf8' }).trim(), expected[label]);
-fs.mkdirSync(output, { recursive: true });
 let activeServer;
 async function run(label, profile, widget, round) {
   const log = fs.openSync(path.join(output, 'commands.log'), 'a');

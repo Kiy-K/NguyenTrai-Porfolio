@@ -623,6 +623,8 @@
       "resourceType": "Document",
       "transferSize": 8513,
       "resourceSize": 35600,
+      "networkRequestTime": 6.011999999638647,
+      "networkEndTime": 14.18500000005588,
       "statusCode": 200
     },
     {
@@ -630,6 +632,8 @@
       "resourceType": "Font",
       "transferSize": 9596,
       "resourceSize": 9056,
+      "networkRequestTime": 35.58999999985099,
+      "networkEndTime": 56.12199999997392,
       "statusCode": 200
     },
     {
@@ -637,6 +641,8 @@
       "resourceType": "Font",
       "transferSize": 39001,
       "resourceSize": 38460,
+      "networkRequestTime": 39.54799999995157,
+      "networkEndTime": 53.38399999961257,
       "statusCode": 200
     },
     {
@@ -644,6 +650,8 @@
       "resourceType": "Image",
       "transferSize": 10801,
       "resourceSize": 10136,
+      "networkRequestTime": 90.89699999988079,
+      "networkEndTime": 121.58700000029057,
       "statusCode": 200
     },
     {
@@ -651,6 +659,8 @@
       "resourceType": "Stylesheet",
       "transferSize": 10020,
       "resourceSize": 47022,
+      "networkRequestTime": 44.41000000014901,
+      "networkEndTime": 55.502000000327826,
       "statusCode": 200
     },
     {
@@ -658,6 +668,8 @@
       "resourceType": "Script",
       "transferSize": 2319,
       "resourceSize": 3336,
+      "networkRequestTime": 91,
+      "networkEndTime": 117.42900000000373,
       "statusCode": 200
     },
     {
@@ -665,6 +677,8 @@
       "resourceType": "Script",
       "transferSize": 64735,
       "resourceSize": 203721,
+      "networkRequestTime": 91.05799999972805,
+      "networkEndTime": 129.50900000007823,
       "statusCode": 200
     },
     {
@@ -672,6 +686,8 @@
       "resourceType": "Script",
       "transferSize": 68020,
       "resourceSize": 242379,
+      "networkRequestTime": 91.12199999997392,
+      "networkEndTime": 129.8289999999106,
       "statusCode": 200
     },
     {
@@ -679,6 +695,8 @@
       "resourceType": "Script",
       "transferSize": 1101,
       "resourceSize": 513,
+      "networkRequestTime": 91.23099999967963,
+      "networkEndTime": 120.08299999963492,
       "statusCode": 200
     },
     {
@@ -686,6 +704,8 @@
       "resourceType": "Script",
       "transferSize": 4934,
       "resourceSize": 13308,
+      "networkRequestTime": 91.38099999958649,
+      "networkEndTime": 118.12099999981001,
       "statusCode": 200
     },
     {
@@ -693,6 +713,8 @@
       "resourceType": "Script",
       "transferSize": 6840,
       "resourceSize": 16631,
+      "networkRequestTime": 118.3479999997653,
+      "networkEndTime": 123.45899999979883,
       "statusCode": 200
     },
     {
@@ -700,6 +722,8 @@
       "resourceType": "Script",
       "transferSize": 3743,
       "resourceSize": 6893,
+      "networkRequestTime": 120.21299999998882,
+      "networkEndTime": 126.88200000021607,
       "statusCode": 200
     },
     {
@@ -707,6 +731,8 @@
       "resourceType": "Script",
       "transferSize": 5631,
       "resourceSize": 13655,
+      "networkRequestTime": 122.39000000013039,
+      "networkEndTime": 128.13299999991432,
       "statusCode": 200
     },
     {
@@ -714,6 +740,8 @@
       "resourceType": "Script",
       "transferSize": 3402,
       "resourceSize": 7072,
+      "networkRequestTime": 122.78299999982119,
+      "networkEndTime": 128.6359999999404,
       "statusCode": 200
     },
     {
@@ -721,6 +749,8 @@
       "resourceType": "Script",
       "transferSize": 1557236,
       "resourceSize": 1557099,
+      "networkRequestTime": 32.02299999957904,
+      "networkEndTime": 89.73600000003353,
       "statusCode": 200
     },
     {
@@ -728,6 +758,8 @@
       "resourceType": "Font",
       "transferSize": 21521,
       "resourceSize": 20980,
+      "networkRequestTime": 105.33199999993667,
+      "networkEndTime": 122.07099999953061,
       "statusCode": 200
     },
     {
@@ -735,6 +767,8 @@
       "resourceType": "Other",
       "transferSize": 534,
       "resourceSize": 9,
+      "networkRequestTime": 198.53099999995902,
+      "networkEndTime": 200.8870000001043,
       "statusCode": 404
     },
     {
@@ -742,6 +776,8 @@
       "resourceType": "Script",
       "transferSize": 0,
       "resourceSize": 0,
+      "networkRequestTime": 255.7170000001788,
+      "networkEndTime": 255.81400000024587,
       "statusCode": -1
     },
     {
@@ -749,6 +785,8 @@
       "resourceType": "Script",
       "transferSize": 0,
       "resourceSize": 0,
+      "networkRequestTime": 256.31600000010803,
+      "networkEndTime": 256.3900000001304,
       "statusCode": -1
     },
     {
@@ -756,6 +794,8 @@
       "resourceType": "Fetch",
       "transferSize": 6154,
       "resourceSize": 6034,
+      "networkRequestTime": 265.6959999999963,
+      "networkEndTime": 266.79100000020117,
       "statusCode": 200
     },
     {
@@ -763,6 +803,8 @@
       "resourceType": "Fetch",
       "transferSize": 937,
       "resourceSize": 416,
+      "networkRequestTime": 270.5209999997169,
+      "networkEndTime": 279.8760000001639,
       "statusCode": 200
     },
     {
@@ -770,6 +812,8 @@
       "resourceType": "Image",
       "transferSize": 21,
       "resourceSize": 21,
+      "networkRequestTime": 285.5319999996573,
+      "networkEndTime": 301.5580000001937,
       "statusCode": 403
     },
     {
@@ -777,7 +821,18 @@
       "resourceType": "Fetch",
       "transferSize": 3122,
       "resourceSize": 7445,
+      "networkRequestTime": 306.9290000000037,
+      "networkEndTime": 312.18800000008196,
       "statusCode": 200
     }
-  ]
+  ],
+  "networkTimingUnit": "milliseconds since navigation start",
+  "animation": "on",
+  "evidenceEnrichment": {
+    "source": "primary/release/mobile-widget-on-4.lhr.json.gz",
+    "sourceGzipSha256": "30bac42e338aa4423ec8b3c20a4ae5d34444a7fa12091877cef9b94d9b7d1c19",
+    "timingSource": "Original Lighthouse 13.5 network-requests audit, networkRequestTime/networkEndTime",
+    "animationSource": "Derived from frozen collector 2fec060: animation ablation did not yet exist",
+    "unchanged": "observedAt, revision, nodeVersion, metrics, scores and task diagnostics"
+  }
 }

@@ -71,3 +71,6 @@ Route (app)                    Revalidate  Expire
 
 ○  (Static)   prerendered as static content
 ƒ  (Dynamic)  server-rendered on demand
+
+# Historical completion status recovered from the original successful execution record: exit=0.
+# This annotation is not a new run; original raw logs remain in the retained archive.

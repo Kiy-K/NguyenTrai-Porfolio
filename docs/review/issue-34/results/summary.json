@@ -50,6 +50,20 @@
         -3796,
         -3796
       ],
+      "homepageJsTransferBytes": [
+        289,
+        289,
+        289,
+        289,
+        289
+      ],
+      "homepageJsResourceBytes": [
+        739,
+        739,
+        739,
+        739,
+        739
+      ],
       "unusedJsBytes": [
         379,
         379,
@@ -108,6 +122,20 @@
         -3796,
         -3796
       ],
+      "homepageJsTransferBytes": [
+        289,
+        289,
+        289,
+        289,
+        289
+      ],
+      "homepageJsResourceBytes": [
+        739,
+        739,
+        739,
+        739,
+        739
+      ],
       "unusedJsBytes": [
         224,
         239,
@@ -145,6 +173,14 @@
         739,
         739
       ],
+      "homepageJsTransferBytes": [
+        289,
+        289
+      ],
+      "homepageJsResourceBytes": [
+        739,
+        739
+      ],
       "unusedJsBytes": [
         120,
         0
@@ -179,14 +215,26 @@
         739,
         739
       ],
+      "homepageJsTransferBytes": [
+        289,
+        289
+      ],
+      "homepageJsResourceBytes": [
+        739,
+        739
+      ],
       "unusedJsBytes": [
         -140,
         120
       ]
     }
   },
-  "observedAt": "2026-10-22T13:20:50.836Z",
-  "harnessRevision": "2fec060",
+  "observedAt": "2026-10-22T13:52:00.957Z",
+  "analysisSources": {
+    "summarize-matched.cjs": "9cf3e8ee7891d76db923be3a68998e85fd4b78cc770fb03d783db62cd1472af1",
+    "matched-metrics.cjs": "8ce34be01baee202ef719044f3f1d200a40937a9ede3353941b700fdfa152543"
+  },
+  "measurementCollector": "Historical primary collector2fec060; original writer did not emit a source hash",
   "summaries": {
     "baseline/mobile/on": {
       "samples": 5,
@@ -225,6 +273,11 @@
         "min": 273.5320000000003,
         "max": 293.95999999999987
       },
+      "firstPartyLongTaskDuration": {
+        "median": 220,
+        "min": 173,
+        "max": 256
+      },
       "widgetExecution": {
         "median": 208.7039999999997,
         "min": 205.88800000000003,
@@ -244,6 +297,21 @@
         "median": 2068403,
         "min": 2068403,
         "max": 2068403
+      },
+      "homepageJsTransferBytes": {
+        "median": 1717672,
+        "min": 1717672,
+        "max": 1717672
+      },
+      "homepageJsResourceBytes": {
+        "median": 2063868,
+        "min": 2063868,
+        "max": 2063868
+      },
+      "adminPrefetchJsTransferBytes": {
+        "median": 2575,
+        "min": 2575,
+        "max": 2575
       },
       "unusedJsBytes": {
         "median": 1114315,
@@ -293,6 +361,11 @@
         "min": 277.91999999999905,
         "max": 301.75200000000115
       },
+      "firstPartyLongTaskDuration": {
+        "median": 231,
+        "min": 227,
+        "max": 241
+      },
       "widgetExecution": {
         "median": 0,
         "min": 0,
@@ -312,6 +385,21 @@
         "median": 511304,
         "min": 511304,
         "max": 511304
+      },
+      "homepageJsTransferBytes": {
+        "median": 160436,
+        "min": 160436,
+        "max": 160436
+      },
+      "homepageJsResourceBytes": {
+        "median": 506769,
+        "min": 506769,
+        "max": 506769
+      },
+      "adminPrefetchJsTransferBytes": {
+        "median": 2575,
+        "min": 2575,
+        "max": 2575
       },
       "unusedJsBytes": {
         "median": 49621,
@@ -361,6 +449,11 @@
         "min": 3.8559999999999994,
         "max": 67.96300000000022
       },
+      "firstPartyLongTaskDuration": {
+        "median": 0,
+        "min": 0,
+        "max": 0
+      },
       "widgetExecution": {
         "median": 50.97499999999998,
         "min": 50.914999999999935,
@@ -380,6 +473,21 @@
         "median": 2068403,
         "min": 2068403,
         "max": 2068403
+      },
+      "homepageJsTransferBytes": {
+        "median": 1717672,
+        "min": 1717672,
+        "max": 1717672
+      },
+      "homepageJsResourceBytes": {
+        "median": 2063868,
+        "min": 2063868,
+        "max": 2063868
+      },
+      "adminPrefetchJsTransferBytes": {
+        "median": 2575,
+        "min": 2575,
+        "max": 2575
       },
       "unusedJsBytes": {
         "median": 1114255,
@@ -429,6 +537,11 @@
         "min": 3.9630000000000005,
         "max": 5.035
       },
+      "firstPartyLongTaskDuration": {
+        "median": 0,
+        "min": 0,
+        "max": 0
+      },
       "widgetExecution": {
         "median": 0,
         "min": 0,
@@ -448,6 +561,21 @@
         "median": 511304,
         "min": 511304,
         "max": 511304
+      },
+      "homepageJsTransferBytes": {
+        "median": 160436,
+        "min": 160436,
+        "max": 160436
+      },
+      "homepageJsResourceBytes": {
+        "median": 506769,
+        "min": 506769,
+        "max": 506769
+      },
+      "adminPrefetchJsTransferBytes": {
+        "median": 2575,
+        "min": 2575,
+        "max": 2575
       },
       "unusedJsBytes": {
         "median": 49621,
@@ -497,6 +625,11 @@
         "min": 266.13999999999896,
         "max": 312.6880000000003
       },
+      "firstPartyLongTaskDuration": {
+        "median": 222,
+        "min": 174,
+        "max": 249
+      },
       "widgetExecution": {
         "median": 214.3079999999997,
         "min": 205.4239999999999,
@@ -516,6 +649,21 @@
         "median": 2064607,
         "min": 2064607,
         "max": 2064607
+      },
+      "homepageJsTransferBytes": {
+        "median": 1717961,
+        "min": 1717961,
+        "max": 1717961
+      },
+      "homepageJsResourceBytes": {
+        "median": 2064607,
+        "min": 2064607,
+        "max": 2064607
+      },
+      "adminPrefetchJsTransferBytes": {
+        "median": 0,
+        "min": 0,
+        "max": 0
       },
       "unusedJsBytes": {
         "median": 1114694,
@@ -565,6 +713,11 @@
         "min": 271.2079999999985,
         "max": 284.28800000000047
       },
+      "firstPartyLongTaskDuration": {
+        "median": 224,
+        "min": 152,
+        "max": 229
+      },
       "widgetExecution": {
         "median": 0,
         "min": 0,
@@ -584,6 +737,21 @@
         "median": 507508,
         "min": 507508,
         "max": 507508
+      },
+      "homepageJsTransferBytes": {
+        "median": 160725,
+        "min": 160725,
+        "max": 160725
+      },
+      "homepageJsResourceBytes": {
+        "median": 507508,
+        "min": 507508,
+        "max": 507508
+      },
+      "adminPrefetchJsTransferBytes": {
+        "median": 0,
+        "min": 0,
+        "max": 0
       },
       "unusedJsBytes": {
         "median": 49845,
@@ -633,6 +801,11 @@
         "min": 0,
         "max": 67.16199999999976
       },
+      "firstPartyLongTaskDuration": {
+        "median": 0,
+        "min": 0,
+        "max": 0
+      },
       "widgetExecution": {
         "median": 54.04899999999997,
         "min": 52.785000000000004,
@@ -652,6 +825,21 @@
         "median": 2069142,
         "min": 2069142,
         "max": 2069142
+      },
+      "homepageJsTransferBytes": {
+        "median": 1717961,
+        "min": 1717961,
+        "max": 1717961
+      },
+      "homepageJsResourceBytes": {
+        "median": 2064607,
+        "min": 2064607,
+        "max": 2064607
+      },
+      "adminPrefetchJsTransferBytes": {
+        "median": 2575,
+        "min": 2575,
+        "max": 2575
       },
       "unusedJsBytes": {
         "median": 1114315,
@@ -701,6 +889,11 @@
         "min": 66.09199999999997,
         "max": 75.56600000000016
       },
+      "firstPartyLongTaskDuration": {
+        "median": 0,
+        "min": 0,
+        "max": 0
+      },
       "widgetExecution": {
         "median": 0,
         "min": 0,
@@ -721,6 +914,21 @@
         "min": 512043,
         "max": 512043
       },
+      "homepageJsTransferBytes": {
+        "median": 160725,
+        "min": 160725,
+        "max": 160725
+      },
+      "homepageJsResourceBytes": {
+        "median": 507508,
+        "min": 507508,
+        "max": 507508
+      },
+      "adminPrefetchJsTransferBytes": {
+        "median": 2575,
+        "min": 2575,
+        "max": 2575
+      },
       "unusedJsBytes": {
         "median": 49611,
         "min": 49481,
@@ -740,6 +948,9 @@
     -11,
     3.151875000000018
   ],
+  "preliminaryTbtSignal": false,
+  "firstPartyAttributionIncrease": false,
   "firstPartyThresholdTriggered": false,
+  "byteComparisonPolicy": "Original total script bytes retained; homepageJs fields exclude /admin route scripts on both revisions. Historic total TBT still includes any prefetch execution.",
   "note": "Threshold is preregistered diagnostic evidence, not statistical proof. See traces, widget-on interaction and scope limits before concluding."
 }

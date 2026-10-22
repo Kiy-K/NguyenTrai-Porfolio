@@ -619,6 +619,8 @@
       "resourceType": "Document",
       "transferSize": 8513,
       "resourceSize": 35600,
+      "networkRequestTime": 6.521999999880791,
+      "networkEndTime": 12.087999999988824,
       "statusCode": 200
     },
     {
@@ -626,6 +628,8 @@
       "resourceType": "Font",
       "transferSize": 9596,
       "resourceSize": 9056,
+      "networkRequestTime": 36.75800000037998,
+      "networkEndTime": 42.15000000037253,
       "statusCode": 200
     },
     {
@@ -633,6 +637,8 @@
       "resourceType": "Font",
       "transferSize": 39001,
       "resourceSize": 38460,
+      "networkRequestTime": 36.86599999992177,
+      "networkEndTime": 42.3519999999553,
       "statusCode": 200
     },
     {
@@ -640,6 +646,8 @@
       "resourceType": "Image",
       "transferSize": 10801,
       "resourceSize": 10136,
+      "networkRequestTime": 77.51899999985471,
+      "networkEndTime": 93.50900000007823,
       "statusCode": 200
     },
     {
@@ -647,6 +655,8 @@
       "resourceType": "Stylesheet",
       "transferSize": 10020,
       "resourceSize": 47022,
+      "networkRequestTime": 40.277999999932945,
+      "networkEndTime": 43.062000000383705,
       "statusCode": 200
     },
     {
@@ -654,6 +664,8 @@
       "resourceType": "Script",
       "transferSize": 2319,
       "resourceSize": 3336,
+      "networkRequestTime": 77.61599999992177,
+      "networkEndTime": 92.8589999997057,
       "statusCode": 200
     },
     {
@@ -661,6 +673,8 @@
       "resourceType": "Script",
       "transferSize": 64735,
       "resourceSize": 203721,
+      "networkRequestTime": 77.68500000005588,
+      "networkEndTime": 95.8980000000447,
       "statusCode": 200
     },
     {
@@ -668,6 +682,8 @@
       "resourceType": "Script",
       "transferSize": 68020,
       "resourceSize": 242379,
+      "networkRequestTime": 77.74599999981001,
+      "networkEndTime": 94.73100000014529,
       "statusCode": 200
     },
     {
@@ -675,6 +691,8 @@
       "resourceType": "Script",
       "transferSize": 1101,
       "resourceSize": 513,
+      "networkRequestTime": 77.80899999989197,
+      "networkEndTime": 93.08499999996275,
       "statusCode": 200
     },
     {
@@ -682,6 +700,8 @@
       "resourceType": "Script",
       "transferSize": 4934,
       "resourceSize": 13308,
+      "networkRequestTime": 77.86500000022352,
+      "networkEndTime": 93.00000000046566,
       "statusCode": 200
     },
     {
@@ -689,6 +709,8 @@
       "resourceType": "Script",
       "transferSize": 6840,
       "resourceSize": 16631,
+      "networkRequestTime": 93.77500000037253,
+      "networkEndTime": 107.0339999999851,
       "statusCode": 200
     },
     {
@@ -696,6 +718,8 @@
       "resourceType": "Script",
       "transferSize": 3743,
       "resourceSize": 6893,
+      "networkRequestTime": 93.84400000004098,
+      "networkEndTime": 106.7730000000447,
       "statusCode": 200
     },
     {
@@ -703,6 +727,8 @@
       "resourceType": "Script",
       "transferSize": 5631,
       "resourceSize": 13655,
+      "networkRequestTime": 94.19400000013411,
+      "networkEndTime": 106.94599999999627,
       "statusCode": 200
     },
     {
@@ -710,6 +736,8 @@
       "resourceType": "Script",
       "transferSize": 3402,
       "resourceSize": 7072,
+      "networkRequestTime": 94.84200000017881,
+      "networkEndTime": 106.86899999994785,
       "statusCode": 200
     },
     {
@@ -717,6 +745,8 @@
       "resourceType": "Script",
       "transferSize": 1557236,
       "resourceSize": 1557099,
+      "networkRequestTime": 33.07600000035018,
+      "networkEndTime": 76.42299999995157,
       "statusCode": 200
     },
     {
@@ -724,6 +754,8 @@
       "resourceType": "Font",
       "transferSize": 21521,
       "resourceSize": 20980,
+      "networkRequestTime": 82.64099999982864,
+      "networkEndTime": 98.03599999984726,
       "statusCode": 200
     },
     {
@@ -731,6 +763,8 @@
       "resourceType": "Other",
       "transferSize": 534,
       "resourceSize": 9,
+      "networkRequestTime": 177.81199999991804,
+      "networkEndTime": 179.1080000004731,
       "statusCode": 404
     },
     {
@@ -738,6 +772,8 @@
       "resourceType": "Script",
       "transferSize": 0,
       "resourceSize": 0,
+      "networkRequestTime": 239.7660000002943,
+      "networkEndTime": 239.8530000001192,
       "statusCode": -1
     },
     {
@@ -745,6 +781,8 @@
       "resourceType": "Script",
       "transferSize": 0,
       "resourceSize": 0,
+      "networkRequestTime": 240.35099999979138,
+      "networkEndTime": 240.43100000033155,
       "statusCode": -1
     },
     {
@@ -752,6 +790,8 @@
       "resourceType": "Fetch",
       "transferSize": 6154,
       "resourceSize": 6034,
+      "networkRequestTime": 242.93100000033155,
+      "networkEndTime": 244.41699999989942,
       "statusCode": 200
     },
     {
@@ -759,6 +799,8 @@
       "resourceType": "Image",
       "transferSize": 21,
       "resourceSize": 21,
+      "networkRequestTime": 267.54000000003725,
+      "networkEndTime": 286.5079999999143,
       "statusCode": 403
     },
     {
@@ -766,18 +808,24 @@
       "resourceType": "Fetch",
       "transferSize": 937,
       "resourceSize": 416,
+      "networkRequestTime": 287.99800000013784,
+      "networkEndTime": 293.0489999996498,
       "statusCode": 200
     },
     {
       "url": "http://127.0.0.1:3330/admin",
       "transferSize": 426,
       "resourceSize": 0,
+      "networkRequestTime": 288.46400000015274,
+      "networkEndTime": 291.9340000003576,
       "statusCode": 307
     },
     {
       "url": "http://127.0.0.1:3330/admin/login",
       "transferSize": 448,
       "resourceSize": 0,
+      "networkRequestTime": 293.7360000000335,
+      "networkEndTime": 297.5150000001304,
       "statusCode": 307
     },
     {
@@ -785,6 +833,8 @@
       "resourceType": "Fetch",
       "transferSize": 3122,
       "resourceSize": 7445,
+      "networkRequestTime": 296.56400000024587,
+      "networkEndTime": 303.25700000021607,
       "statusCode": 200
     },
     {
@@ -792,6 +842,8 @@
       "resourceType": "Fetch",
       "transferSize": 918,
       "resourceSize": 461,
+      "networkRequestTime": 298.32500000018626,
+      "networkEndTime": 304.6219999999739,
       "statusCode": 200
     },
     {
@@ -799,6 +851,8 @@
       "resourceType": "Fetch",
       "transferSize": 2628,
       "resourceSize": 4924,
+      "networkRequestTime": 306.9340000003576,
+      "networkEndTime": 310.28599999984726,
       "statusCode": 200
     },
     {
@@ -806,7 +860,18 @@
       "resourceType": "Script",
       "transferSize": 2575,
       "resourceSize": 4535,
+      "networkRequestTime": 313.0580000001937,
+      "networkEndTime": 315.0079999999143,
       "statusCode": 200
     }
-  ]
+  ],
+  "networkTimingUnit": "milliseconds since navigation start",
+  "animation": "on",
+  "evidenceEnrichment": {
+    "source": "primary/release/desktop-widget-on-1.lhr.json.gz",
+    "sourceGzipSha256": "9a3e0cb1b6f21c771cbaf7d970f2efa259cda04f0fd89e16cf5406bf6eea12ae",
+    "timingSource": "Original Lighthouse 13.5 network-requests audit, networkRequestTime/networkEndTime",
+    "animationSource": "Derived from frozen collector 2fec060: animation ablation did not yet exist",
+    "unchanged": "observedAt, revision, nodeVersion, metrics, scores and task diagnostics"
+  }
 }

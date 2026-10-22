@@ -1,4 +1,4 @@
-$ node /home/khoi/Projects/NguyenTrai-Porfolio/scripts/ui-review/public.cjs
+$ node $HARNESS/public.cjs
 [
   {
     viewport: { width: 1440, height: 1000 },
@@ -17,7 +17,7 @@ $ node /home/khoi/Projects/NguyenTrai-Porfolio/scripts/ui-review/public.cjs
 ]
 
 exit=0
-$ node /home/khoi/Projects/NguyenTrai-Porfolio/scripts/ui-review/search.cjs
+$ node $HARNESS/search.cjs
 [
   {
     "checks": [
@@ -62,7 +62,7 @@ $ node /home/khoi/Projects/NguyenTrai-Porfolio/scripts/ui-review/search.cjs
 ]
 
 exit=0
-$ node /home/khoi/Projects/NguyenTrai-Porfolio/scripts/ui-review/admin.cjs
+$ node $HARNESS/admin.cjs
 [
   {
     viewport: { width: 1440, height: 1000 },
