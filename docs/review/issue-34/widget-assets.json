@@ -1,0 +1,26 @@
+{
+  "04abe971f54096789859eb61d6fc03dda53b136b0904166e96243fb97e6a64da": {
+    "url": "https://unpkg.com/@elevenlabs/convai-widget-embed",
+    "resolvedURL": "https://unpkg.com/@elevenlabs/convai-widget-embed@0.21.2/dist/index.js",
+    "status": 200,
+    "contentType": "text/javascript; charset=utf-8",
+    "bytes": 1557099,
+    "sha256": "50d7d648724e55b5490b22239d996246c05e3de100c64357c3d74c52d3ebb168"
+  },
+  "032b1588ca29f16b76f661f1412aa24ec1aaa3157fb0a66d03cda383bd8dd348": {
+    "url": "https://api.us.elevenlabs.io/v1/convai/agents/agent_3401knm1gpdyehwt9tb5kj9j1znc/widget",
+    "resolvedURL": "https://api.us.elevenlabs.io/v1/convai/agents/agent_3401knm1gpdyehwt9tb5kj9j1znc/widget",
+    "status": 200,
+    "contentType": "application/json",
+    "bytes": 6034,
+    "sha256": "4b87b61a103d0b2b5a7415cbca57b70575c6d7308e5d7f22c13b19a0779fdff5"
+  },
+  "854dffbb717782efa9b25f7ec64808d09e4ab37cd1eef2339690de1bef6d5f7e": {
+    "url": "https://scontent.fsgn2-8.fna.fbcdn.net/v/t39.30808-6/405204148_1094494991863976_8996018060195046649_n.jpg",
+    "resolvedURL": "https://scontent.fsgn2-8.fna.fbcdn.net/v/t39.30808-6/405204148_1094494991863976_8996018060195046649_n.jpg",
+    "status": 403,
+    "contentType": "text/plain",
+    "bytes": 21,
+    "sha256": "16366d2552aa8349747c1168a3ef03665652b08d80385b6664c4cbf6a5b2f932"
+  }
+}

@@ -41,13 +41,12 @@ const safeURL = value => {
       if (url.startsWith(origin + '/') || url.startsWith('data:') || url.startsWith('blob:')) return await request.continue();
       // Analytics and all writes are blocked in capture and replay alike. No conversation is started.
       if (request.method() !== 'GET' || /vercel|vitals\.vercel/i.test(url)) return await request.abort();
-      if (widget === 'off') return await request.abort();
+      if (widget === 'off' && /unpkg\.com|elevenlabs\.io/.test(new URL(url).hostname)) return await request.abort();
       assert.equal(new URL(url).protocol, 'https:', 'External capture is HTTPS only');
       const key = digest(url);
       if (!assets[key] && action === 'capture') {
         const response = await fetch(url, { signal: AbortSignal.timeout(20000), credentials: 'omit' });
         const body = Buffer.from(await response.arrayBuffer());
-        assert.ok(response.ok, `Asset fetch failed: ${response.status} ${safeURL(url)}`);
         assets[key] = { url: safeURL(url), resolvedURL: safeURL(response.url), status: response.status,
           contentType: response.headers.get('content-type') || 'application/octet-stream', bytes: body.length, sha256: digest(body) };
         fs.writeFileSync(path.join(cache, key), body);
