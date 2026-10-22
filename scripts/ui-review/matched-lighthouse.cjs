@@ -7,10 +7,11 @@ const { gzipSync } = require('node:zlib');
 const { execFileSync } = require('node:child_process');
 const { pathToFileURL } = require('node:url');
 const assert = require('node:assert/strict');
-const [action, profile = 'mobile', widget = 'on', sample = '1'] = process.argv.slice(2);
+const [action, profile = 'mobile', widget = 'on', sample = '1', animation = 'on'] = process.argv.slice(2);
 assert.ok(['capture', 'sample'].includes(action));
 assert.ok(['mobile', 'desktop'].includes(profile));
 assert.ok(['on', 'off'].includes(widget));
+assert.ok(['on', 'off'].includes(animation));
 const origin = 'http://127.0.0.1:3330';
 const output = process.env.P31_OUTPUT;
 assert.ok(output, 'P31_OUTPUT required');
@@ -34,6 +35,18 @@ const safeURL = value => {
   const manifestPath = path.join(cache, 'manifest.json');
   const assets = fs.existsSync(manifestPath) ? JSON.parse(fs.readFileSync(manifestPath, 'utf8')) : {};
   const misses = new Set();
+  if (animation === 'off') await page.evaluateOnNewDocument(() => {
+    const disable = () => {
+      if (!document.head) return;
+      const style = document.createElement('style');
+      style.textContent = '*,*::before,*::after{animation:none!important;transition:none!important}';
+      document.head.appendChild(style);
+      observer.disconnect();
+    };
+    const observer = new MutationObserver(disable);
+    observer.observe(document, { childList: true, subtree: true });
+    disable();
+  });
   await page.setRequestInterception(true);
   page.on('request', async request => {
     try {
@@ -85,7 +98,7 @@ const safeURL = value => {
     const record = { observedAt: new Date().toISOString(), revision: execFileSync('git', ['rev-parse', 'HEAD'], { encoding: 'utf8' }).trim(),
       nodeVersion: process.version, lighthouseVersion: run.lhr.lighthouseVersion, browser: await browser.version(),
       platform: { os: os.type(), release: os.release(), arch: os.arch(), cpu: os.cpus()[0].model, cores: os.cpus().length, loadBefore, loadAfter: os.loadavg() },
-      profile, widget, widgetRendered, sample: Number(sample), assetManifestSha256: digest(fs.readFileSync(manifestPath)),
+      profile, widget, widgetRendered, animation, sample: Number(sample), assetManifestSha256: digest(fs.readFileSync(manifestPath)),
       settings: run.lhr.configSettings, metrics, scores: Object.fromEntries(Object.entries(run.lhr.categories).map(([key, value]) => [key, value.score])),
       diagnostics: Object.fromEntries(['mainthread-work-breakdown', 'bootup-time', 'long-tasks', 'unused-javascript', 'third-party-summary', 'lcp-breakdown-insight', 'lcp-discovery-insight', 'color-contrast'].filter(key => audits[key]).map(key => [key, audits[key]])),
       network: (audits['network-requests']?.details?.items || []).map(item => ({ url: safeURL(item.url), resourceType: item.resourceType, transferSize: item.transferSize, resourceSize: item.resourceSize, startTime: item.startTime, endTime: item.endTime, statusCode: item.statusCode })) };
