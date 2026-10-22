@@ -1,0 +1,32 @@
+[
+  {
+    "file": "baseline-mobile-widget-on-1.trace.json.gz",
+    "sourceSha256": "06fae6cbc9f47b13995d6373dc432bf9e7adc5a5103abeaded7f2f98d7ed8d8f",
+    "redactedGzipSha256": "ad6cb83fccd65fc31d44738fc43d94417c4c6ea37a92f9acc269d381f15714ac",
+    "redaction": "URL query strings/fragments removed recursively; trace timing and task structure retained"
+  },
+  {
+    "file": "release-mobile-widget-on-1.trace.json.gz",
+    "sourceSha256": "fc593138c15108cbfd6fc36639448c21c15891ee5cec4ab12d94083235780b84",
+    "redactedGzipSha256": "e57f4df6b0bcd8629ff42c6c4ba1af70647eea720f359bc85369550ace89c70a",
+    "redaction": "URL query strings/fragments removed recursively; trace timing and task structure retained"
+  },
+  {
+    "file": "baseline-mobile-widget-off-1.trace.json.gz",
+    "sourceSha256": "af517f5446c045c42c53579dad94444d74c58f50c2d0d46db5e00d3f491a6dfb",
+    "redactedGzipSha256": "3fffebc6fe2a390ae5f924776dfe43c15698c029cb36538089e92aadad3a7c3d",
+    "redaction": "URL query strings/fragments removed recursively; trace timing and task structure retained"
+  },
+  {
+    "file": "release-mobile-widget-off-1.trace.json.gz",
+    "sourceSha256": "2d4c19ee9f5de1c41d67a30e9b313171b2d96dadf7b0710e6d15be03bde34b9f",
+    "redactedGzipSha256": "7dc3d8107771efed86cb55db2e0b1bd38077aca53352f0d1761ceed47de27c75",
+    "redaction": "URL query strings/fragments removed recursively; trace timing and task structure retained"
+  },
+  {
+    "file": "release-mobile-widget-on-3.trace.json.gz",
+    "sourceSha256": "ac5e71234591b85d879e394215f65451d88c7de3b6dce84b47e085a96ad3ee0d",
+    "redactedGzipSha256": "ce3bd0d160912430a897ee2103e387a1ddc4e1035a5e8f04b231368bf0882a2c",
+    "redaction": "URL query strings/fragments removed recursively; trace timing and task structure retained"
+  }
+]

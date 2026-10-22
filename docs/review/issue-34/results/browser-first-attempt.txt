@@ -1,0 +1,14 @@
+$ node $HARNESS/public.cjs
+AssertionError [ERR_ASSERTION]: Expected "actual" to be strictly unequal to:
+
+'hidden'
+    at $HARNESS/public.cjs:37:20 {
+  generatedMessage: true,
+  code: 'ERR_ASSERTION',
+  actual: 'hidden',
+  expected: 'hidden',
+  operator: 'notStrictEqual',
+  diff: 'simple'
+}
+
+exit=1

@@ -8,6 +8,7 @@
       "review-ui-a11y-audit": false,
       "review-ui-roadmap-integrated": false,
       "review-ui-roadmap-integration": false,
+      "perf/issue-34-matched-lighthouse": false,
       "security/node24-october-patches": false
     }
   }

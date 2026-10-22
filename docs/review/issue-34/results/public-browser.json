@@ -1,0 +1,44 @@
+{
+  "observedAt": "2026-10-22T13:21:01.241Z",
+  "revision": "a86a991899a84f4ceaa72b2931049331466ff061",
+  "nodeVersion": "v24.21.0",
+  "origin": "http://127.0.0.1:3330",
+  "result": [
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 1000
+      },
+      "errors": [],
+      "overflow": false,
+      "cardHeights": [
+        495.25,
+        495.25,
+        495.25
+      ],
+      "routes": [
+        "/",
+        "/sections/tu-tuong-nhan-nghia",
+        "/products/p0-1"
+      ]
+    },
+    {
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "errors": [],
+      "overflow": false,
+      "cardHeights": [
+        479,
+        479,
+        479
+      ],
+      "routes": [
+        "/",
+        "/sections/tu-tuong-nhan-nghia",
+        "/products/p0-1"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,306 @@
+[
+  {
+    "file": "baseline/desktop-widget-off-1.json",
+    "source": "primary/baseline/desktop-widget-off-1.lhr.json.gz",
+    "sourceGzipSha256": "0713520127a75659dbb41a89180ea139b5b948cfc944d8d0d42ba87e7bae0f07",
+    "timingSource": "Original Lighthouse 13.5 network-requests audit, networkRequestTime/networkEndTime",
+    "animationSource": "Derived from frozen collector 2fec060: animation ablation did not yet exist",
+    "unchanged": "observedAt, revision, nodeVersion, metrics, scores and task diagnostics"
+  },
+  {
+    "file": "baseline/desktop-widget-off-2.json",
+    "source": "primary/baseline/desktop-widget-off-2.lhr.json.gz",
+    "sourceGzipSha256": "c8c417d8edb2665721d57f0e93e5581c6f4740b503de160513e9d80b90de8810",
+    "timingSource": "Original Lighthouse 13.5 network-requests audit, networkRequestTime/networkEndTime",
+    "animationSource": "Derived from frozen collector 2fec060: animation ablation did not yet exist",
+    "unchanged": "observedAt, revision, nodeVersion, metrics, scores and task diagnostics"
+  },
+  {
+    "file": "baseline/desktop-widget-on-1.json",
+    "source": "primary/baseline/desktop-widget-on-1.lhr.json.gz",
+    "sourceGzipSha256": "cfc9c2ac2c323ee77be95dcaf0c27b82598af17216f5802298234e122e8967dc",
+    "timingSource": "Original Lighthouse 13.5 network-requests audit, networkRequestTime/networkEndTime",
+    "animationSource": "Derived from frozen collector 2fec060: animation ablation did not yet exist",
+    "unchanged": "observedAt, revision, nodeVersion, metrics, scores and task diagnostics"
+  },
+  {
+    "file": "baseline/desktop-widget-on-2.json",
+    "source": "primary/baseline/desktop-widget-on-2.lhr.json.gz",
+    "sourceGzipSha256": "172e5b069c6785ed336d225f0193344b6bb0184d8963c2947d4f16d405f4746b",
+    "timingSource": "Original Lighthouse 13.5 network-requests audit, networkRequestTime/networkEndTime",
+    "animationSource": "Derived from frozen collector 2fec060: animation ablation did not yet exist",
+    "unchanged": "observedAt, revision, nodeVersion, metrics, scores and task diagnostics"
+  },
+  {
+    "file": "baseline/mobile-widget-off-1.json",
+    "source": "primary/baseline/mobile-widget-off-1.lhr.json.gz",
+    "sourceGzipSha256": "f35fe3c529437bbc66c8656e99c729f5310ededc71f030b3c555361db49b3b55",
+    "timingSource": "Original Lighthouse 13.5 network-requests audit, networkRequestTime/networkEndTime",
+    "animationSource": "Derived from frozen collector 2fec060: animation ablation did not yet exist",
+    "unchanged": "observedAt, revision, nodeVersion, metrics, scores and task diagnostics"
+  },
+  {
+    "file": "baseline/mobile-widget-off-2.json",
+    "source": "primary/baseline/mobile-widget-off-2.lhr.json.gz",
+    "sourceGzipSha256": "6cf0f5d649e4441f58e40aa0678ab138a98c73a940a4a74f45307979b63ec6a0",
+    "timingSource": "Original Lighthouse 13.5 network-requests audit, networkRequestTime/networkEndTime",
+    "animationSource": "Derived from frozen collector 2fec060: animation ablation did not yet exist",
+    "unchanged": "observedAt, revision, nodeVersion, metrics, scores and task diagnostics"
+  },
+  {
+    "file": "baseline/mobile-widget-off-3.json",
+    "source": "primary/baseline/mobile-widget-off-3.lhr.json.gz",
+    "sourceGzipSha256": "4058502f47217e92c3c1eab115344ec6f5fc58acfd227e33b8987d2c850b68b7",
+    "timingSource": "Original Lighthouse 13.5 network-requests audit, networkRequestTime/networkEndTime",
+    "animationSource": "Derived from frozen collector 2fec060: animation ablation did not yet exist",
+    "unchanged": "observedAt, revision, nodeVersion, metrics, scores and task diagnostics"
+  },
+  {
+    "file": "baseline/mobile-widget-off-4.json",
+    "source": "primary/baseline/mobile-widget-off-4.lhr.json.gz",
+    "sourceGzipSha256": "f50c4e21557c65a710c2dcc9cde4752de030f883f7874a3c2aecc152a6be76f1",
+    "timingSource": "Original Lighthouse 13.5 network-requests audit, networkRequestTime/networkEndTime",
+    "animationSource": "Derived from frozen collector 2fec060: animation ablation did not yet exist",
+    "unchanged": "observedAt, revision, nodeVersion, metrics, scores and task diagnostics"
+  },
+  {
+    "file": "baseline/mobile-widget-off-5.json",
+    "source": "primary/baseline/mobile-widget-off-5.lhr.json.gz",
+    "sourceGzipSha256": "f9825254bec4c049a9b256b782598602a844fccfa84185eb1a0efa578c2bb182",
+    "timingSource": "Original Lighthouse 13.5 network-requests audit, networkRequestTime/networkEndTime",
+    "animationSource": "Derived from frozen collector 2fec060: animation ablation did not yet exist",
+    "unchanged": "observedAt, revision, nodeVersion, metrics, scores and task diagnostics"
+  },
+  {
+    "file": "baseline/mobile-widget-on-1.json",
+    "source": "primary/baseline/mobile-widget-on-1.lhr.json.gz",
+    "sourceGzipSha256": "f25152294e1864925a11b2f5571872b1f849206b74924674452fbee00c33f59f",
+    "timingSource": "Original Lighthouse 13.5 network-requests audit, networkRequestTime/networkEndTime",
+    "animationSource": "Derived from frozen collector 2fec060: animation ablation did not yet exist",
+    "unchanged": "observedAt, revision, nodeVersion, metrics, scores and task diagnostics"
+  },
+  {
+    "file": "baseline/mobile-widget-on-2.json",
+    "source": "primary/baseline/mobile-widget-on-2.lhr.json.gz",
+    "sourceGzipSha256": "e2f4d7fcf7efe84f6d8e7c20c95d0508aee1c471b832e0f4c7a097f1a4a7254c",
+    "timingSource": "Original Lighthouse 13.5 network-requests audit, networkRequestTime/networkEndTime",
+    "animationSource": "Derived from frozen collector 2fec060: animation ablation did not yet exist",
+    "unchanged": "observedAt, revision, nodeVersion, metrics, scores and task diagnostics"
+  },
+  {
+    "file": "baseline/mobile-widget-on-3.json",
+    "source": "primary/baseline/mobile-widget-on-3.lhr.json.gz",
+    "sourceGzipSha256": "69cdabfab9999a85310318c0f4bfed99e7b220c58e6f5888f30dc72b4e96e7fa",
+    "timingSource": "Original Lighthouse 13.5 network-requests audit, networkRequestTime/networkEndTime",
+    "animationSource": "Derived from frozen collector 2fec060: animation ablation did not yet exist",
+    "unchanged": "observedAt, revision, nodeVersion, metrics, scores and task diagnostics"
+  },
+  {
+    "file": "baseline/mobile-widget-on-4.json",
+    "source": "primary/baseline/mobile-widget-on-4.lhr.json.gz",
+    "sourceGzipSha256": "9a1a034e0a34eae0c2d19a05e59f5cf31f402795eb028bdeda318e2dbc37fe28",
+    "timingSource": "Original Lighthouse 13.5 network-requests audit, networkRequestTime/networkEndTime",
+    "animationSource": "Derived from frozen collector 2fec060: animation ablation did not yet exist",
+    "unchanged": "observedAt, revision, nodeVersion, metrics, scores and task diagnostics"
+  },
+  {
+    "file": "baseline/mobile-widget-on-5.json",
+    "source": "primary/baseline/mobile-widget-on-5.lhr.json.gz",
+    "sourceGzipSha256": "1e537ce5cb58898e04d47824a78ebffca50c09ff1063f24566683d41ee036434",
+    "timingSource": "Original Lighthouse 13.5 network-requests audit, networkRequestTime/networkEndTime",
+    "animationSource": "Derived from frozen collector 2fec060: animation ablation did not yet exist",
+    "unchanged": "observedAt, revision, nodeVersion, metrics, scores and task diagnostics"
+  },
+  {
+    "file": "release/desktop-widget-off-1.json",
+    "source": "primary/release/desktop-widget-off-1.lhr.json.gz",
+    "sourceGzipSha256": "46b382aa92410dd142a47ecec39726d0c36fe062a323bc78e3cae88239269999",
+    "timingSource": "Original Lighthouse 13.5 network-requests audit, networkRequestTime/networkEndTime",
+    "animationSource": "Derived from frozen collector 2fec060: animation ablation did not yet exist",
+    "unchanged": "observedAt, revision, nodeVersion, metrics, scores and task diagnostics"
+  },
+  {
+    "file": "release/desktop-widget-off-2.json",
+    "source": "primary/release/desktop-widget-off-2.lhr.json.gz",
+    "sourceGzipSha256": "913cd9cc5dad27ddce8d633815a6637a91fe315fab601dcc79112e0e68ffff0a",
+    "timingSource": "Original Lighthouse 13.5 network-requests audit, networkRequestTime/networkEndTime",
+    "animationSource": "Derived from frozen collector 2fec060: animation ablation did not yet exist",
+    "unchanged": "observedAt, revision, nodeVersion, metrics, scores and task diagnostics"
+  },
+  {
+    "file": "release/desktop-widget-on-1.json",
+    "source": "primary/release/desktop-widget-on-1.lhr.json.gz",
+    "sourceGzipSha256": "9a3e0cb1b6f21c771cbaf7d970f2efa259cda04f0fd89e16cf5406bf6eea12ae",
+    "timingSource": "Original Lighthouse 13.5 network-requests audit, networkRequestTime/networkEndTime",
+    "animationSource": "Derived from frozen collector 2fec060: animation ablation did not yet exist",
+    "unchanged": "observedAt, revision, nodeVersion, metrics, scores and task diagnostics"
+  },
+  {
+    "file": "release/desktop-widget-on-2.json",
+    "source": "primary/release/desktop-widget-on-2.lhr.json.gz",
+    "sourceGzipSha256": "a26e7e313d0faa0f5449bbede11a51893cbe5fa27682483805aed1abf27e7caa",
+    "timingSource": "Original Lighthouse 13.5 network-requests audit, networkRequestTime/networkEndTime",
+    "animationSource": "Derived from frozen collector 2fec060: animation ablation did not yet exist",
+    "unchanged": "observedAt, revision, nodeVersion, metrics, scores and task diagnostics"
+  },
+  {
+    "file": "release/mobile-widget-off-1.json",
+    "source": "primary/release/mobile-widget-off-1.lhr.json.gz",
+    "sourceGzipSha256": "0a4e43a4b5f23c890628c641a3864f2c1ab47dd16103b28aeb3b0fa33639ee21",
+    "timingSource": "Original Lighthouse 13.5 network-requests audit, networkRequestTime/networkEndTime",
+    "animationSource": "Derived from frozen collector 2fec060: animation ablation did not yet exist",
+    "unchanged": "observedAt, revision, nodeVersion, metrics, scores and task diagnostics"
+  },
+  {
+    "file": "release/mobile-widget-off-2.json",
+    "source": "primary/release/mobile-widget-off-2.lhr.json.gz",
+    "sourceGzipSha256": "a9929fdb2a5c61131e2781ef109e49508f85af9a80dd18db40e54f84aa08555a",
+    "timingSource": "Original Lighthouse 13.5 network-requests audit, networkRequestTime/networkEndTime",
+    "animationSource": "Derived from frozen collector 2fec060: animation ablation did not yet exist",
+    "unchanged": "observedAt, revision, nodeVersion, metrics, scores and task diagnostics"
+  },
+  {
+    "file": "release/mobile-widget-off-3.json",
+    "source": "primary/release/mobile-widget-off-3.lhr.json.gz",
+    "sourceGzipSha256": "d58fd5ed20efa31f9889aefc36182a040110388bfb01fa64522c063b061bb901",
+    "timingSource": "Original Lighthouse 13.5 network-requests audit, networkRequestTime/networkEndTime",
+    "animationSource": "Derived from frozen collector 2fec060: animation ablation did not yet exist",
+    "unchanged": "observedAt, revision, nodeVersion, metrics, scores and task diagnostics"
+  },
+  {
+    "file": "release/mobile-widget-off-4.json",
+    "source": "primary/release/mobile-widget-off-4.lhr.json.gz",
+    "sourceGzipSha256": "e0f80f61d4ecabce58e34aaa025c9ed4f7d888c0a7167a694af4755b97dc1824",
+    "timingSource": "Original Lighthouse 13.5 network-requests audit, networkRequestTime/networkEndTime",
+    "animationSource": "Derived from frozen collector 2fec060: animation ablation did not yet exist",
+    "unchanged": "observedAt, revision, nodeVersion, metrics, scores and task diagnostics"
+  },
+  {
+    "file": "release/mobile-widget-off-5.json",
+    "source": "primary/release/mobile-widget-off-5.lhr.json.gz",
+    "sourceGzipSha256": "348c4c4e1c8f1350327eea608995a38bcf2a98fb534ee046a8fc0b58df605156",
+    "timingSource": "Original Lighthouse 13.5 network-requests audit, networkRequestTime/networkEndTime",
+    "animationSource": "Derived from frozen collector 2fec060: animation ablation did not yet exist",
+    "unchanged": "observedAt, revision, nodeVersion, metrics, scores and task diagnostics"
+  },
+  {
+    "file": "release/mobile-widget-on-1.json",
+    "source": "primary/release/mobile-widget-on-1.lhr.json.gz",
+    "sourceGzipSha256": "94f124bf360e5e83f795405ab15d73745673540c1b1def4c0ddcec53d5c62539",
+    "timingSource": "Original Lighthouse 13.5 network-requests audit, networkRequestTime/networkEndTime",
+    "animationSource": "Derived from frozen collector 2fec060: animation ablation did not yet exist",
+    "unchanged": "observedAt, revision, nodeVersion, metrics, scores and task diagnostics"
+  },
+  {
+    "file": "release/mobile-widget-on-2.json",
+    "source": "primary/release/mobile-widget-on-2.lhr.json.gz",
+    "sourceGzipSha256": "6bf9e5b1a44169cb6e2306e47649548346cbbdb49d66e683fca44ccdd570f43a",
+    "timingSource": "Original Lighthouse 13.5 network-requests audit, networkRequestTime/networkEndTime",
+    "animationSource": "Derived from frozen collector 2fec060: animation ablation did not yet exist",
+    "unchanged": "observedAt, revision, nodeVersion, metrics, scores and task diagnostics"
+  },
+  {
+    "file": "release/mobile-widget-on-3.json",
+    "source": "primary/release/mobile-widget-on-3.lhr.json.gz",
+    "sourceGzipSha256": "861560a012dd979d8539aee5e34522c37943842913e6b351c22fe99787835ba4",
+    "timingSource": "Original Lighthouse 13.5 network-requests audit, networkRequestTime/networkEndTime",
+    "animationSource": "Derived from frozen collector 2fec060: animation ablation did not yet exist",
+    "unchanged": "observedAt, revision, nodeVersion, metrics, scores and task diagnostics"
+  },
+  {
+    "file": "release/mobile-widget-on-4.json",
+    "source": "primary/release/mobile-widget-on-4.lhr.json.gz",
+    "sourceGzipSha256": "30bac42e338aa4423ec8b3c20a4ae5d34444a7fa12091877cef9b94d9b7d1c19",
+    "timingSource": "Original Lighthouse 13.5 network-requests audit, networkRequestTime/networkEndTime",
+    "animationSource": "Derived from frozen collector 2fec060: animation ablation did not yet exist",
+    "unchanged": "observedAt, revision, nodeVersion, metrics, scores and task diagnostics"
+  },
+  {
+    "file": "release/mobile-widget-on-5.json",
+    "source": "primary/release/mobile-widget-on-5.lhr.json.gz",
+    "sourceGzipSha256": "c51a55d49214e6776febbf5a7a678d798054b3d23109d22842e8a53f5e975635",
+    "timingSource": "Original Lighthouse 13.5 network-requests audit, networkRequestTime/networkEndTime",
+    "animationSource": "Derived from frozen collector 2fec060: animation ablation did not yet exist",
+    "unchanged": "observedAt, revision, nodeVersion, metrics, scores and task diagnostics"
+  },
+  {
+    "file": "baseline-animation-off/mobile-widget-off-1.json",
+    "source": "animation-off/baseline/mobile-widget-off-1.lhr.json.gz",
+    "sourceGzipSha256": "e8823bb48604b73367ae8d4a935afe03668d003ed4ea9cf4e29324948ff7646b",
+    "timingSource": "Original Lighthouse 13.5 network-requests audit, networkRequestTime/networkEndTime",
+    "animationSource": "Originally recorded animation=off",
+    "unchanged": "observedAt, revision, nodeVersion, metrics, scores and task diagnostics"
+  },
+  {
+    "file": "baseline-animation-off/mobile-widget-off-2.json",
+    "source": "animation-off/baseline/mobile-widget-off-2.lhr.json.gz",
+    "sourceGzipSha256": "071904e881ae2d9af870f4c63bde15880ac5e3d5bc00773607750a6b52131f94",
+    "timingSource": "Original Lighthouse 13.5 network-requests audit, networkRequestTime/networkEndTime",
+    "animationSource": "Originally recorded animation=off",
+    "unchanged": "observedAt, revision, nodeVersion, metrics, scores and task diagnostics"
+  },
+  {
+    "file": "baseline-animation-off/mobile-widget-off-3.json",
+    "source": "animation-off/baseline/mobile-widget-off-3.lhr.json.gz",
+    "sourceGzipSha256": "33038ef134878c68a11f9dd8372b307d94a3b538c3de99bd88491bc2c0e3cf28",
+    "timingSource": "Original Lighthouse 13.5 network-requests audit, networkRequestTime/networkEndTime",
+    "animationSource": "Originally recorded animation=off",
+    "unchanged": "observedAt, revision, nodeVersion, metrics, scores and task diagnostics"
+  },
+  {
+    "file": "baseline-animation-off/mobile-widget-off-4.json",
+    "source": "animation-off/baseline/mobile-widget-off-4.lhr.json.gz",
+    "sourceGzipSha256": "f4dd9f55dc84439820f4244c6ed6775a3f1af89d39dcdfa1b7351989e6547d1c",
+    "timingSource": "Original Lighthouse 13.5 network-requests audit, networkRequestTime/networkEndTime",
+    "animationSource": "Originally recorded animation=off",
+    "unchanged": "observedAt, revision, nodeVersion, metrics, scores and task diagnostics"
+  },
+  {
+    "file": "baseline-animation-off/mobile-widget-off-5.json",
+    "source": "animation-off/baseline/mobile-widget-off-5.lhr.json.gz",
+    "sourceGzipSha256": "c1457ce73422dc41b37f017d9d5f032772bb3bb0b3a41d223d52fd550546b3a5",
+    "timingSource": "Original Lighthouse 13.5 network-requests audit, networkRequestTime/networkEndTime",
+    "animationSource": "Originally recorded animation=off",
+    "unchanged": "observedAt, revision, nodeVersion, metrics, scores and task diagnostics"
+  },
+  {
+    "file": "release-animation-off/mobile-widget-off-1.json",
+    "source": "animation-off/release/mobile-widget-off-1.lhr.json.gz",
+    "sourceGzipSha256": "28bd2143da17d2a116e4871934af6feee789de5eeb6d065ce93627e6dce676b0",
+    "timingSource": "Original Lighthouse 13.5 network-requests audit, networkRequestTime/networkEndTime",
+    "animationSource": "Originally recorded animation=off",
+    "unchanged": "observedAt, revision, nodeVersion, metrics, scores and task diagnostics"
+  },
+  {
+    "file": "release-animation-off/mobile-widget-off-2.json",
+    "source": "animation-off/release/mobile-widget-off-2.lhr.json.gz",
+    "sourceGzipSha256": "52c932d647ea931f28841ea5fb6aee66aa95312e7a5acb8429ae4ef46022e9b2",
+    "timingSource": "Original Lighthouse 13.5 network-requests audit, networkRequestTime/networkEndTime",
+    "animationSource": "Originally recorded animation=off",
+    "unchanged": "observedAt, revision, nodeVersion, metrics, scores and task diagnostics"
+  },
+  {
+    "file": "release-animation-off/mobile-widget-off-3.json",
+    "source": "animation-off/release/mobile-widget-off-3.lhr.json.gz",
+    "sourceGzipSha256": "a7f24d4ff8c76dc3aa3e07fcfd78e1e8a81d50187a49d508f8bc21136bb09ce3",
+    "timingSource": "Original Lighthouse 13.5 network-requests audit, networkRequestTime/networkEndTime",
+    "animationSource": "Originally recorded animation=off",
+    "unchanged": "observedAt, revision, nodeVersion, metrics, scores and task diagnostics"
+  },
+  {
+    "file": "release-animation-off/mobile-widget-off-4.json",
+    "source": "animation-off/release/mobile-widget-off-4.lhr.json.gz",
+    "sourceGzipSha256": "214ab8f7af2c6b266c2fcbfcded9139d53f5301b3292747271c0a10e2fe62d57",
+    "timingSource": "Original Lighthouse 13.5 network-requests audit, networkRequestTime/networkEndTime",
+    "animationSource": "Originally recorded animation=off",
+    "unchanged": "observedAt, revision, nodeVersion, metrics, scores and task diagnostics"
+  },
+  {
+    "file": "release-animation-off/mobile-widget-off-5.json",
+    "source": "animation-off/release/mobile-widget-off-5.lhr.json.gz",
+    "sourceGzipSha256": "a20910769749af6454c691666910a46341d5d203597f8c0ba59c8d821347ca7d",
+    "timingSource": "Original Lighthouse 13.5 network-requests audit, networkRequestTime/networkEndTime",
+    "animationSource": "Originally recorded animation=off",
+    "unchanged": "observedAt, revision, nodeVersion, metrics, scores and task diagnostics"
+  }
+]

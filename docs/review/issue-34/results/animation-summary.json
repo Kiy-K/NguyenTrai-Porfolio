@@ -1,0 +1,36 @@
+{
+  "baseline": {
+    "lcp": {
+      "median": 2112.2787,
+      "min": 2110.0047,
+      "max": 2158.6141
+    },
+    "tbt": {
+      "median": 59,
+      "min": 51,
+      "max": 65
+    },
+    "score": {
+      "median": 99,
+      "min": 98,
+      "max": 99
+    }
+  },
+  "release": {
+    "lcp": {
+      "median": 2605.7568499999998,
+      "min": 2597.3186,
+      "max": 2654.37935
+    },
+    "tbt": {
+      "median": 96.5,
+      "min": 57,
+      "max": 103
+    },
+    "score": {
+      "median": 96,
+      "min": 96,
+      "max": 96
+    }
+  }
+}

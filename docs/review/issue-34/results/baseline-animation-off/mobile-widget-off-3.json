@@ -1,0 +1,716 @@
+{
+  "observedAt": "2026-10-22T13:16:09.574Z",
+  "revision": "97da6087a6969975fbb360c3ec966ac6c723fb6d",
+  "nodeVersion": "v24.21.0",
+  "lighthouseVersion": "13.5.0",
+  "browser": "Chrome/155.0.8059.12",
+  "platform": {
+    "os": "Linux",
+    "release": "7.2.10-200.fc44.x86_64",
+    "arch": "x64",
+    "cpu": "13th Gen Intel(R) Core(TM) i7-13620H",
+    "cores": 16,
+    "loadBefore": [
+      0.83,
+      1.16,
+      1.19
+    ],
+    "loadAfter": [
+      1.72,
+      1.33,
+      1.25
+    ]
+  },
+  "profile": "mobile",
+  "widget": "off",
+  "widgetRendered": false,
+  "animation": "off",
+  "sample": 3,
+  "assetManifestSha256": "ead7ad6ce9c8182575fc7f604baaedeae4e5472099e278c1972cf35d347b8e80",
+  "settings": {
+    "output": "json",
+    "maxWaitForFcp": 30000,
+    "maxWaitForLoad": 45000,
+    "pauseAfterFcpMs": 1000,
+    "pauseAfterLoadMs": 1000,
+    "networkQuietThresholdMs": 1000,
+    "cpuQuietThresholdMs": 1000,
+    "formFactor": "mobile",
+    "throttling": {
+      "rttMs": 150,
+      "throughputKbps": 1638.4,
+      "requestLatencyMs": 562.5,
+      "downloadThroughputKbps": 1474.5600000000002,
+      "uploadThroughputKbps": 675,
+      "cpuSlowdownMultiplier": 4
+    },
+    "throttlingMethod": "simulate",
+    "screenEmulation": {
+      "mobile": true,
+      "width": 390,
+      "height": 844,
+      "deviceScaleFactor": 1,
+      "disabled": false
+    },
+    "emulatedUserAgent": "Mozilla/5.0 (Linux; Android 11; moto g power (2022)) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Mobile Safari/537.36",
+    "auditMode": false,
+    "gatherMode": false,
+    "clearStorageTypes": [
+      "file_systems",
+      "shader_cache",
+      "service_workers",
+      "cache_storage"
+    ],
+    "disableStorageReset": false,
+    "debugNavigation": false,
+    "channel": "node",
+    "usePassiveGathering": false,
+    "disableFullPageScreenshot": false,
+    "skipAboutBlank": false,
+    "blankPage": "about:blank",
+    "ignoreStatusCode": false,
+    "locale": "en-US",
+    "blockedUrlPatterns": [
+      "*vercel*"
+    ],
+    "additionalTraceCategories": null,
+    "extraHeaders": null,
+    "precomputedLanternData": null,
+    "onlyAudits": null,
+    "onlyCategories": [
+      "performance",
+      "accessibility"
+    ],
+    "skipAudits": null
+  },
+  "metrics": {
+    "total-blocking-time": 65,
+    "largest-contentful-paint": 2112.2787,
+    "cumulative-layout-shift": 0,
+    "speed-index": 1386.1393500000001,
+    "interactive": 2680.91805
+  },
+  "scores": {
+    "performance": 0.98,
+    "accessibility": 1
+  },
+  "diagnostics": {
+    "mainthread-work-breakdown": {
+      "id": "mainthread-work-breakdown",
+      "title": "Minimizes main-thread work",
+      "description": "Consider reducing the time spent parsing, compiling and executing JS. You may find delivering smaller JS payloads helps with this. [Learn how to minimize main-thread work](https://developer.chrome.com/docs/lighthouse/performance/mainthread-work-breakdown/)",
+      "score": 1,
+      "scoreDisplayMode": "metricSavings",
+      "numericValue": 755.0240000000011,
+      "numericUnit": "millisecond",
+      "displayValue": "0.8 s",
+      "metricSavings": {
+        "TBT": 50
+      },
+      "details": {
+        "type": "table",
+        "headings": [
+          {
+            "key": "groupLabel",
+            "valueType": "text",
+            "label": "Category"
+          },
+          {
+            "key": "duration",
+            "valueType": "ms",
+            "granularity": 1,
+            "label": "Time Spent"
+          }
+        ],
+        "items": [
+          {
+            "group": "scriptEvaluation",
+            "groupLabel": "Script Evaluation",
+            "duration": 360.40800000000104
+          },
+          {
+            "group": "other",
+            "groupLabel": "Other",
+            "duration": 173.84800000000016
+          },
+          {
+            "group": "styleLayout",
+            "groupLabel": "Style & Layout",
+            "duration": 132.712
+          },
+          {
+            "group": "scriptParseCompile",
+            "groupLabel": "Script Parsing & Compilation",
+            "duration": 37.48799999999999
+          },
+          {
+            "group": "parseHTML",
+            "groupLabel": "Parse HTML & CSS",
+            "duration": 20.156
+          },
+          {
+            "group": "garbageCollection",
+            "groupLabel": "Garbage Collection",
+            "duration": 15.664
+          },
+          {
+            "group": "paintCompositeRender",
+            "groupLabel": "Rendering",
+            "duration": 14.747999999999994
+          }
+        ],
+        "sortedBy": [
+          "duration"
+        ]
+      },
+      "guidanceLevel": 1
+    },
+    "bootup-time": {
+      "id": "bootup-time",
+      "title": "JavaScript execution time",
+      "description": "Consider reducing the time spent parsing, compiling, and executing JS. You may find delivering smaller JS payloads helps with this. [Learn how to reduce Javascript execution time](https://developer.chrome.com/docs/lighthouse/performance/bootup-time/).",
+      "score": 1,
+      "scoreDisplayMode": "metricSavings",
+      "numericValue": 356.28800000000064,
+      "numericUnit": "millisecond",
+      "displayValue": "0.4 s",
+      "metricSavings": {
+        "TBT": 100
+      },
+      "details": {
+        "type": "table",
+        "headings": [
+          {
+            "key": "url",
+            "valueType": "url",
+            "label": "URL"
+          },
+          {
+            "key": "total",
+            "granularity": 1,
+            "valueType": "ms",
+            "label": "Total CPU Time"
+          },
+          {
+            "key": "scripting",
+            "granularity": 1,
+            "valueType": "ms",
+            "label": "Script Evaluation"
+          },
+          {
+            "key": "scriptParseCompile",
+            "granularity": 1,
+            "valueType": "ms",
+            "label": "Script Parse"
+          }
+        ],
+        "items": [
+          {
+            "url": "http://127.0.0.1:3330/_next/static/chunks/794-0ac5e2f0e81d2e0d.js",
+            "total": 349.70800000000065,
+            "scripting": 306.0720000000006,
+            "scriptParseCompile": 14.075999999999999
+          },
+          {
+            "url": "http://127.0.0.1:3330/",
+            "total": 208.05599999999998,
+            "scripting": 19.14799999999999,
+            "scriptParseCompile": 5.936
+          },
+          {
+            "url": "Unattributable",
+            "total": 137.7600000000002,
+            "scripting": 11.056,
+            "scriptParseCompile": 0
+          }
+        ],
+        "summary": {
+          "wastedMs": 356.28800000000064
+        },
+        "sortedBy": [
+          "total"
+        ]
+      },
+      "guidanceLevel": 1
+    },
+    "long-tasks": {
+      "id": "long-tasks",
+      "title": "Avoid long main-thread tasks",
+      "description": "Lists the longest tasks on the main thread, useful for identifying worst contributors to input delay. [Learn how to avoid long main-thread tasks](https://web.dev/articles/optimize-long-tasks)",
+      "score": 1,
+      "scoreDisplayMode": "informative",
+      "displayValue": "2 long tasks found",
+      "metricSavings": {
+        "TBT": 50
+      },
+      "details": {
+        "type": "table",
+        "headings": [
+          {
+            "key": "url",
+            "valueType": "url",
+            "label": "URL"
+          },
+          {
+            "key": "startTime",
+            "valueType": "ms",
+            "granularity": 1,
+            "label": "Start Time"
+          },
+          {
+            "key": "duration",
+            "valueType": "ms",
+            "granularity": 1,
+            "label": "Duration"
+          }
+        ],
+        "items": [
+          {
+            "url": "http://127.0.0.1:3330/_next/static/chunks/794-0ac5e2f0e81d2e0d.js",
+            "duration": 180,
+            "startTime": 2568.41805
+          },
+          {
+            "url": "http://127.0.0.1:3330/",
+            "duration": 58,
+            "startTime": 619.13935
+          }
+        ],
+        "sortedBy": [
+          "duration"
+        ],
+        "skipSumming": [
+          "startTime"
+        ],
+        "debugData": {
+          "type": "debugdata",
+          "urls": [
+            "http://127.0.0.1:3330/_next/static/chunks/794-0ac5e2f0e81d2e0d.js",
+            "http://127.0.0.1:3330/"
+          ],
+          "tasks": [
+            {
+              "urlIndex": 0,
+              "startTime": 2568.4,
+              "duration": 180,
+              "other": 180,
+              "scriptEvaluation": 0
+            },
+            {
+              "urlIndex": 1,
+              "startTime": 619.1,
+              "duration": 58,
+              "other": 58,
+              "paintCompositeRender": 0,
+              "scriptEvaluation": 0,
+              "styleLayout": 0
+            }
+          ]
+        }
+      },
+      "guidanceLevel": 1
+    },
+    "unused-javascript": {
+      "id": "unused-javascript",
+      "title": "Reduce unused JavaScript",
+      "description": "Reduce unused JavaScript and defer loading scripts until they are required to decrease bytes consumed by network activity. [Learn how to reduce unused JavaScript](https://developer.chrome.com/docs/lighthouse/performance/unused-javascript/).",
+      "score": 0,
+      "scoreDisplayMode": "metricSavings",
+      "numericValue": 300,
+      "numericUnit": "millisecond",
+      "displayValue": "Est savings of 48 KiB",
+      "metricSavings": {
+        "FCP": 0,
+        "LCP": 300
+      },
+      "details": {
+        "type": "opportunity",
+        "headings": [
+          {
+            "key": "url",
+            "valueType": "url",
+            "subItemsHeading": {
+              "key": "source",
+              "valueType": "code"
+            },
+            "label": "URL"
+          },
+          {
+            "key": "totalBytes",
+            "valueType": "bytes",
+            "subItemsHeading": {
+              "key": "sourceBytes"
+            },
+            "label": "Transfer Size"
+          },
+          {
+            "key": "wastedBytes",
+            "valueType": "bytes",
+            "subItemsHeading": {
+              "key": "sourceWastedBytes"
+            },
+            "label": "Est Savings"
+          }
+        ],
+        "items": [
+          {
+            "url": "http://127.0.0.1:3330/_next/static/chunks/4bd1b696-c7408084347438ae.js",
+            "totalBytes": 64114,
+            "wastedBytes": 26528,
+            "wastedPercent": 41.3757050083202
+          },
+          {
+            "url": "http://127.0.0.1:3330/_next/static/chunks/794-0ac5e2f0e81d2e0d.js",
+            "totalBytes": 67398,
+            "wastedBytes": 23093,
+            "wastedPercent": 34.26273945135058
+          }
+        ],
+        "overallSavingsMs": 300,
+        "overallSavingsBytes": 49621,
+        "sortedBy": [
+          "wastedBytes"
+        ],
+        "debugData": {
+          "type": "debugdata",
+          "metricSavings": {
+            "FCP": 0,
+            "LCP": 300
+          }
+        }
+      },
+      "guidanceLevel": 1
+    },
+    "lcp-breakdown-insight": {
+      "id": "lcp-breakdown-insight",
+      "title": "LCP breakdown",
+      "description": "Each [subpart has specific improvement strategies](https://developer.chrome.com/docs/performance/insights/lcp-breakdown). Ideally, most of the LCP time should be spent on loading the resources, not within delays.",
+      "score": 1,
+      "scoreDisplayMode": "informative",
+      "metricSavings": {
+        "LCP": 0
+      },
+      "details": {
+        "type": "list",
+        "items": [
+          {
+            "type": "table",
+            "headings": [
+              {
+                "key": "label",
+                "valueType": "text",
+                "label": "Subpart"
+              },
+              {
+                "key": "duration",
+                "valueType": "ms",
+                "label": "Duration"
+              }
+            ],
+            "items": [
+              {
+                "subpart": "timeToFirstByte",
+                "label": "Time to first byte",
+                "duration": 8.238
+              },
+              {
+                "subpart": "elementRenderDelay",
+                "label": "Element render delay",
+                "duration": 73.615
+              }
+            ]
+          },
+          {
+            "type": "node",
+            "lhId": "page-0-P",
+            "path": "1,HTML,1,BODY,1,DIV,4,DIV,0,MAIN,0,DIV,2,DIV,1,P",
+            "selector": "main.max-w-7xl > div.text-center > div.flex > p.max-w-3xl",
+            "boundingRect": {
+              "top": 677,
+              "bottom": 833,
+              "left": 64,
+              "right": 326,
+              "width": 262,
+              "height": 156
+            },
+            "snippet": "<p class=\"max-w-3xl mx-auto text-2xl text-[#5C4033] italic font-playfair leading-rel…\">",
+            "nodeLabel": "\"Việc nhân nghĩa cốt ở yên dân\nQuân điếu phạt trước lo trừ bạo\""
+          }
+        ]
+      },
+      "guidanceLevel": 3
+    },
+    "lcp-discovery-insight": {
+      "id": "lcp-discovery-insight",
+      "title": "LCP request discovery",
+      "description": "[Optimize LCP](https://developer.chrome.com/docs/performance/insights/lcp-discovery) by making the LCP image discoverable from the HTML immediately, and avoiding lazy-loading",
+      "score": null,
+      "scoreDisplayMode": "notApplicable",
+      "guidanceLevel": 3
+    },
+    "color-contrast": {
+      "id": "color-contrast",
+      "title": "Background and foreground colors have a sufficient contrast ratio",
+      "description": "Low-contrast text is difficult or impossible for many users to read. [Learn how to provide sufficient color contrast](https://dequeuniversity.com/rules/axe/4.13/color-contrast).",
+      "score": 1,
+      "scoreDisplayMode": "binary",
+      "details": {
+        "type": "table",
+        "headings": [
+          {
+            "key": "node",
+            "valueType": "node",
+            "subItemsHeading": {
+              "key": "relatedNode",
+              "valueType": "node"
+            },
+            "label": "Failing Elements"
+          }
+        ],
+        "items": []
+      }
+    }
+  },
+  "network": [
+    {
+      "url": "http://127.0.0.1:3330/",
+      "resourceType": "Document",
+      "transferSize": 8354,
+      "resourceSize": 33117,
+      "networkRequestTime": 3.2910000002011657,
+      "networkEndTime": 8.18900000024587,
+      "statusCode": 200
+    },
+    {
+      "url": "http://127.0.0.1:3330/_next/static/media/4ead58c4dcc3f285-s.p.woff2",
+      "resourceType": "Font",
+      "transferSize": 9596,
+      "resourceSize": 9056,
+      "networkRequestTime": 23.660999999847263,
+      "networkEndTime": 36.760000000242144,
+      "statusCode": 200
+    },
+    {
+      "url": "http://127.0.0.1:3330/_next/static/media/eaead17c7dbfcd5d-s.p.woff2",
+      "resourceType": "Font",
+      "transferSize": 39001,
+      "resourceSize": 38460,
+      "networkRequestTime": 24.94799999985844,
+      "networkEndTime": 37.29399999976158,
+      "statusCode": 200
+    },
+    {
+      "url": "http://127.0.0.1:3330/_next/static/css/c64f4698cb88c3d1.css",
+      "resourceType": "Stylesheet",
+      "transferSize": 9673,
+      "resourceSize": 45014,
+      "networkRequestTime": 30.665000000037253,
+      "networkEndTime": 43.73600000003353,
+      "statusCode": 200
+    },
+    {
+      "url": "http://127.0.0.1:3330/_next/static/chunks/webpack-1c7e54eb92818659.js",
+      "resourceType": "Script",
+      "transferSize": 2319,
+      "resourceSize": 3336,
+      "networkRequestTime": 30.87000000011176,
+      "networkEndTime": 40.51699999999255,
+      "statusCode": 200
+    },
+    {
+      "url": "http://127.0.0.1:3330/_next/static/chunks/4bd1b696-c7408084347438ae.js",
+      "resourceType": "Script",
+      "transferSize": 64735,
+      "resourceSize": 203721,
+      "networkRequestTime": 30.92299999995157,
+      "networkEndTime": 56.350999999791384,
+      "statusCode": 200
+    },
+    {
+      "url": "http://127.0.0.1:3330/_next/static/chunks/794-0ac5e2f0e81d2e0d.js",
+      "resourceType": "Script",
+      "transferSize": 68020,
+      "resourceSize": 242379,
+      "networkRequestTime": 30.979000000283122,
+      "networkEndTime": 57.25799999991432,
+      "statusCode": 200
+    },
+    {
+      "url": "http://127.0.0.1:3330/_next/static/chunks/main-app-e81e8d05c3c569fe.js",
+      "resourceType": "Script",
+      "transferSize": 1101,
+      "resourceSize": 513,
+      "networkRequestTime": 37.0230000000447,
+      "networkEndTime": 49.18599999975413,
+      "statusCode": 200
+    },
+    {
+      "url": "http://127.0.0.1:3330/_next/static/chunks/app/layout-7a5067c1a09df003.js",
+      "resourceType": "Script",
+      "transferSize": 4934,
+      "resourceSize": 13308,
+      "networkRequestTime": 37.44900000002235,
+      "networkEndTime": 50.34599999990314,
+      "statusCode": 200
+    },
+    {
+      "url": "http://127.0.0.1:3330/_next/static/chunks/200-6e30e7e675c1bb93.js",
+      "resourceType": "Script",
+      "transferSize": 6840,
+      "resourceSize": 16631,
+      "networkRequestTime": 41.330000000074506,
+      "networkEndTime": 51.29600000008941,
+      "statusCode": 200
+    },
+    {
+      "url": "http://127.0.0.1:3330/_next/static/chunks/500-8af45f63ef5e66a0.js",
+      "resourceType": "Script",
+      "transferSize": 3743,
+      "resourceSize": 6893,
+      "networkRequestTime": 44.14999999990687,
+      "networkEndTime": 53.29700000025332,
+      "statusCode": 200
+    },
+    {
+      "url": "http://127.0.0.1:3330/_next/static/chunks/app/(public)/page-c1ee31d1f4f9e4c5.js",
+      "resourceType": "Script",
+      "transferSize": 5573,
+      "resourceSize": 13534,
+      "networkRequestTime": 50.178000000305474,
+      "networkEndTime": 57.135000000242144,
+      "statusCode": 200
+    },
+    {
+      "url": "http://127.0.0.1:3330/_next/static/chunks/app/(public)/layout-e26547aac3029220.js",
+      "resourceType": "Script",
+      "transferSize": 3171,
+      "resourceSize": 6454,
+      "networkRequestTime": 52.94300000043586,
+      "networkEndTime": 57.6019999999553,
+      "statusCode": 200
+    },
+    {
+      "url": "https://unpkg.com/@elevenlabs/convai-widget-embed",
+      "resourceType": "Script",
+      "transferSize": 0,
+      "resourceSize": 0,
+      "networkRequestTime": 16.618000000249594,
+      "networkEndTime": 30.969000000040978,
+      "statusCode": -1
+    },
+    {
+      "url": "http://127.0.0.1:3330/_next/static/media/28a2004cf8372660-s.woff2",
+      "resourceType": "Font",
+      "transferSize": 21521,
+      "resourceSize": 20980,
+      "networkRequestTime": 79.04100000020117,
+      "networkEndTime": 99.9499999997206,
+      "statusCode": 200
+    },
+    {
+      "url": "http://127.0.0.1:3330/_next/image",
+      "resourceType": "Image",
+      "transferSize": 34078,
+      "resourceSize": 33413,
+      "networkRequestTime": 76.85499999998137,
+      "networkEndTime": 101.15100000007078,
+      "statusCode": 200
+    },
+    {
+      "url": "http://127.0.0.1:3330/_vercel/insights/script.js",
+      "resourceType": "Script",
+      "transferSize": 0,
+      "resourceSize": 0,
+      "networkRequestTime": 159.93399999989197,
+      "networkEndTime": 160.03700000001118,
+      "statusCode": -1
+    },
+    {
+      "url": "http://127.0.0.1:3330/_vercel/speed-insights/script.js",
+      "resourceType": "Script",
+      "transferSize": 0,
+      "resourceSize": 0,
+      "networkRequestTime": 160.6129999998957,
+      "networkEndTime": 160.69900000002235,
+      "statusCode": -1
+    },
+    {
+      "url": "http://127.0.0.1:3330/favicon.ico",
+      "resourceType": "Other",
+      "transferSize": 534,
+      "resourceSize": 9,
+      "networkRequestTime": 165.85000000009313,
+      "networkEndTime": 168.63500000024214,
+      "statusCode": 404
+    },
+    {
+      "url": "http://127.0.0.1:3330/",
+      "resourceType": "Fetch",
+      "transferSize": 937,
+      "resourceSize": 416,
+      "networkRequestTime": 186.34900000039488,
+      "networkEndTime": 206.61799999978393,
+      "statusCode": 200
+    },
+    {
+      "url": "http://127.0.0.1:3330/admin",
+      "transferSize": 426,
+      "resourceSize": 0,
+      "networkRequestTime": 186.46200000029057,
+      "networkEndTime": 197.6480000000447,
+      "statusCode": 307
+    },
+    {
+      "url": "http://127.0.0.1:3330/admin/login",
+      "transferSize": 448,
+      "resourceSize": 0,
+      "networkRequestTime": 199.35099999979138,
+      "networkEndTime": 206.9890000000596,
+      "statusCode": 307
+    },
+    {
+      "url": "http://127.0.0.1:3330/admin/login",
+      "resourceType": "Fetch",
+      "transferSize": 917,
+      "resourceSize": 461,
+      "networkRequestTime": 208.5109999999404,
+      "networkEndTime": 217.32700000004843,
+      "statusCode": 200
+    },
+    {
+      "url": "http://127.0.0.1:3330/",
+      "resourceType": "Fetch",
+      "transferSize": 3213,
+      "resourceSize": 7912,
+      "networkRequestTime": 210.24000000022352,
+      "networkEndTime": 215.964999999851,
+      "statusCode": 200
+    },
+    {
+      "url": "http://127.0.0.1:3330/admin/login",
+      "resourceType": "Fetch",
+      "transferSize": 2629,
+      "resourceSize": 4924,
+      "networkRequestTime": 220.31800000043586,
+      "networkEndTime": 224.30799999972805,
+      "statusCode": 200
+    },
+    {
+      "url": "http://127.0.0.1:3330/_next/static/chunks/app/admin/login/page-2ad9101869ba5bdd.js",
+      "resourceType": "Script",
+      "transferSize": 2575,
+      "resourceSize": 4535,
+      "networkRequestTime": 227.19699999969453,
+      "networkEndTime": 229.46400000015274,
+      "statusCode": 200
+    }
+  ],
+  "networkTimingUnit": "milliseconds since navigation start",
+  "evidenceEnrichment": {
+    "source": "animation-off/baseline/mobile-widget-off-3.lhr.json.gz",
+    "sourceGzipSha256": "33038ef134878c68a11f9dd8372b307d94a3b538c3de99bd88491bc2c0e3cf28",
+    "timingSource": "Original Lighthouse 13.5 network-requests audit, networkRequestTime/networkEndTime",
+    "animationSource": "Originally recorded animation=off",
+    "unchanged": "observedAt, revision, nodeVersion, metrics, scores and task diagnostics"
+  }
+}

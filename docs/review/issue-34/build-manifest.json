@@ -1,0 +1,31 @@
+{
+  "baseline": {
+    "revision": "97da6087a6969975fbb360c3ec966ac6c723fb6d",
+    "files": {
+      "package-lock.json": "4b12d701d0eeb553bde240041547463086a5510a948bd2b62a3fc8d03ce2ea98",
+      "public/nguyen-trai.jpg": "b4f1f8552cbdb9241f7c9fb0cf17ed824af8142920986a6d5d88d2a80cb19ea5",
+      ".next/static/media/28a2004cf8372660-s.woff2": "5628567856d60d714e7a35bcac9e3de08b336d63b12138f61b970990a1ee9547",
+      ".next/static/media/47f136985ef5b5cb-s.woff2": "d7f9db9b1034978ebebdf7312aa4aee55dff3ef6039e7ff71413780bd4a05558",
+      ".next/static/media/4ead58c4dcc3f285-s.p.woff2": "8fa67d5f0ab2a1d0b924729a0411a069b384d7a236edd96a6767ef342a6d048f",
+      ".next/static/media/eaead17c7dbfcd5d-s.p.woff2": "5d91eb5d522a03081946c44c8ca17c902230dfed5f0f9b5014262135d47b15b2"
+    },
+    "gitStatus": [
+      " M next-env.d.ts"
+    ]
+  },
+  "release": {
+    "revision": "a86a991899a84f4ceaa72b2931049331466ff061",
+    "files": {
+      "package-lock.json": "f66a2a3329733490c84c39bc756b136220f92fc8bd5f32988a681330955aa029",
+      "public/nguyen-trai.jpg": "b4f1f8552cbdb9241f7c9fb0cf17ed824af8142920986a6d5d88d2a80cb19ea5",
+      ".next/static/media/28a2004cf8372660-s.woff2": "5628567856d60d714e7a35bcac9e3de08b336d63b12138f61b970990a1ee9547",
+      ".next/static/media/47f136985ef5b5cb-s.woff2": "d7f9db9b1034978ebebdf7312aa4aee55dff3ef6039e7ff71413780bd4a05558",
+      ".next/static/media/4ead58c4dcc3f285-s.p.woff2": "8fa67d5f0ab2a1d0b924729a0411a069b384d7a236edd96a6767ef342a6d048f",
+      ".next/static/media/eaead17c7dbfcd5d-s.p.woff2": "5d91eb5d522a03081946c44c8ca17c902230dfed5f0f9b5014262135d47b15b2"
+    },
+    "gitStatus": [
+      " M next-env.d.ts"
+    ]
+  },
+  "fixtureSha256": "4046cc56132c3d340b86d7f2dd3a2a876ca0b9bb2fca1fd1424f32d023f18e23"
+}
