@@ -15,6 +15,9 @@ function parsePropagationTargets(value?: string): (string | RegExp)[] {
 }
 
 export function register() {
+  if (process.env.NEXT_RUNTIME === 'nodejs') {
+    console.info(`[runtime] node=${process.version}`);
+  }
   registerOTel({
     serviceName: 'nguyen-trai-portfolio',
     propagators: ['tracecontext', 'baggage'],
