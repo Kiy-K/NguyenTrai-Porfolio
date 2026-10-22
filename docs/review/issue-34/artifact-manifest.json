@@ -1,0 +1,7 @@
+{
+  "archivePath": "/tmp/nguyentrai-issue-34-evidence.tar.gz",
+  "archiveBytes": 36018701,
+  "sha256": "cb84bab0caf5e252c24604f22b733bd245268819eb45fad2392fba59790f5cf9",
+  "contents": "All38 full Lighthouse reports/traces, original public frozen asset bodies/manifest, synthetic functional outputs, build/test/lint logs. Local artifact only; contains no production content. Five URL-redacted representative traces are committed separately.",
+  "retention": "Not uploaded to GitHub; preserve/download this local archive before cleaning /tmp."
+}

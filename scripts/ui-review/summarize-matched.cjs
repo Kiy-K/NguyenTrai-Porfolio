@@ -7,6 +7,18 @@ const median = values => { const v = [...values].sort((a, b) => a - b); return (
 const stats = values => { assert.ok(values.every(Number.isFinite)); return { median: median(values), min: Math.min(...values), max: Math.max(...values) }; };
 assert.deepEqual(stats([3, 1, 2]), { median: 2, min: 1, max: 3 });
 assert.equal(median([1, 3]), 2);
+if (process.argv[3] === 'animation-off') {
+  const summary = {};
+  for (const revision of ['baseline', 'release']) {
+    const runs = Array.from({ length: 5 }, (_, i) => JSON.parse(fs.readFileSync(path.join(root, revision, `mobile-widget-off-${i + 1}.json`))));
+    assert.ok(runs.every(r => r.animation === 'off' && r.nodeVersion === 'v24.21.0' && !r.widgetRendered));
+    summary[revision] = { lcp: stats(runs.map(r => r.metrics['largest-contentful-paint'])), tbt: stats(runs.map(r => r.metrics['total-blocking-time'])), score: stats(runs.map(r => r.scores.performance * 100)) };
+  }
+  fs.writeFileSync(path.join(root, 'animation-summary.json'), JSON.stringify(summary, null, 2));
+  console.log(JSON.stringify(summary));
+  return;
+}
+assert.ok(!process.argv[3], 'Only animation-off is supported');
 const groups = {};
 const sums = {};
 for (const revision of ['baseline', 'release']) for (const profile of ['mobile', 'desktop']) for (const widget of ['on', 'off']) {
@@ -43,7 +55,20 @@ const pairedTbtDeltas = after.map((r, i) => r.metrics['total-blocking-time'] - b
 const baselineTbt = sums['baseline/mobile/off'].tbt.median;
 const delta = sums['release/mobile/off'].tbt.median - baselineTbt;
 const firstPartyThresholdTriggered = delta > 100 && delta > baselineTbt * 0.2 && pairedTbtDeltas.filter(x => x > 0).length >= 4;
-const report = { observedAt: new Date().toISOString(), harnessRevision: '2fec060', summaries: sums,
+const pairedMetricDeltas = {};
+const boot = (r, field) => (r.diagnostics['bootup-time']?.details?.items || []).reduce((s, x) => s + (x[field] || 0), 0);
+const measures = {
+  tbt: r => r.metrics['total-blocking-time'], lcp: r => r.metrics['largest-contentful-paint'], score: r => r.scores.performance * 100,
+  execution: r => boot(r, 'scripting'), parse: r => boot(r, 'scriptParseCompile'),
+  jsTransferBytes: r => r.network.filter(x => x.resourceType === 'Script').reduce((s, x) => s + x.transferSize, 0),
+  jsResourceBytes: r => r.network.filter(x => x.resourceType === 'Script').reduce((s, x) => s + x.resourceSize, 0),
+  unusedJsBytes: r => (r.diagnostics['unused-javascript']?.details?.items || []).reduce((s, x) => s + (x.wastedBytes || 0), 0),
+};
+for (const profile of ['mobile', 'desktop']) for (const widget of ['on', 'off']) {
+  const a = groups[`baseline/${profile}/${widget}`], b = groups[`release/${profile}/${widget}`];
+  pairedMetricDeltas[`${profile}/${widget}`] = Object.fromEntries(Object.entries(measures).map(([key, value]) => [key, b.map((r, i) => value(r) - value(a[i]))]));
+}
+const report = { pairedMetricDeltas, observedAt: new Date().toISOString(), harnessRevision: '2fec060', summaries: sums,
   pairedWidgetOffTbtDeltas: pairedTbtDeltas, firstPartyThresholdTriggered,
   note: 'Threshold is preregistered diagnostic evidence, not statistical proof. See traces, widget-on interaction and scope limits before concluding.' };
 fs.writeFileSync(path.join(root, 'summary.json'), JSON.stringify(report, null, 2));

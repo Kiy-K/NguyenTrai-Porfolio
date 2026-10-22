@@ -1,0 +1,745 @@
+{
+  "pairedMetricDeltas": {
+    "mobile/on": {
+      "tbt": [
+        28.5,
+        -21.5,
+        134,
+        -1,
+        -6
+      ],
+      "lcp": [
+        449.80600000000004,
+        1257.6866,
+        10107.84255,
+        1270.94705,
+        1522.7280499999997
+      ],
+      "score": [
+        -1,
+        -2,
+        -29,
+        -3,
+        -4
+      ],
+      "execution": [
+        22.74800000000016,
+        -3.852000000001567,
+        55.57599999999968,
+        -32.35200000000077,
+        -31.06400000000184
+      ],
+      "parse": [
+        12.063999999999993,
+        -18.811999999999998,
+        10.87599999999999,
+        -0.3079999999999927,
+        -2.711999999999975
+      ],
+      "jsTransferBytes": [
+        -2286,
+        -2286,
+        -2286,
+        -2286,
+        -2286
+      ],
+      "jsResourceBytes": [
+        -3796,
+        -3796,
+        -3796,
+        -3796,
+        -3796
+      ],
+      "unusedJsBytes": [
+        379,
+        379,
+        119,
+        379,
+        499
+      ]
+    },
+    "mobile/off": {
+      "tbt": [
+        4,
+        6.5,
+        58,
+        -11,
+        3.151875000000018
+      ],
+      "lcp": [
+        402.1069499999994,
+        437.6099500000005,
+        412.77420000000075,
+        458.30979999999954,
+        476.9899499999992
+      ],
+      "score": [
+        -2,
+        -2,
+        -2,
+        -2,
+        -2
+      ],
+      "execution": [
+        -3.0480000000000587,
+        -17.82400000000166,
+        -0.25199999999898637,
+        -21.96000000000066,
+        -1.8640000000003738
+      ],
+      "parse": [
+        -14.647999999999996,
+        -0.3760000000000012,
+        -0.652000000000001,
+        12.836000000000002,
+        -0.49999999999999645
+      ],
+      "jsTransferBytes": [
+        -2286,
+        -2286,
+        -2286,
+        -2286,
+        -2286
+      ],
+      "jsResourceBytes": [
+        -3796,
+        -3796,
+        -3796,
+        -3796,
+        -3796
+      ],
+      "unusedJsBytes": [
+        224,
+        239,
+        224,
+        224,
+        224
+      ]
+    },
+    "desktop/on": {
+      "tbt": [
+        -3.5,
+        0
+      ],
+      "lcp": [
+        -1613.7039499999998,
+        -1256.3801
+      ],
+      "score": [
+        10,
+        8
+      ],
+      "execution": [
+        3.476999999999464,
+        -1.9859999999999332
+      ],
+      "parse": [
+        1.3919999999999924,
+        -1.1529999999999916
+      ],
+      "jsTransferBytes": [
+        289,
+        289
+      ],
+      "jsResourceBytes": [
+        739,
+        739
+      ],
+      "unusedJsBytes": [
+        120,
+        0
+      ]
+    },
+    "desktop/off": {
+      "tbt": [
+        0,
+        0
+      ],
+      "lcp": [
+        39.62135000000012,
+        -93.04475000000025
+      ],
+      "score": [
+        0,
+        0
+      ],
+      "execution": [
+        70.53100000000016,
+        62.12899999999997
+      ],
+      "parse": [
+        3.7560000000000002,
+        2.1530000000000005
+      ],
+      "jsTransferBytes": [
+        289,
+        289
+      ],
+      "jsResourceBytes": [
+        739,
+        739
+      ],
+      "unusedJsBytes": [
+        -140,
+        120
+      ]
+    }
+  },
+  "observedAt": "2026-10-22T13:20:50.836Z",
+  "harnessRevision": "2fec060",
+  "summaries": {
+    "baseline/mobile/on": {
+      "samples": 5,
+      "tbt": {
+        "median": 218.5,
+        "min": 211,
+        "max": 251.5
+      },
+      "lcp": {
+        "median": 1211.6297,
+        "min": 1206.8853,
+        "max": 1220.9605999999999
+      },
+      "score": {
+        "median": 96,
+        "min": 95,
+        "max": 96
+      },
+      "cls": {
+        "median": 0,
+        "min": 0,
+        "max": 0
+      },
+      "execution": {
+        "median": 513.3159999999996,
+        "min": 489.6800000000004,
+        "max": 517.876000000001
+      },
+      "parse": {
+        "median": 113.044,
+        "min": 108.316,
+        "max": 130.44
+      },
+      "firstPartyExecution": {
+        "median": 285.6960000000007,
+        "min": 273.5320000000003,
+        "max": 293.95999999999987
+      },
+      "widgetExecution": {
+        "median": 208.7039999999997,
+        "min": 205.88800000000003,
+        "max": 218.29599999999996
+      },
+      "longTaskDuration": {
+        "median": 519,
+        "min": 512,
+        "max": 557
+      },
+      "jsTransferBytes": {
+        "median": 1720247,
+        "min": 1720247,
+        "max": 1720247
+      },
+      "jsResourceBytes": {
+        "median": 2068403,
+        "min": 2068403,
+        "max": 2068403
+      },
+      "unusedJsBytes": {
+        "median": 1114315,
+        "min": 1114195,
+        "max": 1114315
+      },
+      "load1": {
+        "median": 1.44,
+        "min": 0.99,
+        "max": 1.56
+      }
+    },
+    "baseline/mobile/off": {
+      "samples": 5,
+      "tbt": {
+        "median": 60,
+        "min": 53.5,
+        "max": 62
+      },
+      "lcp": {
+        "median": 2181.0988000000007,
+        "min": 2180.0424000000003,
+        "max": 2255.4489000000003
+      },
+      "score": {
+        "median": 98,
+        "min": 98,
+        "max": 98
+      },
+      "cls": {
+        "median": 0,
+        "min": 0,
+        "max": 0
+      },
+      "execution": {
+        "median": 295.78800000000024,
+        "min": 289.01599999999905,
+        "max": 313.45600000000115
+      },
+      "parse": {
+        "median": 20.863999999999997,
+        "min": 20.2,
+        "max": 34.379999999999995
+      },
+      "firstPartyExecution": {
+        "median": 287.1639999999998,
+        "min": 277.91999999999905,
+        "max": 301.75200000000115
+      },
+      "widgetExecution": {
+        "median": 0,
+        "min": 0,
+        "max": 0
+      },
+      "longTaskDuration": {
+        "median": 231,
+        "min": 227,
+        "max": 241
+      },
+      "jsTransferBytes": {
+        "median": 163011,
+        "min": 163011,
+        "max": 163011
+      },
+      "jsResourceBytes": {
+        "median": 511304,
+        "min": 511304,
+        "max": 511304
+      },
+      "unusedJsBytes": {
+        "median": 49621,
+        "min": 49621,
+        "max": 49621
+      },
+      "load1": {
+        "median": 1.22,
+        "min": 1.02,
+        "max": 1.96
+      }
+    },
+    "baseline/desktop/on": {
+      "samples": 2,
+      "tbt": {
+        "median": 6.5,
+        "min": 4,
+        "max": 9
+      },
+      "lcp": {
+        "median": 1986.75315,
+        "min": 1831.00925,
+        "max": 2142.49705
+      },
+      "score": {
+        "median": 91,
+        "min": 90,
+        "max": 92
+      },
+      "cls": {
+        "median": 0,
+        "min": 0,
+        "max": 0
+      },
+      "execution": {
+        "median": 86.88450000000009,
+        "min": 54.77099999999994,
+        "max": 118.99800000000025
+      },
+      "parse": {
+        "median": 25.125999999999998,
+        "min": 23.633999999999997,
+        "max": 26.618000000000002
+      },
+      "firstPartyExecution": {
+        "median": 35.90950000000011,
+        "min": 3.8559999999999994,
+        "max": 67.96300000000022
+      },
+      "widgetExecution": {
+        "median": 50.97499999999998,
+        "min": 50.914999999999935,
+        "max": 51.03500000000002
+      },
+      "longTaskDuration": {
+        "median": 58.5,
+        "min": 58,
+        "max": 59
+      },
+      "jsTransferBytes": {
+        "median": 1720247,
+        "min": 1720247,
+        "max": 1720247
+      },
+      "jsResourceBytes": {
+        "median": 2068403,
+        "min": 2068403,
+        "max": 2068403
+      },
+      "unusedJsBytes": {
+        "median": 1114255,
+        "min": 1114195,
+        "max": 1114315
+      },
+      "load1": {
+        "median": 1.365,
+        "min": 1.29,
+        "max": 1.44
+      }
+    },
+    "baseline/desktop/off": {
+      "samples": 2,
+      "tbt": {
+        "median": 0,
+        "min": 0,
+        "max": 0
+      },
+      "lcp": {
+        "median": 621.7330000000001,
+        "min": 621.15275,
+        "max": 622.3132500000002
+      },
+      "score": {
+        "median": 100,
+        "min": 100,
+        "max": 100
+      },
+      "cls": {
+        "median": 0,
+        "min": 0,
+        "max": 0
+      },
+      "execution": {
+        "median": 4.4990000000000006,
+        "min": 3.9630000000000005,
+        "max": 5.035
+      },
+      "parse": {
+        "median": 1.5829999999999997,
+        "min": 1.3959999999999997,
+        "max": 1.7699999999999998
+      },
+      "firstPartyExecution": {
+        "median": 4.4990000000000006,
+        "min": 3.9630000000000005,
+        "max": 5.035
+      },
+      "widgetExecution": {
+        "median": 0,
+        "min": 0,
+        "max": 0
+      },
+      "longTaskDuration": {
+        "median": 0,
+        "min": 0,
+        "max": 0
+      },
+      "jsTransferBytes": {
+        "median": 163011,
+        "min": 163011,
+        "max": 163011
+      },
+      "jsResourceBytes": {
+        "median": 511304,
+        "min": 511304,
+        "max": 511304
+      },
+      "unusedJsBytes": {
+        "median": 49621,
+        "min": 49621,
+        "max": 49621
+      },
+      "load1": {
+        "median": 1.225,
+        "min": 1.03,
+        "max": 1.42
+      }
+    },
+    "release/mobile/on": {
+      "samples": 5,
+      "tbt": {
+        "median": 230,
+        "min": 215.5,
+        "max": 345
+      },
+      "lcp": {
+        "median": 2486.03145,
+        "min": 1661.4357,
+        "max": 11314.72785
+      },
+      "score": {
+        "median": 93,
+        "min": 67,
+        "max": 95
+      },
+      "cls": {
+        "median": 0,
+        "min": 0,
+        "max": 0
+      },
+      "execution": {
+        "median": 514.0239999999994,
+        "min": 480.9639999999988,
+        "max": 545.2560000000001
+      },
+      "parse": {
+        "median": 111.628,
+        "min": 110.33200000000002,
+        "max": 134.292
+      },
+      "firstPartyExecution": {
+        "median": 278.0839999999996,
+        "min": 266.13999999999896,
+        "max": 312.6880000000003
+      },
+      "widgetExecution": {
+        "median": 214.3079999999997,
+        "min": 205.4239999999999,
+        "max": 225.8759999999998
+      },
+      "longTaskDuration": {
+        "median": 515,
+        "min": 486,
+        "max": 602
+      },
+      "jsTransferBytes": {
+        "median": 1717961,
+        "min": 1717961,
+        "max": 1717961
+      },
+      "jsResourceBytes": {
+        "median": 2064607,
+        "min": 2064607,
+        "max": 2064607
+      },
+      "unusedJsBytes": {
+        "median": 1114694,
+        "min": 1114434,
+        "max": 1114694
+      },
+      "load1": {
+        "median": 1.53,
+        "min": 0.94,
+        "max": 1.81
+      }
+    },
+    "release/mobile/off": {
+      "samples": 5,
+      "tbt": {
+        "median": 60.5,
+        "min": 51,
+        "max": 118
+      },
+      "lcp": {
+        "median": 2657.5558499999997,
+        "min": 2593.1246,
+        "max": 2661.83585
+      },
+      "score": {
+        "median": 96,
+        "min": 96,
+        "max": 96
+      },
+      "cls": {
+        "median": 0,
+        "min": 0,
+        "max": 0
+      },
+      "execution": {
+        "median": 291.4960000000005,
+        "min": 282.2399999999985,
+        "max": 293.40799999999945
+      },
+      "parse": {
+        "median": 20.211999999999996,
+        "min": 19.732,
+        "max": 33.128
+      },
+      "firstPartyExecution": {
+        "median": 283.2920000000002,
+        "min": 271.2079999999985,
+        "max": 284.28800000000047
+      },
+      "widgetExecution": {
+        "median": 0,
+        "min": 0,
+        "max": 0
+      },
+      "longTaskDuration": {
+        "median": 224,
+        "min": 152,
+        "max": 229
+      },
+      "jsTransferBytes": {
+        "median": 160725,
+        "min": 160725,
+        "max": 160725
+      },
+      "jsResourceBytes": {
+        "median": 507508,
+        "min": 507508,
+        "max": 507508
+      },
+      "unusedJsBytes": {
+        "median": 49845,
+        "min": 49845,
+        "max": 49860
+      },
+      "load1": {
+        "median": 1.6,
+        "min": 0.79,
+        "max": 1.73
+      }
+    },
+    "release/desktop/on": {
+      "samples": 2,
+      "tbt": {
+        "median": 4.75,
+        "min": 4,
+        "max": 5.5
+      },
+      "lcp": {
+        "median": 551.711125,
+        "min": 528.7931000000001,
+        "max": 574.62915
+      },
+      "score": {
+        "median": 100,
+        "min": 100,
+        "max": 100
+      },
+      "cls": {
+        "median": 0,
+        "min": 0,
+        "max": 0
+      },
+      "execution": {
+        "median": 87.62999999999985,
+        "min": 52.785000000000004,
+        "max": 122.47499999999971
+      },
+      "parse": {
+        "median": 25.2455,
+        "min": 22.481000000000005,
+        "max": 28.009999999999994
+      },
+      "firstPartyExecution": {
+        "median": 33.58099999999988,
+        "min": 0,
+        "max": 67.16199999999976
+      },
+      "widgetExecution": {
+        "median": 54.04899999999997,
+        "min": 52.785000000000004,
+        "max": 55.31299999999994
+      },
+      "longTaskDuration": {
+        "median": 59.5,
+        "min": 58,
+        "max": 61
+      },
+      "jsTransferBytes": {
+        "median": 1720536,
+        "min": 1720536,
+        "max": 1720536
+      },
+      "jsResourceBytes": {
+        "median": 2069142,
+        "min": 2069142,
+        "max": 2069142
+      },
+      "unusedJsBytes": {
+        "median": 1114315,
+        "min": 1114315,
+        "max": 1114315
+      },
+      "load1": {
+        "median": 1.5550000000000002,
+        "min": 1.51,
+        "max": 1.6
+      }
+    },
+    "release/desktop/off": {
+      "samples": 2,
+      "tbt": {
+        "median": 0,
+        "min": 0,
+        "max": 0
+      },
+      "lcp": {
+        "median": 595.0213,
+        "min": 529.2684999999999,
+        "max": 660.7741000000001
+      },
+      "score": {
+        "median": 100,
+        "min": 100,
+        "max": 100
+      },
+      "cls": {
+        "median": 0,
+        "min": 0,
+        "max": 0
+      },
+      "execution": {
+        "median": 70.82900000000006,
+        "min": 66.09199999999997,
+        "max": 75.56600000000016
+      },
+      "parse": {
+        "median": 4.5375,
+        "min": 3.549,
+        "max": 5.526
+      },
+      "firstPartyExecution": {
+        "median": 70.82900000000006,
+        "min": 66.09199999999997,
+        "max": 75.56600000000016
+      },
+      "widgetExecution": {
+        "median": 0,
+        "min": 0,
+        "max": 0
+      },
+      "longTaskDuration": {
+        "median": 0,
+        "min": 0,
+        "max": 0
+      },
+      "jsTransferBytes": {
+        "median": 163300,
+        "min": 163300,
+        "max": 163300
+      },
+      "jsResourceBytes": {
+        "median": 512043,
+        "min": 512043,
+        "max": 512043
+      },
+      "unusedJsBytes": {
+        "median": 49611,
+        "min": 49481,
+        "max": 49741
+      },
+      "load1": {
+        "median": 1.6099999999999999,
+        "min": 1.59,
+        "max": 1.63
+      }
+    }
+  },
+  "pairedWidgetOffTbtDeltas": [
+    4,
+    6.5,
+    58,
+    -11,
+    3.151875000000018
+  ],
+  "firstPartyThresholdTriggered": false,
+  "note": "Threshold is preregistered diagnostic evidence, not statistical proof. See traces, widget-on interaction and scope limits before concluding."
+}

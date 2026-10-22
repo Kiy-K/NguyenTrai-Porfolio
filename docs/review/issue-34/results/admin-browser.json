@@ -1,0 +1,80 @@
+{
+  "observedAt": "2026-10-22T13:21:22.695Z",
+  "revision": "a86a991899a84f4ceaa72b2931049331466ff061",
+  "nodeVersion": "v24.21.0",
+  "origin": "http://127.0.0.1:3330",
+  "result": [
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 1000
+      },
+      "auth": "pending",
+      "gate": "passed"
+    },
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 1000
+      },
+      "auth": "rejected",
+      "gate": "passed"
+    },
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 1000
+      },
+      "auth": "offline",
+      "gate": "passed"
+    },
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 1000
+      },
+      "auth": "accepted",
+      "workflow": "passed",
+      "saves": 2,
+      "deletes": 2,
+      "errors": [],
+      "recoveryDownload": true
+    },
+    {
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "auth": "pending",
+      "gate": "passed"
+    },
+    {
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "auth": "rejected",
+      "gate": "passed"
+    },
+    {
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "auth": "offline",
+      "gate": "passed"
+    },
+    {
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "auth": "accepted",
+      "workflow": "passed",
+      "saves": 2,
+      "deletes": 2,
+      "errors": [],
+      "recoveryDownload": true
+    }
+  ]
+}

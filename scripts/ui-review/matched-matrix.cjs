@@ -4,6 +4,8 @@ const path = require('node:path');
 const { spawn, execFileSync } = require('node:child_process');
 const assert = require('node:assert/strict');
 const harness = __dirname;
+const animationAblation = process.argv[2] === 'animation-off';
+assert.ok(!process.argv[2] || animationAblation, 'Only animation-off is supported');
 const output = process.env.P31_OUTPUT;
 assert.ok(output && process.env.P31_BASELINE && process.env.P31_RELEASE && process.env.P31_ASSETS);
 const targets = { baseline: process.env.P31_BASELINE, release: process.env.P31_RELEASE };
@@ -13,7 +15,7 @@ fs.mkdirSync(output, { recursive: true });
 let activeServer;
 async function run(label, profile, widget, round) {
   const log = fs.openSync(path.join(output, 'commands.log'), 'a');
-  const args = [path.join(harness, 'matched-lighthouse.cjs'), 'sample', profile, widget, String(round)];
+  const args = [path.join(harness, 'matched-lighthouse.cjs'), 'sample', profile, widget, String(round), animationAblation ? 'off' : 'on'];
   try {
     await new Promise((resolve, reject) => {
       const child = spawn(process.execPath, args, { cwd: targets[label], env: { ...process.env, P31_OUTPUT: path.join(output, label) }, stdio: ['ignore', log, log] });
@@ -45,9 +47,9 @@ async function stop() {
           await new Promise(resolve => setTimeout(resolve, 500));
         }
         assert.ok(ready, 'Synthetic server readiness timeout');
-        for (const widget of ['on', 'off']) {
+        for (const widget of animationAblation ? ['off'] : ['on', 'off']) {
           await run(label, 'mobile', widget, round);
-          if (round <= 2) await run(label, 'desktop', widget, round);
+          if (!animationAblation && round <= 2) await run(label, 'desktop', widget, round);
         }
         await stop();
       }
