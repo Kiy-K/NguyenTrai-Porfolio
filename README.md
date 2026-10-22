@@ -35,8 +35,8 @@ Preserve and promote the historical legacy of Nguyễn Trãi while raising aware
 
 ## Prerequisites
 
-- Node.js 20+
-- npm
+- Node.js **24.22.1 or newer patched 24.x** (`.nvmrc` / `mise.toml`); other major versions are rejected by npm tooling.
+- npm **11+** (bundled with the pinned Node release)
 - Optional service accounts:
   - Upstash Redis
   - Cloudinary
@@ -48,7 +48,8 @@ Preserve and promote the historical legacy of Nguyễn Trãi while raising aware
 ```bash
 git clone https://github.com/Kiy-K/NguyenTrai-Porfolio.git
 cd NguyenTrai-Porfolio
-npm install
+# Select Node 24.22.1 with your runtime manager (mise or nvm).
+npm ci
 cp .env.example .env.local
 npm run dev
 ```
