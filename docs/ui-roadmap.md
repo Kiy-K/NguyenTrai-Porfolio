@@ -1,8 +1,16 @@
 # Nguyen Trai: UI/UX, Search and AI Summary Removal Roadmap
 
-**Status:** Proposed, awaiting owner review  
+**Status:** P0–P2 implemented locally; local P3 audit complete; release approval pending
 **Baseline:** `main` at `1c74f3d` (2026-10-17), after PRs #26, #27 and #28  
 **Principle:** Small, testable PRs. Preserve the historical identity and production reliability.
+
+## Implementation status and GitHub review handoff
+
+Current review preparation (2026-10-22) uses main `cbf43ec` with roadmap #29 and P2 #31 merged. P1 #30 and P3 #32 were merged into the P0 foundation, not main. The draft `review-ui-roadmap-integration` now combines that stack with latest main without conflicts. Its application source matches original `b862a2f` except the reviewed focus-contrast correction. Original branches and local files are preserved.
+
+The existing focused reviews remain the source history: [P1 #30](https://github.com/Kiy-K/NguyenTrai-Porfolio/pull/30), [P2 #31](https://github.com/Kiy-K/NguyenTrai-Porfolio/pull/31), [P3 #32](https://github.com/Kiy-K/NguyenTrai-Porfolio/pull/32). The integration draft has independent P0/P1/P2/P3 review sections; P2 adds no further runtime diff against main. [Current integration evidence and gates](review/ui-roadmap/integration-review.md) supersede the older publication-state descriptions in the dated validation reports.
+
+P0 MiniSearch and AI-summary removal are included prerequisites requiring explicit review. [Compatibility notes](review/ui-roadmap/p0-compatibility.md) distinguish original branch documentation conflicts from the conflict-free resolved integration. No merge or deployment is part of this preparation. P4 remains deferred.
 
 ## Objectives and non-goals
 
@@ -21,13 +29,13 @@ Do not rewrite Next.js, replace Neon/Redis, change media providers, deploy autom
 - PR #27: shared 60-second public Redis cache-aside, with authenticated fresh reads and invalidation.
 - PR #28: streamed, layout-matched skeletons for public content/admin authentication/link previews; production deployed.
 
-## P0 — Retire public AI search and AI summaries (NEXT)
+## P0 — Retire public AI search and AI summaries
 
 ### P0a — Replace AI search with MiniSearch
 
 **Decision:** Use [MiniSearch](https://github.com/lucaong/minisearch), an in-memory JavaScript full-text search library with prefix matches, typo tolerance and field boosts. At the current scale (~31 products at the last verified inventory), a local index is sufficient. [Fuse.js](https://www.fusejs.io/) is a simpler fallback if MiniSearch is demonstrably worse; do not introduce hosted search, embeddings, Orama vector search or Pagefind's build-time indexing.
 
-**Existing code:** `components/ProjectList.tsx` currently combines substring matching with a debounced public POST to `/api/search-projects`. `app/api/search-projects/route.ts` calls Mistral using a client-supplied project array. This is unnecessary and can fail without API keys.
+**Planning baseline:** `components/ProjectList.tsx` combined substring matching with a debounced public POST to `/api/search-projects`. `app/api/search-projects/route.ts` called Mistral using a client-supplied project array. This was unnecessary and could fail without API keys.
 
 **Implementation PR A (separate from this document):**
 1. Add a small, typed, pure search adapter around MiniSearch; index **public products only**. Build the index once per change in the received product list (e.g. `useMemo`). Do not index credentials, admin records or private feedback.
@@ -44,7 +52,7 @@ Do not rewrite Next.js, replace Neon/Redis, change media providers, deploy autom
 
 **Decision:** Retire on-demand summaries rather than hiding the button or replacing it with another summarizer. Editorial `description` and `fullDescription` belong to the original articles and must stay.
 
-**Existing code:** `components/SummarizeButton.tsx` calls `POST /api/get-summary`, which currently routes to Gemini or Mistral. The component is imported and rendered by `components/ProjectCard.tsx`, `components/ProductCard.tsx`, and `app/(public)/products/[id]/page.tsx`.
+**Planning baseline:** `components/SummarizeButton.tsx` called `POST /api/get-summary`, routing to Gemini or Mistral. It was imported by `components/ProjectCard.tsx`, `components/ProductCard.tsx`, and `app/(public)/products/[id]/page.tsx`; those controls, component and API are now removed.
 
 **Implementation PR B (independent, reviewable, no migration):**
 1. Remove the summary button/UI from all public cards and product details, including imports, wrapper spacing and comments; preserve the normal description, article body, card links, share controls and media.

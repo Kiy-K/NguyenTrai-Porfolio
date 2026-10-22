@@ -1,0 +1,30 @@
+Reproduction harness checks (Node v26.10.0)
+
+$ npm run lint
+
+> ai-studio-applet@0.1.0 lint
+> eslint .
+
+
+Command exit status: 0
+
+$ npm run typecheck
+
+> ai-studio-applet@0.1.0 typecheck
+> tsc --noEmit
+
+
+Command exit status: 0
+
+$ node --test scripts/ui-review/harness.test.cjs
+✔ synthetic harness pins loopback, pauses writes and clears provider credentials (0.696759ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 1
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 45.65973
+
+Command exit status: 0

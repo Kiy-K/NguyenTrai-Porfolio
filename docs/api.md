@@ -160,34 +160,6 @@ Returns Cloudinary upload result JSON (includes `secure_url`).
 - `429` if rate limit exceeded
 - `500` on Cloudinary failure
 
-## `POST /api/get-summary`
-
-Generates a Vietnamese 2-3 sentence summary.
-
-### Request body
-
-```json
-{ "text": "..." }
-```
-
-### Provider behavior
-
-- Uses Gemini when `GEMINI_API_KEY` is configured
-- Falls back to Mistral when Gemini key is unavailable
-- Returns `500` if neither provider is configured
-- If `BRAINTRUST_API_KEY` is set, logs LLM trace spans to Braintrust
-
-### Success
-
-```json
-{ "summary": "..." }
-```
-
-### Errors
-
-- `400` if `text` missing
-- `500` provider/config/runtime errors
-
 ## `POST /api/suggest-title`
 
 Returns 3 Vietnamese title suggestions for a partially typed title.
@@ -219,42 +191,6 @@ Returns 3 Vietnamese title suggestions for a partially typed title.
 
 - `400` if `text` missing
 - `500` if providers unavailable or parsing fails
-
-## `POST /api/search-projects`
-
-Semantic ID matching over supplied project snippets.
-
-### Request body
-
-```json
-{
-  "query": "...",
-  "projects": [
-    {
-      "id": "...",
-      "title": "...",
-      "description": "..."
-    }
-  ]
-}
-```
-
-### Provider behavior
-
-- Mistral only (`MISTRAL_API_KEY` required)
-- Model instructed to return JSON array of relevant IDs
-- If `BRAINTRUST_API_KEY` is set, logs LLM trace spans to Braintrust
-
-### Success
-
-```json
-{ "matchedIds": ["id1", "id2"] }
-```
-
-### Errors
-
-- `400` if query missing
-- `500` if key missing, provider fails, or network error
 
 ## `POST /api/mux/upload-url`
 

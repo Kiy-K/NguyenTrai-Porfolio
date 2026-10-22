@@ -6,7 +6,8 @@
       "review-ui-public-polish": false,
       "review-admin-sections": false,
       "review-ui-a11y-audit": false,
-      "review-ui-roadmap-integrated": false
+      "review-ui-roadmap-integrated": false,
+      "review-ui-roadmap-integration": false
     }
   }
 }

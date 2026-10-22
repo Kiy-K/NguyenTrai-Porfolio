@@ -1,0 +1,6 @@
+
+> ai-studio-applet@0.1.0 typecheck
+> tsc --noEmit
+
+
+Command exit status: 0

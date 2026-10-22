@@ -94,8 +94,6 @@ See [cache validation](redis-cache-validation.md) for evidence and staging gates
   - `POST /api/feedback`
 - AI:
   - `POST /api/suggest-title`
-  - `POST /api/get-summary`
-  - `POST /api/search-projects`
 - Media:
   - `POST /api/upload` (Cloudinary)
   - `POST /api/mux/upload-url`
@@ -141,16 +139,11 @@ At render time, detail page supports multiple videos and prefers Mux playback fo
 - Provider order: Gemini first, then Mistral fallback.
 - Route enforces JSON-like output and parses defensively.
 
-### Summarization (`/api/get-summary`)
+### Public search
 
-- Used in cards and detail page.
-- Provider order: Gemini first, then Mistral fallback.
+`ProjectList` builds a browser-local MiniSearch index once per received product-list change. Only public products (published or legacy absent status) are indexed, scoped to the section selected by the server. Fields are title (boost 6), tags (3), section (2) and description (1); original objects and accented display text remain unchanged.
 
-### Semantic search (`/api/search-projects`)
-
-- Uses Mistral only.
-- Sends simplified project list (`id`, `title`, `description`).
-- Returns matched IDs for semantic relevance blending with local text search.
+Index and query share Vietnamese accent/đ folding. All query words must match; prefixes require two characters, and terms of four or more characters allow one edit. Relevance is the default for a query; ties use Vietnamese title then stable ID. Empty queries use title order; explicit A–Z/Z–A sorting overrides relevance. Tag intersections and ten-item pagination remain local. Search works offline after the product list loads and sends no content to AI providers. There is no search API or search-specific telemetry.
 
 ## Rendering and Client Behavior
 
@@ -187,9 +180,7 @@ This can be overridden via `OTEL_PROPAGATE_CONTEXT_URLS`.
 
 `lib/braintrust.ts` adds optional LLM-level tracing spans for Gemini and Mistral calls in:
 
-- `/api/get-summary`
 - `/api/suggest-title`
-- `/api/search-projects`
 
 Enable it with `BRAINTRUST_API_KEY` (and optional `BRAINTRUST_PROJECT_NAME`).
 

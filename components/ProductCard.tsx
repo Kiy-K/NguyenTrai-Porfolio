@@ -1,7 +1,6 @@
 import Image from 'next/image';
 import { Product } from '@/data/products';
 import { ChevronRight } from 'lucide-react';
-import SummarizeButton from '@/components/SummarizeButton';
 
 interface ProductCardProps {
   product: Product;
@@ -33,9 +32,6 @@ export default function ProductCard({ product }: ProductCardProps) {
         <p className="text-sm text-gray-600 line-clamp-2">
           {product.description}
         </p>
-        
-        {/* AI Summarization Feature (Compact mode for cards) */}
-        <SummarizeButton text={product.description} compact={true} />
         
         <div className="mt-auto pt-4 border-t border-gray-50 flex items-center text-sm font-medium text-indigo-600">
           <a href={`/products/${product.id}`} className="inline-flex items-center hover:text-indigo-800 transition-colors">

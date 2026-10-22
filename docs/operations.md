@@ -28,7 +28,7 @@ You can run with partial integrations enabled:
 - Redis only: content CRUD works, no AI/media extras
 - Redis + Cloudinary: image upload works
 - Redis + Cloudinary + Mux: full media pipeline
-- Add Gemini/Mistral keys: AI summary/title/search enabled
+- Add Gemini/Mistral keys: AI title enabled; public search works locally without keys
 
 ## Data Operations
 
@@ -134,17 +134,16 @@ Checks:
 - Confirm `NEXT_PUBLIC_MUX_DATA_ENV_KEY` is set for player telemetry context
 - If uploading many videos for one product, verify each upload reaches `ready` in admin before submitting.
 
-### AI errors (summary/title/search)
+### AI errors (title)
 
 Symptoms:
 
-- Summaries/suggestions fail with `500`
-- Search returns provider error message
+- Title suggestions fail with `500`
 
 Checks:
 
-- Set `GEMINI_API_KEY` for summary/title primary path
-- Set `MISTRAL_API_KEY` for search and as fallback
+- Set `GEMINI_API_KEY` for title primary path
+- Set `MISTRAL_API_KEY` as fallback
 - Confirm outbound network access to provider endpoints
 
 ## Observability

@@ -1,0 +1,19 @@
+{
+  "checks": [
+    {
+      "command": "get",
+      "key": "portfolio_data_v4",
+      "status": 200
+    },
+    {
+      "command": "set",
+      "key": "portfolio_data_v4",
+      "status": 403
+    },
+    {
+      "command": "get",
+      "key": "admin_credentials",
+      "status": 403
+    }
+  ]
+}
