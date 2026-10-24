@@ -1,6 +1,6 @@
 # Issue #43 — historical article references
 
-Implementation: `55482d5` (base `82090d9`). This is a create-only addition; no
+Implementation: `55482d5`, admin layout correction: `a053c76` (base `82090d9`). This is a create-only addition; no
 existing article prose, source data, SQL schema, provider selection or cache
 policy changes. Sources are editorial input, not automatically verified facts.
 
@@ -61,6 +61,30 @@ Chromium build 1247 were reused from the existing review environment.
 implementation revision. Public desktop/mobile and admin desktop/mobile
 screenshots are linked below. The long unbroken source title and injection text
 are deliberate stress fixtures, not authored historical content.
+
+### Admin layout correction
+
+The initial admin screenshots were inadequate visual evidence: the reference
+editor stacked every field on desktop, mobile action labels wrapped, and the
+viewport capture began partway through the description textarea. The initial
+browser checks did not catch those layout problems. Do not use the superseded
+screenshots as a visual sign-off.
+
+The corrected editor uses two columns on desktop and one on mobile, with 44px
+reorder arrow buttons retaining their accessible names, and a remove control
+that stays on the same row. The browser regression checks action-row alignment
+and desktop input columns. It failed against the prior build with “desktop
+source fields must use two columns.” Replacement screenshots capture the whole
+reference editor, including both source rows and the Add control.
+
+Node 24.22.1 production build, all 120 tests, lint and typecheck passed again.
+The corrected desktop/mobile browser checks passed on `a053c76`. Both replacement
+admin screenshots were inspected by the implementer and the independent reviewer;
+the reviewer found no clipping, overlap or remaining visual/accessibility issues
+at 1440×1000 and 390×844. Intermediate widths and other browsers were not checked.
+An earlier attempt stopped during a `/tmp` quota failure and produced a truncated
+image; it was not a passing run. The completed run used an ignored workspace
+temporary directory without deleting older artifacts.
 
 ## Independent review
 
