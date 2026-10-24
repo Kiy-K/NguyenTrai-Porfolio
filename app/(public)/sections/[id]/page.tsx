@@ -1,3 +1,6 @@
+import JsonLd from '@/components/JsonLd';
+import { breadcrumbs, sectionMetadata } from '@/lib/seo';
+
 import { Suspense } from 'react';
 import { ProjectListSkeleton } from '@/components/ContentSkeletons';
 import { notFound } from 'next/navigation';
@@ -8,6 +11,14 @@ import ProjectList from '@/components/ProjectList';
 import BackButton from '@/components/BackButton';
 
 export const dynamic = 'force-dynamic';
+
+export async function generateMetadata({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
+  const section = SECTIONS.find(section => section.id === id);
+  if (!section) notFound();
+  return sectionMetadata(section);
+}
+
 
 export default async function SectionPage({ params }: { params: Promise<{ id: string }> }) {
   const resolvedParams = await params;
@@ -21,7 +32,7 @@ export default async function SectionPage({ params }: { params: Promise<{ id: st
 
   return (
     <div className="flex-1 bg-[#F4EBD0] font-playfair flex flex-col">
-      
+      <JsonLd data={breadcrumbs([{ name: section.name, path: section.path }])} />
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-16 flex-grow w-full relative">
         <div className="w-full">
           {/* Section Title */}

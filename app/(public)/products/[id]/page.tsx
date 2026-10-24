@@ -1,3 +1,6 @@
+import JsonLd from '@/components/JsonLd';
+import { articleMetadata, articleStructuredData, isDiscoverableArticle } from '@/lib/seo';
+
 import { Suspense } from 'react';
 import { ProductSkeleton } from '@/components/ContentSkeletons';
 import { notFound } from 'next/navigation';
@@ -14,6 +17,13 @@ import ArticleReferences from '@/components/ArticleReferences';
 import { parseTextWithUrls } from '@/lib/url-parser';
 
 export const dynamic = 'force-dynamic';
+
+export async function generateMetadata({ params }: { params: Promise<{ id: string }> }) {
+  const product = await getProduct((await params).id);
+  if (!isDiscoverableArticle(product)) notFound();
+  return articleMetadata(product);
+}
+
 
 function buildVideoList(product: {
   videos?: ProductVideo[];
@@ -80,7 +90,7 @@ export default async function ProductDetail({ params }: { params: Promise<{ id: 
 async function ProductContent({ id }: { id: string }) {
   const product = await getProduct(id);
 
-  if (!product) {
+  if (!isDiscoverableArticle(product)) {
     notFound();
   }
 
@@ -91,6 +101,7 @@ async function ProductContent({ id }: { id: string }) {
 
   return (
         <div className="bg-white rounded-sm shadow-sm border border-[#D4C4A8] overflow-hidden relative">
+          <JsonLd data={articleStructuredData(product)} />
           {/* Main Media */}
           {mainEmbedUrl ? (
             <div className="w-full bg-[#F4EBD0] border-b border-[#D4C4A8] p-4 sm:p-6">

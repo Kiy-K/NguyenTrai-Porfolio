@@ -1,3 +1,8 @@
+import JsonLd from '@/components/JsonLd';
+import { homeMetadata, PRODUCTION_ORIGIN, SITE_TITLE } from '@/lib/seo';
+
+export const metadata = homeMetadata();
+
 import Footer from '@/components/Footer';
 import CategoryLayout from '@/components/CategoryLayout';
 import HeroImage from '@/components/HeroImage';
@@ -8,7 +13,7 @@ export const revalidate = 1800; // Cache for 30 minutes
 export default async function Home() {
   return (
     <div className="flex-1 bg-[#F4EBD0] font-playfair flex flex-col">
-      
+      <JsonLd data={{ "@context": "https://schema.org", "@type": "WebSite", name: SITE_TITLE, url: PRODUCTION_ORIGIN + "/", inLanguage: "vi" }} />
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-16 flex-grow w-full relative">
         {/* Hero Section */}
         <div className="text-center mt-4 sm:mt-12 mb-12 sm:mb-24 relative p-4 sm:p-12 motion-safe:animate-in motion-safe:fade-in duration-500 ease-out">
