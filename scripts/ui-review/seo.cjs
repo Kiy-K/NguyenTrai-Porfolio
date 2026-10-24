@@ -12,7 +12,7 @@ const fixture = {
   createdAt: '2024-02-29T12:00:00Z',
 };
 const log = fs.openSync(artifact('seo-server.log'), 'w');
-const server = spawn(process.execPath, ['-e', `require('./scripts/ui-review/fixtures.cjs').push(${JSON.stringify(fixture)}); require('./scripts/ui-review/server.cjs');`], { env: localEnv(), stdio: ['ignore', log, log] });
+const server = spawn(process.execPath, ['-e', `require('./scripts/ui-review/fixtures.cjs').push(${JSON.stringify(fixture)}, {id:'seo-malformed', title:'Malformed', videos:{}}); require('./scripts/ui-review/server.cjs');`], { env: localEnv(), stdio: ['ignore', log, log] });
 let browser;
 const results = [];
 (async () => {
@@ -37,8 +37,8 @@ const results = [];
       await page.goto(origin + path, { waitUntil: 'networkidle' });
       await page.waitForFunction(title => document.title === title, title);
       assert.equal(await page.locator('meta[name="description"]').getAttribute('content'), description);
-      assert.equal(await page.locator('link[rel="canonical"]').getAttribute('href'), canonical + path);
-      assert.equal(await page.locator('meta[property="og:url"]').getAttribute('content'), canonical + path);
+      assert.equal(new URL(await page.locator('link[rel="canonical"]').getAttribute('href')).href, canonical + path);
+      assert.equal(new URL(await page.locator('meta[property="og:url"]').getAttribute('content')).href, canonical + path);
       assert.equal(await page.locator('meta[property="og:title"]').getAttribute('content'), title);
       assert.equal(await page.locator('meta[property="og:description"]').getAttribute('content'), description);
       assert.equal(await page.locator('meta[property="og:type"]').getAttribute('content'), type);
@@ -59,11 +59,11 @@ const results = [];
       const response = await context.request.get(origin + path, { headers: { 'user-agent': 'Googlebot' } });
       assert.equal(response.status(), 200);
       const html = await response.text();
-      assert.ok(html.includes('rel="canonical" href="' + canonical + path + '"'));
+      assert.ok(html.includes('rel="canonical" href="' + canonical + (path === '/' ? '' : path) + '"'));
       assert.ok(html.includes('application/ld+json'));
       assert.ok(!html.includes('<img src=x onerror='));
     }
-    for (const path of ['/products/draft', '/products/archived', '/products/p6-missing', '/sections/p6-missing']) {
+    for (const path of ['/products/draft', '/products/archived', '/products/p6-missing', '/products/seo-malformed', '/sections/p6-missing']) {
       const response = await context.request.get(origin + path, { headers: { 'user-agent': 'Googlebot' } });
       assert.equal(response.status(), 404);
       assert.match(await response.text(), /name="robots" content="noindex/);
@@ -78,7 +78,7 @@ const results = [];
     assert.equal(locations.length, 43); // home + 9 sections + 33 public articles
     for (const location of locations) assert.equal(new URL(location).origin, canonical);
     assert.ok(locations.includes(canonical + '/products/seo-legacy'));
-    assert.doesNotMatch(xml, /\/products\/(draft|archived)|\/admin|\/api\//);
+    assert.doesNotMatch(xml, /\/products\/(draft|archived|seo-malformed)|\/admin|\/api\//);
     assert.doesNotMatch(xml, /<lastmod>/);
     const robots = await context.request.get(origin + '/robots.txt');
     assert.equal(robots.status(), 200);

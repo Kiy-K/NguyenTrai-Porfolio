@@ -94,7 +94,7 @@ test('sitemap calls public reads and propagates backend errors without emitting 
 
 test('page metadata rejects missing, unpublished and malformed articles, and unknown sections', async () => {
   const mocks = { '@/lib/seo': seo, '@/components/JsonLd': {}, '@/components/ContentSkeletons': {}, '@/lib/data': {}, '@/data/products': {}, '@/components/ShareButton': {}, '@/components/VideoPlayer': {}, '@/components/MuxVideoPlayer': {}, '@/components/BackButton': {}, '@/components/RichTextWithEmbeds': {}, '@/components/SmartEmbed': {}, '@/components/ArticleReferences': {}, '@/lib/url-parser': {}, 'next/navigation': { notFound: () => { throw Error('NOT_FOUND'); } } };
-  for (const product of [undefined, { ...article, status: 'draft' }, { ...article, status: 'archived' }, { ...article, title: null }]) {
+  for (const product of [undefined, { ...article, status: 'draft' }, { ...article, status: 'archived' }, { ...article, title: null }, { ...article, videos: {} }]) {
     const page = loadTs('app/(public)/products/[id]/page.tsx', { ...mocks, '@/lib/data': { getProduct: async () => product } });
     await assert.rejects(page.generateMetadata({ params: Promise.resolve({ id: 'missing' }) }), /NOT_FOUND/);
   }
@@ -103,4 +103,26 @@ test('page metadata rejects missing, unpublished and malformed articles, and unk
   const section = loadTs('app/(public)/sections/[id]/page.tsx', { ...mocks, '@/lib/constants': constants, '@/components/Footer': {}, '@/components/ProjectList': {} });
   await assert.rejects(section.generateMetadata({ params: Promise.resolve({ id: 'missing' }) }), /NOT_FOUND/);
   assert.deepEqual(await section.generateMetadata({ params: Promise.resolve({ id: constants.SECTIONS[0].id }) }), seo.sectionMetadata(constants.SECTIONS[0]));
+});
+
+
+test('malformed renderer fields are neither advertised nor rendered, while safe legacy references stay eligible', async () => {
+  const malformed = [{ videos: {} }, { videos: [null] }, { videos: [{ muxPlaybackId: 1 }] }, { images: {} }, { images: [{}] }, { tags: {} }, { tags: [{}] }, { description: {} }, { fullDescription: 123 }, { references: [null] }, { references: [{ title: {} }] }, { references: { length: 1 } }];
+  for (const fields of malformed) {
+    const product = { ...article, ...fields };
+    assert.equal(seo.isDiscoverableArticle(product), false);
+    assert.deepEqual(seo.buildSitemap([product]), seo.buildSitemap([]));
+    const page = loadTs('app/(public)/products/[id]/page.tsx', {
+      '@/lib/seo': seo, '@/components/JsonLd': {}, '@/components/ContentSkeletons': {},
+      '@/lib/data': { getProduct: async () => product }, '@/data/products': {},
+      '@/components/ShareButton': {}, '@/components/VideoPlayer': {}, '@/components/MuxVideoPlayer': {},
+      '@/components/BackButton': () => null, '@/components/RichTextWithEmbeds': {}, '@/components/SmartEmbed': {},
+      '@/components/ArticleReferences': {}, '@/lib/url-parser': {},
+      'next/navigation': { notFound: () => { throw Error('NOT_FOUND'); } },
+    });
+    const shell = await page.default({ params: Promise.resolve({ id: article.id }) });
+    const suspense = shell.props.children.props.children[1];
+    await assert.rejects(suspense.props.children.type(suspense.props.children.props), /NOT_FOUND/);
+  }
+  assert.equal(seo.isDiscoverableArticle({ ...article, references: [{ title: 'Unsafe legacy URL stays displayable', url: 'javascript:alert(1)' }] }), true);
 });

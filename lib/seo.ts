@@ -1,6 +1,7 @@
 import type { Metadata, MetadataRoute } from 'next';
 import type { Product } from '@/data/products';
 import { SECTIONS } from '@/lib/constants';
+import { z } from 'zod';
 
 export const PRODUCTION_ORIGIN = 'https://nguyen-trai-porfolio.vercel.app';
 export const SITE_TITLE = 'Nguyễn Trãi - Danh nhân văn hóa thế giới';
@@ -13,6 +14,16 @@ function plainText(value: unknown): string {
     : '';
 }
 
+// Validate fields consumed by the public renderer without rewriting legacy payloads.
+const renderableArticle = z.object({
+  title: z.string().trim().min(1),
+  description: z.string().nullish(), fullDescription: z.string().nullish(), section: z.string().nullish(),
+  images: z.array(z.string().min(1)).nullish(), tags: z.array(z.string()).nullish(),
+  video: z.string().nullish(), muxAssetId: z.string().nullish(), muxPlaybackId: z.string().nullish(),
+  videos: z.array(z.object({ video: z.string().nullish(), muxAssetId: z.string().nullish(), muxPlaybackId: z.string().nullish() })).nullish(),
+  references: z.array(z.object({ title: z.string(), url: z.string().nullish(), author: z.string().nullish(), publisher: z.string().nullish() })).nullish(),
+});
+
 export function isDiscoverableArticle(value: unknown): value is Product {
   if (!value || typeof value !== 'object') return false;
   const product = value as Product;
@@ -20,7 +31,7 @@ export function isDiscoverableArticle(value: unknown): value is Product {
   return (product.status === undefined || product.status === 'published')
     && ((typeof id === 'number' && Number.isFinite(id))
       || (typeof id === 'string' && !!id.trim() && id === id.trim() && id.isWellFormed() && !['.', '..'].includes(id)))
-    && !!plainText(product.title);
+    && renderableArticle.safeParse(product).success;
 }
 
 export const articlePath = (product: Product) => `/products/${encodeURIComponent(String(product.id))}`;
