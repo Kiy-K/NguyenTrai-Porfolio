@@ -84,7 +84,52 @@ metadata tags, bot HTML without JS, JSON-LD parsing/escaping, sitemap XML/URLs,
 private/missing pages, robots/admin noindex, references round-trip, page errors and
 overflow. Playwright is an external review tool, not an application dependency.
 
-Validation results and independent review: pending final checks below.
+Final validation on 2026-10-24:
+
+- Full suite: **130 passed**, including ten SEO regressions and existing reference,
+  cache/persistence, auth, sanitization, media and admin behavior tests.
+- ESLint and TypeScript `tsc --noEmit`: passed.
+- Node **24.22.1**, locked Next.js **16.4.3**, production **Webpack** build: passed.
+  The identity check reported Redis/unconfigured Neon; real credentials were blank.
+- Chromium 155 via pinned external Playwright **1.64.0-alpha-1790635538000**:
+  **1440×1000** and **390×844** browser checks passed. Generated HTML includes the
+  expected social image URL and `summary_large_image` on the image-bearing fixture.
+  Sitemap XML contained 44 unique canonical URLs (home, 9 sections, 34 public
+  synthetic articles), excluding malformed/private controls and untracked dates.
+  No browser page errors or horizontal document overflow. Desktop/mobile screenshots
+  were visually inspected; hostile literal text is deliberate injection-test data.
+- [Exact-source browser receipt](evidence/p6/seo-browser.json),
+  [desktop screenshot](evidence/p6/seo-public-1440.png),
+  [mobile screenshot](evidence/p6/seo-public-390.png).
+  Receipt source `d26ef67` includes final harness changes; app source is unchanged
+  from built/reviewed `148c23b`. Later evidence/docs commits do not change runtime code.
+
+The first sandbox-only test/build attempts could not execute subprocess-dependent
+checks correctly. Unsandboxed reruns passed. One typecheck overlapped Next.js type
+regeneration and failed on missing generated files; the final sequential post-build
+typecheck passed. Browser setup initially had mismatched Playwright/Chromium; the
+pinned external review version resolved it. No app dependency changed.
+
+### Independent review
+
+Two read-only reviewers independently examined `origin/main...HEAD`:
+
+- **Standards:** zero remaining material findings. A malformed-image-source finding
+  was fixed in `148c23b` and re-reviewed; ten SEO tests independently passed.
+- **Spec:** zero remaining material findings. A malformed-media-array finding was
+  fixed in `39e8e39`; image validation and final streaming documentation were
+  re-reviewed through `d26ef67`. Ten SEO tests independently passed.
+
+Reviewers did not independently rerun the full suite, production build or browsers;
+those are implementer results above. No issue-tracker agent configuration was
+present; the user's supplied P6 task served as the specification.
+
+Implementation follows the official Next.js guidance for
+[metadata](https://nextjs.org/docs/app/api-reference/functions/generate-metadata),
+[sitemaps](https://nextjs.org/docs/app/api-reference/file-conventions/metadata/sitemap),
+[robots](https://nextjs.org/docs/app/api-reference/file-conventions/metadata/robots),
+and [JSON-LD escaping](https://nextjs.org/docs/app/guides/json-ld), fetched through
+Context7 for this task.
 
 ## Risks and rollback
 
