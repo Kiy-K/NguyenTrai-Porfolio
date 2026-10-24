@@ -1,11 +1,14 @@
 import JsonLd from '@/components/JsonLd';
-import { articleMetadata, articleStructuredData, isDiscoverableArticle } from '@/lib/seo';
+import { articleBreadcrumbs, articleMetadata, articleStructuredData, isDiscoverableArticle } from '@/lib/seo';
+import BreadcrumbNav from '@/components/BreadcrumbNav';
+import RelatedArticles from '@/components/RelatedArticles';
+import { relatedArticles } from '@/lib/related-articles';
 
 import { Suspense } from 'react';
 import { ProductSkeleton } from '@/components/ContentSkeletons';
 import { notFound } from 'next/navigation';
 import Image from 'next/image';
-import { getProduct } from '@/lib/data';
+import { getProduct, getProducts } from '@/lib/data';
 import { ProductVideo } from '@/data/products';
 import ShareButton from '@/components/ShareButton';
 import VideoPlayer from '@/components/VideoPlayer';
@@ -88,7 +91,8 @@ export default async function ProductDetail({ params }: { params: Promise<{ id: 
 }
 
 async function ProductContent({ id }: { id: string }) {
-  const product = await getProduct(id);
+  const products = await getProducts();
+  const product = products.find(product => String(product.id) === id);
 
   if (!isDiscoverableArticle(product)) {
     notFound();
@@ -100,6 +104,8 @@ async function ProductContent({ id }: { id: string }) {
     parseTextWithUrls(productText).find((segment) => segment.type === 'url')?.value ?? null;
 
   return (
+    <>
+        <BreadcrumbNav items={articleBreadcrumbs(product)} />
         <div className="bg-white rounded-sm shadow-sm border border-[#D4C4A8] overflow-hidden relative">
           <JsonLd data={articleStructuredData(product)} />
           {/* Main Media */}
@@ -202,7 +208,9 @@ async function ProductContent({ id }: { id: string }) {
               </div>
             )}
             <ArticleReferences references={product.references} />
+            <RelatedArticles products={relatedArticles(product, products)} />
           </div>
         </div>
+    </>
   );
 }

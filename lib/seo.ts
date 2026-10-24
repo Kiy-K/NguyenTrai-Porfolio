@@ -45,6 +45,18 @@ export function isDiscoverableArticle(value: unknown): value is Product {
 
 export const articlePath = (product: Product) => `/products/${encodeURIComponent(String(product.id))}`;
 
+export function articleSection(product: Product) {
+  return SECTIONS.find(section => product.section
+    ? typeof product.section === 'string' && section.name.toLowerCase() === product.section.toLowerCase()
+    : section.id === 'tu-tuong-nhan-nghia');
+}
+
+export function articleBreadcrumbs(product: Product) {
+  const section = articleSection(product);
+  return [...(section ? [{ name: section.name, path: section.path }] : []),
+    { name: plainText(product.title), path: articlePath(product) }];
+}
+
 function articleImages(product: Product): string[] {
   if (!Array.isArray(product.images)) return [];
   return product.images.filter(isHttpImage);
@@ -97,7 +109,7 @@ export function breadcrumbs(items: { name: string; path: string }[]) {
   };
 }
 export function articleStructuredData(product: Product) {
-  const section = SECTIONS.find(section => typeof product.section === 'string' && section.name.toLowerCase() === product.section.toLowerCase());
+  const section = articleSection(product);
   const path = articlePath(product);
   const description = plainText(product.description) || plainText(product.fullDescription);
   return [
@@ -109,7 +121,7 @@ export function articleStructuredData(product: Product) {
       ...(articleImages(product).length ? { image: articleImages(product) } : {}),
       ...(section ? { articleSection: section.name } : {}),
     },
-    breadcrumbs([...(section ? [{ name: section.name, path: section.path }] : []), { name: plainText(product.title), path }]),
+    breadcrumbs(articleBreadcrumbs(product)),
   ];
 }
 export const serializeJsonLd = (data: unknown) => JSON.stringify(data).replace(/</g, '\\u003c');
