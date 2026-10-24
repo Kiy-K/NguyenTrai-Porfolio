@@ -11,12 +11,12 @@
       "sha256": "0588d2b385dfaff16dde7dc9462cf652a902e0f3dae636c6d8cecc30fdd34dc7"
     },
     "build-baseline.txt": {
-      "bytes": 3778,
-      "sha256": "5dec364d0ab5ff6b9feddfb0f19a0f6a9e1a0b0165873773a912424c9dc4d2ee"
+      "bytes": 3777,
+      "sha256": "b77f5e43f8ecb91012713cb96501828b72bd0952702be4781ef1e5867f0ff795"
     },
     "build-current.txt": {
-      "bytes": 3615,
-      "sha256": "6c8984b74c30b5cd328d6fa8eb66a9832ef68f09515a5cd9a249a4ae3d000f82"
+      "bytes": 3614,
+      "sha256": "27b9aea375a36dc80dad241a03324e49fbe4d6d9ebc0db431eadb2f14e9a4606"
     },
     "build-manifest.json": {
       "bytes": 7034,
@@ -27,8 +27,8 @@
       "sha256": "ef5a287b42710fc947a4659586e14898dd8a5ce996e3f87e5ed2802c2f2adfe2"
     },
     "decode-sync-build-retry.txt": {
-      "bytes": 3614,
-      "sha256": "1ee01a66e2d675ac0b460a78beff9ccd4f012bbd7b13462c26a00c38274cf9b2"
+      "bytes": 3613,
+      "sha256": "974dde0f16764c58e2e18e86345b0221e87bd07504cf058d5eab44aa18b6cab7"
     },
     "decode-sync-build.txt": {
       "bytes": 4355,
@@ -51,8 +51,8 @@
       "sha256": "9147bc20cb5389d79837fc198e199fe87b7a6db5f8390569200145210a604ab7"
     },
     "fetch-high-build-retry.txt": {
-      "bytes": 3615,
-      "sha256": "ef1d478ec52bbfc5f330ddfc1bda0e111b2877ec1f0e8124e0c7e052072a3543"
+      "bytes": 3614,
+      "sha256": "0108aeabc238845fee156f0673d56d4ee74b5bb44276cb7c4fdc25a118a1da39"
     },
     "fetch-high-build.txt": {
       "bytes": 4355,
@@ -711,8 +711,8 @@
       "sha256": "4af18e2ed77a4f4c603a0e65d61e03507a31e27dd47fc7fa5cad5db2b0a02db4"
     },
     "results/validation/build.txt": {
-      "bytes": 3778,
-      "sha256": "72c28d31ac600cf80d9293edd73c28b2f1455d72f7d15205be3224142bc45c61"
+      "bytes": 3777,
+      "sha256": "b593309c064e811fec2b76409994dd2fa43ef26cefcf726e7ad6e4f919b508d5"
     },
     "results/validation/build.txt.gz": {
       "bytes": 874,
@@ -771,8 +771,8 @@
       "sha256": "5f1d1ca69963c428281604eaa62bd000d1c3ba7231902a0a4926dafb52e2dc56"
     },
     "results/validation/lint.txt": {
-      "bytes": 43,
-      "sha256": "048b32cd72bfef2a0abbf8363139a3407fcd7ed7d2ee0abc6849ca4ee03994f9"
+      "bytes": 42,
+      "sha256": "761a072801ad091a7eae1d335100559da9d2327bcc44808f2b5a8245e5fe2568"
     },
     "results/validation/lint.txt.gz": {
       "bytes": 60,
@@ -803,16 +803,16 @@
       "sha256": "1d926a784d939edb9cd68de4d94a599be659c28955c829f594aad07221f3c9ca"
     },
     "results/validation/typecheck.txt": {
-      "bytes": 52,
-      "sha256": "08e5e1884cbd0877ea254f15f676a083e80f38741859df617c5bc7f81a650589"
+      "bytes": 51,
+      "sha256": "1552e44f7f75a8a07537436127b4b72fcc1d0c0df531b375723dcb07aec3f8c1"
     },
     "results/validation/typecheck.txt.gz": {
       "bytes": 72,
       "sha256": "e4c841853398b6697131144956759d5bd5389c77cacd09c5c84e5ef0bbff4b7f"
     },
     "review-notes.md": {
-      "bytes": 2065,
-      "sha256": "37f23b14ace8795f776434cfbf6c83fb69292967a5bc4b5e6eaebcebae30142b"
+      "bytes": 2077,
+      "sha256": "20229ea37102cd363d01fd9e5dfd529f7c8104b14b0249ccc790d29620ade48a"
     },
     "screenshots/baseline-mobile.png": {
       "bytes": 102180,
