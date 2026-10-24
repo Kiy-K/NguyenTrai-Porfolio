@@ -101,6 +101,7 @@ for (const [file, method] of [
       'next/server': { NextResponse }, 'next/cache': noIo, '@/lib/data': noIo,
       '@/lib/persistence': noIo, '@/lib/redis': { redis: noIo },
       '@/lib/admin-auth': noIo, '@/lib/rate-limit': noIo, '@/lib/feedback-search': noIo,
+      '@/lib/article-references': loadTs('lib/article-references.ts'),
       '@/lib/request-security': loadTs('lib/request-security.ts'), '@/lib/constants': loadTs('lib/constants.ts'),
     });
     const res = await route[method](new Request('https://test.invalid/api/test', { method, headers: { origin: 'https://test.invalid' } }));

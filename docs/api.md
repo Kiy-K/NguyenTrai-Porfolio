@@ -58,6 +58,14 @@ Creates a new product by appending to the selected content store (atomic JSONB a
   "muxAssetId": "string (optional)",
   "muxPlaybackId": "string (optional)",
   "teamMembers": "string (optional)",
+  "references": [
+    {
+      "title": "Tên nguồn",
+      "url": "https://example.org/source (optional)",
+      "author": "Tác giả / Cơ quan (optional)",
+      "publisher": "Nhà xuất bản / Ấn bản (optional)"
+    }
+  ],
   "section": "string"
 }
 ```
@@ -67,6 +75,8 @@ Notes:
 - The server always assigns `id` with `crypto.randomUUID()`; a client-supplied `id`, `status` or any other unlisted field is ignored.
 - Validation: `title` (1–200 chars) and `description` (1–2000) are trimmed and required; `fullDescription` ≤ 50,000; `images` ≤ 50 and `video` must be `http(s)` URLs; Mux IDs must be alphanumeric; `videos` ≤ 20 entries; `teamMembers` ≤ 1000; `section` must be a `SECTIONS` name.
 - `videos` is optional and allows one or many video entries per product.
+- `references` is optional (omitted or `[]` means no sources), preserves author order and accepts at most 20 entries. Each entry requires a nonblank title (max 300 characters); optional URL (max 2048), author and publisher (max 200 each) are trimmed, with blank optional values omitted. Limits apply before trimming to bound raw input. URLs must be absolute `http://` or `https://` links; relative, malformed and other protocols are rejected. Print sources need no URL. Unknown reference keys are stripped.
+- The create request body is limited to 1 MiB of UTF-8 bytes, checked while reading even without `Content-Length`, after the existing security gates. Oversized bodies use the existing `400` validation convention with field `body`; invalid reference errors identify the row/field (for example `references.0.url`).
 - Legacy single-video fields (`video`, `muxAssetId`, `muxPlaybackId`) are still accepted for backward compatibility.
 - Redis must be configured (`UPSTASH_REDIS_REST_URL`) or route returns `500`.
 
@@ -117,6 +127,7 @@ Returns one product by stringified ID comparison.
 Notes:
 
 - Returned `product` may include `videos[]` (multi-video format).
+- Saved `references[]` are returned unchanged by product GETs and in the create response. Public article pages show “Nguồn tham khảo” only for a nonempty list; text is escaped, print titles remain readable, and only absolute HTTP(S) links open in a new tab with `noopener noreferrer`.
 - Legacy fields (`video`, `muxAssetId`, `muxPlaybackId`) may also be present for backward compatibility.
 
 ### Success

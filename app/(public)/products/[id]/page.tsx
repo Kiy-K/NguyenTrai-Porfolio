@@ -10,6 +10,7 @@ import MuxVideoPlayer from '@/components/MuxVideoPlayer';
 import BackButton from '@/components/BackButton';
 import RichTextWithEmbeds from '@/components/RichTextWithEmbeds';
 import SmartEmbed from '@/components/SmartEmbed';
+import ArticleReferences from '@/components/ArticleReferences';
 import { parseTextWithUrls } from '@/lib/url-parser';
 
 export const dynamic = 'force-dynamic';
@@ -189,6 +190,7 @@ async function ProductContent({ id }: { id: string }) {
                 </div>
               </div>
             )}
+            <ArticleReferences references={product.references} />
           </div>
         </div>
   );

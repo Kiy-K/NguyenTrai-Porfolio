@@ -8,6 +8,7 @@ import { consumeRateLimit } from '@/lib/rate-limit';
 import { SECTIONS } from '@/lib/constants';
 import { randomUUID } from 'crypto';
 import { z } from 'zod';
+import { articleReferencesSchema } from '@/lib/article-references';
 
 const isHttpUrl = (value: string) => {
   try {
@@ -33,12 +34,37 @@ const productInputSchema = z.object({
     .max(20)
     .optional(),
   teamMembers: z.string().trim().max(1000).optional(),
+  references: articleReferencesSchema.optional(),
   section: z.string().refine((name) => SECTIONS.some((section) => section.name === name)),
 });
 
 // GET /api/products - Lấy danh sách tất cả sản phẩm
 export const dynamic = 'force-dynamic';
 const noStore = { 'Cache-Control': 'no-store' };
+
+async function readProductInput(request: Request): Promise<unknown> {
+  const reader = request.body?.getReader();
+  if (!reader) return null;
+  const decoder = new TextDecoder();
+  let bytes = 0, text = '';
+  try {
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      bytes += value.byteLength;
+      if (bytes > 1_048_576) {
+        await reader.cancel();
+        return null;
+      }
+      text += decoder.decode(value, { stream: true });
+    }
+    return JSON.parse(text + decoder.decode());
+  } catch {
+    return null;
+  } finally {
+    reader.releaseLock();
+  }
+}
 
 export async function GET(request: Request) {
   try {
@@ -141,7 +167,7 @@ export async function POST(request: Request) {
       );
     }
 
-    const parsed = productInputSchema.safeParse(await request.json().catch(() => null));
+    const parsed = productInputSchema.safeParse(await readProductInput(request));
     if (!parsed.success) {
       const field = parsed.error.issues[0]?.path.join('.') || 'body';
       return NextResponse.json({ error: `Dữ liệu sản phẩm không hợp lệ (${field})` }, { status: 400 });

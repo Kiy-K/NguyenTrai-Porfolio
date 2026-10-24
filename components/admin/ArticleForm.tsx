@@ -2,11 +2,13 @@
 
 import { useState, useRef, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { X } from 'lucide-react';
+import { ArrowUp, ArrowDown, X } from 'lucide-react';
 import { SECTIONS } from '@/lib/constants';
 import MediaEditor from '@/components/admin/MediaEditor';
 import StatusMessage from '@/components/admin/StatusMessage';
 import type { AdminStatus, MutationState, UploadedMuxVideo } from '@/components/admin/types';
+import type { ArticleReference } from '@/data/products';
+import { articleReferencesSchema } from '@/lib/article-references';
 
 export default function ArticleForm({ isMutationPending, setIsMutationPending }: MutationState) {
   const router = useRouter();
@@ -23,6 +25,16 @@ export default function ArticleForm({ isMutationPending, setIsMutationPending }:
   const [status, setStatus] = useState<AdminStatus>({ type: null, message: '' });
   const [mediaBusy, setMediaBusy] = useState(false);
   const [mediaKey, setMediaKey] = useState(0);
+  const [references, setReferences] = useState<(ArticleReference & { key: number })[]>([]);
+  const [referenceErrors, setReferenceErrors] = useState<Record<string, string>>({});
+  const nextReferenceKey = useRef(0);
+  const referenceFocus = useRef<string | null>(null);
+  useEffect(() => {
+    if (referenceFocus.current) {
+      document.getElementById(referenceFocus.current)?.focus();
+      referenceFocus.current = null;
+    }
+  }, [references]);
   // AI Title Suggestions State
   const [titleSuggestions, setTitleSuggestions] = useState<string[]>([]);
   const [isSuggestingTitle, setIsSuggestingTitle] = useState(false);
@@ -106,6 +118,15 @@ export default function ArticleForm({ isMutationPending, setIsMutationPending }:
     }
 
     if (mediaBusy || isMutationPending) return;
+    const parsedReferences = articleReferencesSchema.safeParse(references);
+    if (!parsedReferences.success) {
+      setReferenceErrors(Object.fromEntries(parsedReferences.error.issues.map(issue => [issue.path.join('.'), issue.message])));
+      setStatus({ type: 'error', message: 'Vui lòng kiểm tra nguồn tham khảo.' });
+      const [row, field] = parsedReferences.error.issues[0].path;
+      document.getElementById(`reference-${references[Number(row)]?.key}-${String(field)}`)?.focus();
+      return;
+    }
+    setReferenceErrors({});
     setIsMutationPending(true);
     setStatus({ type: 'loading', message: 'Đang lưu bài viết. Vui lòng đợi...' });
 
@@ -128,6 +149,7 @@ export default function ArticleForm({ isMutationPending, setIsMutationPending }:
       muxPlaybackId: primaryMuxVideo?.muxPlaybackId || undefined,
       videos: videos.length > 0 ? videos : undefined,
       teamMembers: formData.teamMembers || undefined,
+      references: parsedReferences.data.length ? parsedReferences.data : undefined,
       section: formData.section
     };
 
@@ -154,6 +176,7 @@ export default function ArticleForm({ isMutationPending, setIsMutationPending }:
       setImages([]);
       setMediaKey(key => key + 1);
       setUploadedMuxVideos([]);
+      setReferences([]);
 
       setTimeout(() => {
         router.push(sectionPath);
@@ -294,6 +317,70 @@ export default function ArticleForm({ isMutationPending, setIsMutationPending }:
                 placeholder="Mô tả đầy đủ về tác phẩm, ý nghĩa, phân tích..."
               ></textarea>
             </div>
+
+            <fieldset disabled={isMutationPending} className="space-y-4 min-w-0 scroll-mt-24">
+              <legend className="text-lg font-bold text-[#2C1E16] mb-2">Nguồn tham khảo (Tùy chọn)</legend>
+              <p className="text-sm text-[#5C4033]">Tối đa 20 nguồn, theo thứ tự hiển thị. Sách in không cần URL.</p>
+              {references.map((reference, index) => (
+                <fieldset key={reference.key} className="min-w-0 border border-[#D4C4A8] rounded-sm p-4 space-y-3">
+                  <legend className="px-1 font-bold text-[#2C1E16]">Nguồn {index + 1}</legend>
+                  <div className="grid gap-3 sm:grid-cols-2">
+                  {([
+                    ['title', 'Tên nguồn *', 300],
+                    ['url', 'URL (Tùy chọn)', 2048],
+                    ['author', 'Tác giả / Cơ quan (Tùy chọn)', 200],
+                    ['publisher', 'Nhà xuất bản / Ấn bản (Tùy chọn)', 200],
+                  ] as const).map(([field, label, maxLength]) => {
+                    const id = `reference-${reference.key}-${field}`;
+                    const error = referenceErrors[`${index}.${field}`];
+                    return (
+                      <div key={field} className="min-w-0">
+                        <label htmlFor={id} className="block text-sm font-bold text-[#2C1E16] mb-1">{label}</label>
+                        <input id={id} type="text" inputMode={field === 'url' ? 'url' : 'text'}
+                          maxLength={maxLength} value={reference[field] || ''} aria-required={field === 'title'}
+                          aria-invalid={!!error} aria-describedby={error ? `${id}-error` : undefined}
+                          onChange={event => {
+                            setReferences(references.map(item => item.key === reference.key ? { ...item, [field]: event.target.value } : item));
+                            setReferenceErrors({});
+                          }}
+                          className="w-full min-w-0 px-3 py-2 border border-[#D4C4A8] rounded-sm bg-[#F4EBD0] text-[#2C1E16]" />
+                        {error && <p id={`${id}-error`} role="alert" className="text-sm text-[#8B3A3A] mt-1">{error}</p>}
+                      </div>
+                    );
+                  })}
+                  </div>
+                  <div className="flex items-center gap-2 text-sm text-[#8B3A3A]">
+                    {([-1, 1] as const).map(direction => (
+                      <button key={direction} type="button" disabled={index + direction < 0 || index + direction >= references.length}
+                        aria-label={`Chuyển nguồn ${index + 1} ${direction < 0 ? 'lên' : 'xuống'}`}
+                        title={direction < 0 ? 'Chuyển lên' : 'Chuyển xuống'}
+                        className="h-11 w-11 shrink-0 inline-flex items-center justify-center border border-[#D4C4A8] rounded-sm disabled:opacity-50"
+                        onClick={() => {
+                          const reordered = [...references];
+                          [reordered[index], reordered[index + direction]] = [reordered[index + direction], reordered[index]];
+                          referenceFocus.current = `reference-${reference.key}-title`;
+                          setReferences(reordered);
+                          setReferenceErrors({});
+                        }}>{direction < 0 ? <ArrowUp aria-hidden="true" className="h-4 w-4" /> : <ArrowDown aria-hidden="true" className="h-4 w-4" />}</button>
+                    ))}
+                    <button type="button" aria-label={`Xóa nguồn ${index + 1}`} className="ml-auto min-h-11 px-2 py-2 underline whitespace-nowrap"
+                      onClick={() => {
+                        referenceFocus.current = 'add-article-reference';
+                        setReferences(references.filter(item => item.key !== reference.key));
+                        setReferenceErrors({});
+                      }}>Xóa nguồn</button>
+                  </div>
+                </fieldset>
+              ))}
+              <button id="add-article-reference" type="button" disabled={references.length >= 20}
+                className="px-4 py-2 border border-[#8B3A3A] rounded-sm text-[#8B3A3A] disabled:opacity-50"
+                onClick={() => {
+                  const key = nextReferenceKey.current++;
+                  referenceFocus.current = `reference-${key}-title`;
+                  setReferences([...references, { key, title: '' }]);
+                  setReferenceErrors({});
+                }}>Thêm nguồn tham khảo</button>
+            </fieldset>
 
             <MediaEditor key={mediaKey} images={images} setImages={setImages}
               uploadedMuxVideos={uploadedMuxVideos} setUploadedMuxVideos={setUploadedMuxVideos}
