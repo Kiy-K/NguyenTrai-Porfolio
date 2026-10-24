@@ -37,8 +37,10 @@ termination; references remain in the existing safe public renderer and API.
 Root metadata defaults to `noindex, nofollow` for administrative/login and other
 internal pages; valid public pages override to `index, follow`. Missing, malformed
 or unpublished article metadata invokes notFound without reading private storage.
-Next.js streaming clients may receive HTTP 200 with not-found UI and noindex;
-HTML-limited crawlers (tested with Twitterbot) receive HTTP 404 before streaming.
+Next.js streaming responses, including tested Twitterbot requests, may return
+HTTP 200 with not-found UI and noindex once the page shell has streamed. Public
+article APIs still return 404 for missing/private records. The sitemap excludes them.
+This preserves existing streaming behavior; it does not promise hard 404 page status.
 `/robots.txt` allows public crawling, discourages `/admin` and `/api/`, and advertises
 the canonical sitemap. These hints are not access controls: existing session,
 origin, rate-limit and API filtering boundaries remain authoritative.

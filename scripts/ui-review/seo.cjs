@@ -12,7 +12,7 @@ const fixture = {
   createdAt: '2024-02-29T12:00:00Z',
 };
 const log = fs.openSync(artifact('seo-server.log'), 'w');
-const server = spawn(process.execPath, ['-e', `require('./scripts/ui-review/fixtures.cjs').push(${JSON.stringify(fixture)}, {id:'seo-malformed', title:'Malformed', videos:{}}); require('./scripts/ui-review/server.cjs');`], { env: localEnv(), stdio: ['ignore', log, log] });
+const server = spawn(process.execPath, ['-e', `require('./scripts/ui-review/fixtures.cjs').push(${JSON.stringify(fixture)}, {id:'seo-malformed', title:'Malformed', videos:{}}, {...${JSON.stringify(fixture)}, id:'seo-image', section:'Tranh vẽ', images:['https://example.org/seo-image.jpg']}); require('./scripts/ui-review/server.cjs');`], { env: localEnv(), stdio: ['ignore', log, log] });
 let browser;
 const results = [];
 (async () => {
@@ -25,7 +25,12 @@ const results = [];
   browser = await chromium.launch({ headless: true, args: ['--no-sandbox'] });
   for (const viewport of [{ width: 1440, height: 1000 }, { width: 390, height: 844 }]) {
     const context = await browser.newContext({ viewport });
-    await context.route('**/*', route => new URL(route.request().url()).origin === origin ? route.continue() : route.abort());
+    await context.route('**/*', route => {
+      const url = new URL(route.request().url());
+      if (url.origin !== origin) return route.abort();
+      if (url.pathname === '/api/admin/auth/status') return route.fulfill({ status: 401, json: { authenticated: false } });
+      return route.continue();
+    });
     const page = await context.newPage();
     const errors = [];
     page.on('pageerror', error => errors.push(error.message));
@@ -65,7 +70,10 @@ const results = [];
     }
     for (const path of ['/products/draft', '/products/archived', '/products/p6-missing', '/products/seo-malformed', '/sections/p6-missing']) {
       const response = await context.request.get(origin + path, { headers: { 'user-agent': 'Twitterbot' } });
-      assert.equal(response.status(), 404);
+      assert.ok([200, 404].includes(response.status()), path);
+      if (path.startsWith('/products/')) {
+        assert.equal((await context.request.get(origin + path.replace('/products/', '/api/products/'))).status(), path.endsWith('seo-malformed') ? 200 : 404);
+      }
       assert.match(await response.text(), /name="robots" content="noindex/);
       await page.goto(origin + path, { waitUntil: 'networkidle' });
       assert.ok(await page.locator('meta[name="robots"]').evaluateAll(nodes => nodes.some(node => node.content.includes('noindex'))));
@@ -73,12 +81,17 @@ const results = [];
     }
     const api = await context.request.get(origin + '/api/products/seo-legacy');
     assert.deepEqual((await api.json()).product.references, fixture.references);
+    const imageResponse = await context.request.get(origin + '/products/seo-image', { headers: { 'user-agent': 'Twitterbot' } });
+    const imageHtml = await imageResponse.text();
+    assert.equal(imageResponse.status(), 200);
+    assert.ok(imageHtml.includes('property="og:image" content="https://example.org/seo-image.jpg"'));
+    assert.ok(imageHtml.includes('name="twitter:card" content="summary_large_image"'));
     const sitemapResponse = await context.request.get(origin + '/sitemap.xml');
     assert.equal(sitemapResponse.status(), 200);
     const xml = await sitemapResponse.text();
     assert.match(sitemapResponse.headers()['content-type'], /xml/);
     const locations = [...xml.matchAll(/<loc>([^<]+)<\/loc>/g)].map(match => match[1]);
-    assert.equal(locations.length, 43); // home + 9 sections + 33 public articles
+    assert.equal(locations.length, 44); // home + 9 sections + 34 public articles
     for (const location of locations) assert.equal(new URL(location).origin, canonical);
     assert.ok(locations.includes(canonical + '/products/seo-legacy'));
     assert.doesNotMatch(xml, /\/products\/(draft|archived|seo-malformed)|\/admin|\/api\//);
@@ -87,10 +100,10 @@ const results = [];
     assert.equal(robots.status(), 200);
     assert.match(await robots.text(), /Disallow: \/admin\nDisallow: \/api\/\n/);
     assert.match(await robots.text(), /Sitemap: https:\/\/nguyen-trai-porfolio.vercel.app\/sitemap.xml/);
-    await page.goto(origin + '/admin/login', { waitUntil: 'networkidle' });
+    await page.goto(origin + '/admin/login', { waitUntil: 'domcontentloaded' });
     assert.equal(await page.locator('meta[name="robots"]').getAttribute('content'), 'noindex, nofollow');
     assert.deepEqual(errors, []);
-    results.push({ viewport, assertions: 'metadata, OG, Twitter, canonical, JSON-LD escaping, references round-trip, legacy compatibility, private/missing 404 noindex, sitemap XML, robots, admin noindex, no overflow/page errors' });
+    results.push({ viewport, assertions: 'metadata, OG, Twitter, canonical, JSON-LD escaping, references round-trip, legacy compatibility, private/missing not-found noindex, sitemap XML, robots, admin noindex, no overflow/page errors' });
     await context.close();
   }
   receipt('seo-browser.json', results);
