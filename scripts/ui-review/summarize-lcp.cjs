@@ -10,7 +10,7 @@ function spread(values) {
 function summarize(records, expectedCount) {
   assert.equal(records.length, expectedCount, 'Incomplete cell');
   const identity = r => JSON.stringify([r.nodeVersion, r.revision, r.collectorSourceSha256, r.metricsHelperSha256,
-    r.browser, r.tools, r.assetManifestSha256, r.settings, r.widget, r.profile]);
+    r.browser, r.tools, r.assetManifestSha256, r.settings, r.widget, r.profile, r.animation]);
   assert.equal(new Set(records.map(identity)).size, 1, 'Mixed cell conditions');
   assert.deepEqual(records.map(r => r.sample).sort((a, b) => a - b), Array.from({ length: expectedCount }, (_, i) => i + 1));
   const metrics = Object.fromEntries(Object.keys(records[0].metrics).map(key => [key, spread(records.map(r => r.metrics[key]))]));
@@ -35,6 +35,7 @@ if (require.main === module) {
   const plan = JSON.parse(fs.readFileSync(path.join(root, 'plan.json')));
   const result = {};
   let experimentIdentity;
+  const settings = {};
   for (const target of plan.targets) {
     result[target.label] = {};
     for (const widget of plan.widgets) for (const profile of ['mobile', 'desktop']) {
@@ -43,7 +44,14 @@ if (require.main === module) {
       for (const r of records) {
         assert.equal(r.revision, target.revision);
         assert.equal(r.nodeVersion, 'v24.22.1');
-        const id = JSON.stringify([r.nodeVersion, r.collectorSourceSha256, r.browser, r.tools, r.assetManifestSha256]);
+        assert.equal(r.profile, profile);
+        assert.equal(r.widget, widget);
+        assert.equal(r.animation, 'on');
+        assert.equal(r.adminPrefetchPolicy, 'blocked');
+        const key = `${profile}-${widget}`;
+        settings[key] ??= JSON.stringify(r.settings);
+        assert.equal(JSON.stringify(r.settings), settings[key], 'Mismatched target settings');
+        const id = JSON.stringify([r.nodeVersion, r.collectorSourceSha256, r.metricsHelperSha256, r.browser, r.tools, r.assetManifestSha256]);
         experimentIdentity ??= id;
         assert.equal(id, experimentIdentity, 'Mixed experiment tools/assets');
       }

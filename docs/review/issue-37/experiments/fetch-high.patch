@@ -1,0 +1,12 @@
+diff --git a/components/HeroImage.tsx b/components/HeroImage.tsx
+index 1e0d264..5566c25 100644
+--- a/components/HeroImage.tsx
++++ b/components/HeroImage.tsx
+@@ -14,6 +14,7 @@ export default function HeroImage() {
+         fill
+         sizes="(min-width: 768px) 224px, 192px"
+         preload
++        fetchPriority="high"
+         className="object-cover object-top"
+         referrerPolicy="no-referrer"
+         unoptimized={imgSrc.startsWith('http')}

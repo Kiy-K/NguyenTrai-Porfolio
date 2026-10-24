@@ -8,7 +8,7 @@ const { origin, receipt, artifact } = require('./common.cjs');
   const result = [];
   try {
     for (const [width, height, dpr] of [[390, 844, 1], [1440, 1000, 1], [390, 844, 3]]) {
-      for (const javascriptEnabled of [true, false]) {
+      for (const javascriptEnabled of process.argv[2] === 'baseline' ? [true] : [true, false]) {
         const context = await browser.newContext({ viewport: { width, height }, deviceScaleFactor: dpr, javaScriptEnabled: javascriptEnabled });
         await context.route('**/*', r => new URL(r.request().url()).origin === origin ? r.continue() : r.abort());
         const page = await context.newPage();
@@ -28,6 +28,7 @@ const { origin, receipt, artifact } = require('./common.cjs');
         });
         assert.ok(state.image.naturalWidth > 0);
         assert.equal(state.overflow, false);
+        if (javascriptEnabled) assert.ok(state.image.visibleArea > 0);
         if (process.argv[2] !== 'baseline') assert.equal(state.imagePreloads, 1);
         await page.screenshot({ path: artifact(`hero-${width}-dpr${dpr}-js${javascriptEnabled}.png`) });
         result.push({ width, height, dpr, javascriptEnabled, ...state });

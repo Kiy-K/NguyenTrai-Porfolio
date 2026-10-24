@@ -1,0 +1,141 @@
+{
+  "baseline": {
+    "revision": "97da6087a6969975fbb360c3ec966ac6c723fb6d",
+    "files": {
+      "package-lock.json": {
+        "bytes": 348456,
+        "sha256": "4b12d701d0eeb553bde240041547463086a5510a948bd2b62a3fc8d03ce2ea98"
+      },
+      "public/nguyen-trai.jpg": {
+        "bytes": 325059,
+        "sha256": "b4f1f8552cbdb9241f7c9fb0cf17ed824af8142920986a6d5d88d2a80cb19ea5"
+      },
+      ".next/static/media/28a2004cf8372660-s.woff2": {
+        "bytes": 20980,
+        "sha256": "5628567856d60d714e7a35bcac9e3de08b336d63b12138f61b970990a1ee9547"
+      },
+      ".next/static/media/47f136985ef5b5cb-s.woff2": {
+        "bytes": 21144,
+        "sha256": "d7f9db9b1034978ebebdf7312aa4aee55dff3ef6039e7ff71413780bd4a05558"
+      },
+      ".next/static/media/4ead58c4dcc3f285-s.p.woff2": {
+        "bytes": 9056,
+        "sha256": "8fa67d5f0ab2a1d0b924729a0411a069b384d7a236edd96a6767ef342a6d048f"
+      },
+      ".next/static/media/eaead17c7dbfcd5d-s.p.woff2": {
+        "bytes": 38460,
+        "sha256": "5d91eb5d522a03081946c44c8ca17c902230dfed5f0f9b5014262135d47b15b2"
+      }
+    },
+    "gitStatus": " M next-env.d.ts\n",
+    "buildId": "BRlhNyUUOWhtVLeX1hxFd"
+  },
+  "current": {
+    "revision": "e081fff4317e75205b02066bf23668674425a791",
+    "files": {
+      "package-lock.json": {
+        "bytes": 348135,
+        "sha256": "62b3e0cc8537fde3c42fe1ebd98f45643c31bd02b14e4cb6479e92c8de298c28"
+      },
+      "public/nguyen-trai.jpg": {
+        "bytes": 325059,
+        "sha256": "b4f1f8552cbdb9241f7c9fb0cf17ed824af8142920986a6d5d88d2a80cb19ea5"
+      },
+      ".next/static/media/28a2004cf8372660-s.woff2": {
+        "bytes": 20980,
+        "sha256": "5628567856d60d714e7a35bcac9e3de08b336d63b12138f61b970990a1ee9547"
+      },
+      ".next/static/media/47f136985ef5b5cb-s.woff2": {
+        "bytes": 21144,
+        "sha256": "d7f9db9b1034978ebebdf7312aa4aee55dff3ef6039e7ff71413780bd4a05558"
+      },
+      ".next/static/media/4ead58c4dcc3f285-s.p.woff2": {
+        "bytes": 9056,
+        "sha256": "8fa67d5f0ab2a1d0b924729a0411a069b384d7a236edd96a6767ef342a6d048f"
+      },
+      ".next/static/media/eaead17c7dbfcd5d-s.p.woff2": {
+        "bytes": 38460,
+        "sha256": "5d91eb5d522a03081946c44c8ca17c902230dfed5f0f9b5014262135d47b15b2"
+      }
+    },
+    "gitStatus": " M next-env.d.ts\n",
+    "buildId": "JXHIAV64_3CONDzNMGl4n"
+  },
+  "tools": {
+    "/home/khoi/.local/share/mise/installs/node/24.22.1/bin/node": "e32e2d16081cf644f88392934288086e7662529d0d43277c34f7aad2207cfafb",
+    "/home/khoi/.cache/ms-playwright/chromium-1247/chrome-linux64/chrome": "adf078f8f80eb9e980a07b4418af23b0f4008a83bc5756d5588055bc4d76c5a0",
+    "/tmp/nguyentrai-p32-work/scripts/ui-review/lcp-matrix.cjs": "f00645ea62e777079d9e123603f39be67d35ef79679b6a1fbe87f0fbbd00b45c",
+    "/tmp/nguyentrai-p32-work/scripts/ui-review/lcp-lighthouse.cjs": "d48692f03fe93874cad2d7d93b7e00f1c1e47ba9e7167dbab7848057132eafed"
+  },
+  "fixtureSha256": "4046cc56132c3d340b86d7f2dd3a2a876ca0b9bb2fca1fd1424f32d023f18e23",
+  "decode-sync": {
+    "revision": "213f95f2cac1dea08fbadb43e2c541012f788d3c",
+    "files": {
+      "package-lock.json": {
+        "bytes": 348135,
+        "sha256": "62b3e0cc8537fde3c42fe1ebd98f45643c31bd02b14e4cb6479e92c8de298c28"
+      },
+      "components/HeroImage.tsx": {
+        "bytes": 1084,
+        "sha256": "7e9dbef81eece770a9e570a08b98ba6c3c03d586885bb4695425bf56123ed5e3"
+      },
+      "public/nguyen-trai.jpg": {
+        "bytes": 325059,
+        "sha256": "b4f1f8552cbdb9241f7c9fb0cf17ed824af8142920986a6d5d88d2a80cb19ea5"
+      },
+      ".next/static/media/28a2004cf8372660-s.woff2": {
+        "bytes": 20980,
+        "sha256": "5628567856d60d714e7a35bcac9e3de08b336d63b12138f61b970990a1ee9547"
+      },
+      ".next/static/media/47f136985ef5b5cb-s.woff2": {
+        "bytes": 21144,
+        "sha256": "d7f9db9b1034978ebebdf7312aa4aee55dff3ef6039e7ff71413780bd4a05558"
+      },
+      ".next/static/media/4ead58c4dcc3f285-s.p.woff2": {
+        "bytes": 9056,
+        "sha256": "8fa67d5f0ab2a1d0b924729a0411a069b384d7a236edd96a6767ef342a6d048f"
+      },
+      ".next/static/media/eaead17c7dbfcd5d-s.p.woff2": {
+        "bytes": 38460,
+        "sha256": "5d91eb5d522a03081946c44c8ca17c902230dfed5f0f9b5014262135d47b15b2"
+      }
+    },
+    "gitStatus": " M next-env.d.ts\n",
+    "buildId": "gze6cMH3qeVeZmNmbPX9x"
+  },
+  "fetch-high": {
+    "revision": "5f345d8e32c1105b01d8bf55f68373f3a7d6590f",
+    "files": {
+      "package-lock.json": {
+        "bytes": 348135,
+        "sha256": "62b3e0cc8537fde3c42fe1ebd98f45643c31bd02b14e4cb6479e92c8de298c28"
+      },
+      "components/HeroImage.tsx": {
+        "bytes": 1089,
+        "sha256": "afb2b49fefa6e53f27e6c5dbd34a2e5de8e7b64f271bcc63b33995b95da4fcca"
+      },
+      "public/nguyen-trai.jpg": {
+        "bytes": 325059,
+        "sha256": "b4f1f8552cbdb9241f7c9fb0cf17ed824af8142920986a6d5d88d2a80cb19ea5"
+      },
+      ".next/static/media/28a2004cf8372660-s.woff2": {
+        "bytes": 20980,
+        "sha256": "5628567856d60d714e7a35bcac9e3de08b336d63b12138f61b970990a1ee9547"
+      },
+      ".next/static/media/47f136985ef5b5cb-s.woff2": {
+        "bytes": 21144,
+        "sha256": "d7f9db9b1034978ebebdf7312aa4aee55dff3ef6039e7ff71413780bd4a05558"
+      },
+      ".next/static/media/4ead58c4dcc3f285-s.p.woff2": {
+        "bytes": 9056,
+        "sha256": "8fa67d5f0ab2a1d0b924729a0411a069b384d7a236edd96a6767ef342a6d048f"
+      },
+      ".next/static/media/eaead17c7dbfcd5d-s.p.woff2": {
+        "bytes": 38460,
+        "sha256": "5d91eb5d522a03081946c44c8ca17c902230dfed5f0f9b5014262135d47b15b2"
+      }
+    },
+    "gitStatus": " M next-env.d.ts\n",
+    "buildId": "74H2VcjjBd91b1CMJU4Wd"
+  }
+}

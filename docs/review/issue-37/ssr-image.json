@@ -1,0 +1,39 @@
+{
+  "baseline": [
+    {
+      "tag": "img",
+      "alt": "Ch\u00e2n dung Nguy\u1ec5n Tr\u00e3i",
+      "referrerpolicy": "no-referrer",
+      "loading": "lazy",
+      "decoding": "async",
+      "data-nimg": "fill",
+      "class": "object-cover object-top",
+      "style": "position:absolute;height:100%;width:100%;left:0;top:0;right:0;bottom:0;color:transparent",
+      "sizes": "100vw",
+      "srcset": "/_next/image?url=%2Fnguyen-trai.jpg&w=640&q=75 640w, /_next/image?url=%2Fnguyen-trai.jpg&w=750&q=75 750w, /_next/image?url=%2Fnguyen-trai.jpg&w=828&q=75 828w, /_next/image?url=%2Fnguyen-trai.jpg&w=1080&q=75 1080w, /_next/image?url=%2Fnguyen-trai.jpg&w=1200&q=75 1200w, /_next/image?url=%2Fnguyen-trai.jpg&w=1920&q=75 1920w, /_next/image?url=%2Fnguyen-trai.jpg&w=2048&q=75 2048w, /_next/image?url=%2Fnguyen-trai.jpg&w=3840&q=75 3840w",
+      "src": "/_next/image?url=%2Fnguyen-trai.jpg&w=3840&q=75"
+    }
+  ],
+  "current": [
+    {
+      "tag": "link",
+      "rel": "preload",
+      "as": "image",
+      "imagesrcset": "/_next/image?url=%2Fnguyen-trai.jpg&w=32&q=75 32w, /_next/image?url=%2Fnguyen-trai.jpg&w=48&q=75 48w, /_next/image?url=%2Fnguyen-trai.jpg&w=64&q=75 64w, /_next/image?url=%2Fnguyen-trai.jpg&w=96&q=75 96w, /_next/image?url=%2Fnguyen-trai.jpg&w=128&q=75 128w, /_next/image?url=%2Fnguyen-trai.jpg&w=256&q=75 256w, /_next/image?url=%2Fnguyen-trai.jpg&w=384&q=75 384w, /_next/image?url=%2Fnguyen-trai.jpg&w=640&q=75 640w, /_next/image?url=%2Fnguyen-trai.jpg&w=750&q=75 750w, /_next/image?url=%2Fnguyen-trai.jpg&w=828&q=75 828w, /_next/image?url=%2Fnguyen-trai.jpg&w=1080&q=75 1080w, /_next/image?url=%2Fnguyen-trai.jpg&w=1200&q=75 1200w, /_next/image?url=%2Fnguyen-trai.jpg&w=1920&q=75 1920w, /_next/image?url=%2Fnguyen-trai.jpg&w=2048&q=75 2048w, /_next/image?url=%2Fnguyen-trai.jpg&w=3840&q=75 3840w",
+      "imagesizes": "(min-width: 768px) 224px, 192px",
+      "referrerpolicy": "no-referrer"
+    },
+    {
+      "tag": "img",
+      "alt": "Ch\u00e2n dung Nguy\u1ec5n Tr\u00e3i",
+      "referrerpolicy": "no-referrer",
+      "decoding": "async",
+      "data-nimg": "fill",
+      "class": "object-cover object-top",
+      "style": "position:absolute;height:100%;width:100%;left:0;top:0;right:0;bottom:0;color:transparent",
+      "sizes": "(min-width: 768px) 224px, 192px",
+      "srcset": "/_next/image?url=%2Fnguyen-trai.jpg&w=32&q=75 32w, /_next/image?url=%2Fnguyen-trai.jpg&w=48&q=75 48w, /_next/image?url=%2Fnguyen-trai.jpg&w=64&q=75 64w, /_next/image?url=%2Fnguyen-trai.jpg&w=96&q=75 96w, /_next/image?url=%2Fnguyen-trai.jpg&w=128&q=75 128w, /_next/image?url=%2Fnguyen-trai.jpg&w=256&q=75 256w, /_next/image?url=%2Fnguyen-trai.jpg&w=384&q=75 384w, /_next/image?url=%2Fnguyen-trai.jpg&w=640&q=75 640w, /_next/image?url=%2Fnguyen-trai.jpg&w=750&q=75 750w, /_next/image?url=%2Fnguyen-trai.jpg&w=828&q=75 828w, /_next/image?url=%2Fnguyen-trai.jpg&w=1080&q=75 1080w, /_next/image?url=%2Fnguyen-trai.jpg&w=1200&q=75 1200w, /_next/image?url=%2Fnguyen-trai.jpg&w=1920&q=75 1920w, /_next/image?url=%2Fnguyen-trai.jpg&w=2048&q=75 2048w, /_next/image?url=%2Fnguyen-trai.jpg&w=3840&q=75 3840w",
+      "src": "/_next/image?url=%2Fnguyen-trai.jpg&w=3840&q=75"
+    }
+  ]
+}

@@ -1,0 +1,1571 @@
+{
+  "current": {
+    "mobile-off": {
+      "metrics": {
+        "total-blocking-time": {
+          "median": 203.12635,
+          "min": 158.62742500000013,
+          "max": 277.4999999999998,
+          "samples": [
+            277.4999999999998,
+            161.648825,
+            203.12635,
+            203.38722499999994,
+            158.62742500000013
+          ]
+        },
+        "largest-contentful-paint": {
+          "median": 2695.2419,
+          "min": 2645.891975,
+          "max": 2808.46435,
+          "samples": [
+            2808.46435,
+            2650.755875,
+            2695.2419,
+            2701.0638750000003,
+            2645.891975
+          ]
+        },
+        "cumulative-layout-shift": {
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "samples": [
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        "speed-index": {
+          "median": 1446.32145,
+          "min": 1385.7473,
+          "max": 1459.22555,
+          "samples": [
+            1446.32145,
+            1446.70235,
+            1385.7473,
+            1459.22555,
+            1437.25485
+          ]
+        },
+        "interactive": {
+          "median": 2698.01663,
+          "min": 2652.5792325,
+          "max": 2811.41435,
+          "samples": [
+            2811.41435,
+            2657.6909925,
+            2698.01663,
+            2707.7251525,
+            2652.5792325
+          ]
+        }
+      },
+      "accessibility": {
+        "median": 1,
+        "min": 1,
+        "max": 1,
+        "samples": [
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      },
+      "candidates": [
+        [
+          {
+            "startTime": 132,
+            "renderTime": 132,
+            "loadTime": 0,
+            "size": 7160,
+            "url": "",
+            "element": {
+              "tag": "A",
+              "text": "❦Nguyễn Trãi",
+              "rect": {
+                "x": 16,
+                "y": 26,
+                "width": 210.703125,
+                "height": 36,
+                "top": 26,
+                "right": 226.703125,
+                "bottom": 62,
+                "left": 16
+              }
+            }
+          },
+          {
+            "startTime": 432,
+            "renderTime": 432,
+            "loadTime": 379.5,
+            "size": 33856,
+            "url": "http://127.0.0.1:3330/_next/image?url=%2Fnguyen-trai.jpg&w=256&q=75",
+            "element": {
+              "tag": "IMG",
+              "text": "",
+              "rect": {
+                "x": 103,
+                "y": 318,
+                "width": 184,
+                "height": 184,
+                "top": 318,
+                "right": 287,
+                "bottom": 502,
+                "left": 103
+              }
+            }
+          }
+        ],
+        [
+          {
+            "startTime": 100,
+            "renderTime": 100,
+            "loadTime": 0,
+            "size": 7160,
+            "url": "",
+            "element": {
+              "tag": "A",
+              "text": "❦Nguyễn Trãi",
+              "rect": {
+                "x": 16,
+                "y": 26,
+                "width": 210.703125,
+                "height": 36,
+                "top": 26,
+                "right": 226.703125,
+                "bottom": 62,
+                "left": 16
+              }
+            }
+          },
+          {
+            "startTime": 444,
+            "renderTime": 444,
+            "loadTime": 406.60000000009313,
+            "size": 33856,
+            "url": "http://127.0.0.1:3330/_next/image?url=%2Fnguyen-trai.jpg&w=256&q=75",
+            "element": {
+              "tag": "IMG",
+              "text": "",
+              "rect": {
+                "x": 103,
+                "y": 318,
+                "width": 184,
+                "height": 184,
+                "top": 318,
+                "right": 287,
+                "bottom": 502,
+                "left": 103
+              }
+            }
+          }
+        ],
+        [
+          {
+            "startTime": 112,
+            "renderTime": 112,
+            "loadTime": 0,
+            "size": 7160,
+            "url": "",
+            "element": {
+              "tag": "A",
+              "text": "❦Nguyễn Trãi",
+              "rect": {
+                "x": 16,
+                "y": 26,
+                "width": 210.703125,
+                "height": 36,
+                "top": 26,
+                "right": 226.703125,
+                "bottom": 62,
+                "left": 16
+              }
+            }
+          },
+          {
+            "startTime": 452,
+            "renderTime": 452,
+            "loadTime": 417.20000000018626,
+            "size": 33856,
+            "url": "http://127.0.0.1:3330/_next/image?url=%2Fnguyen-trai.jpg&w=256&q=75",
+            "element": {
+              "tag": "IMG",
+              "text": "",
+              "rect": {
+                "x": 103,
+                "y": 318,
+                "width": 184,
+                "height": 184,
+                "top": 318,
+                "right": 287,
+                "bottom": 502,
+                "left": 103
+              }
+            }
+          }
+        ],
+        [
+          {
+            "startTime": 148,
+            "renderTime": 148,
+            "loadTime": 0,
+            "size": 7160,
+            "url": "",
+            "element": {
+              "tag": "A",
+              "text": "❦Nguyễn Trãi",
+              "rect": {
+                "x": 16,
+                "y": 26,
+                "width": 210.703125,
+                "height": 36,
+                "top": 26,
+                "right": 226.703125,
+                "bottom": 62,
+                "left": 16
+              }
+            }
+          },
+          {
+            "startTime": 504,
+            "renderTime": 504,
+            "loadTime": 451.20000000018626,
+            "size": 33856,
+            "url": "http://127.0.0.1:3330/_next/image?url=%2Fnguyen-trai.jpg&w=256&q=75",
+            "element": {
+              "tag": "IMG",
+              "text": "",
+              "rect": {
+                "x": 103,
+                "y": 318,
+                "width": 184,
+                "height": 184,
+                "top": 318,
+                "right": 287,
+                "bottom": 502,
+                "left": 103
+              }
+            }
+          }
+        ],
+        [
+          {
+            "startTime": 120,
+            "renderTime": 120,
+            "loadTime": 0,
+            "size": 7160,
+            "url": "",
+            "element": {
+              "tag": "A",
+              "text": "❦Nguyễn Trãi",
+              "rect": {
+                "x": 16,
+                "y": 26,
+                "width": 210.703125,
+                "height": 36,
+                "top": 26,
+                "right": 226.703125,
+                "bottom": 62,
+                "left": 16
+              }
+            }
+          },
+          {
+            "startTime": 456,
+            "renderTime": 456,
+            "loadTime": 418.29999999981374,
+            "size": 33856,
+            "url": "http://127.0.0.1:3330/_next/image?url=%2Fnguyen-trai.jpg&w=256&q=75",
+            "element": {
+              "tag": "IMG",
+              "text": "",
+              "rect": {
+                "x": 103,
+                "y": 318,
+                "width": 184,
+                "height": 184,
+                "top": 318,
+                "right": 287,
+                "bottom": 502,
+                "left": 103
+              }
+            }
+          }
+        ]
+      ],
+      "observedSubparts": {
+        "timeToFirstByte": {
+          "median": 15.683,
+          "min": 12.011,
+          "max": 20.129000000476836,
+          "samples": [
+            16.142999999523163,
+            13.535,
+            12.011,
+            20.129000000476836,
+            15.683
+          ]
+        },
+        "resourceLoadDelay": {
+          "median": 14.942000000476837,
+          "min": 12.044,
+          "max": 18.470999999523162,
+          "samples": [
+            14.942000000476837,
+            15.048,
+            12.044,
+            18.470999999523162,
+            13.222
+          ]
+        },
+        "resourceLoadDuration": {
+          "median": 34.808,
+          "min": 22.018,
+          "max": 49.784,
+          "samples": [
+            34.808,
+            22.018,
+            38.653,
+            49.784,
+            34.415
+          ]
+        },
+        "elementRenderDelay": {
+          "median": 389.443,
+          "min": 365.499,
+          "max": 415.293,
+          "samples": [
+            365.499,
+            390.236,
+            388.3,
+            415.293,
+            389.443
+          ]
+        }
+      }
+    },
+    "desktop-off": {
+      "metrics": {
+        "total-blocking-time": {
+          "median": 23.00000000000003,
+          "min": 22,
+          "max": 24.000000000000057,
+          "samples": [
+            22,
+            24.000000000000057
+          ]
+        },
+        "largest-contentful-paint": {
+          "median": 588.2137,
+          "min": 579.7803,
+          "max": 596.6471000000001,
+          "samples": [
+            596.6471000000001,
+            579.7803
+          ]
+        },
+        "cumulative-layout-shift": {
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "samples": [
+            0,
+            0
+          ]
+        },
+        "speed-index": {
+          "median": 409.80292499999996,
+          "min": 408.21569999999997,
+          "max": 411.39015,
+          "samples": [
+            408.21569999999997,
+            411.39015
+          ]
+        },
+        "interactive": {
+          "median": 589.2744850000001,
+          "min": 579.7803000000001,
+          "max": 598.7686700000002,
+          "samples": [
+            598.7686700000002,
+            579.7803000000001
+          ]
+        }
+      },
+      "accessibility": {
+        "median": 1,
+        "min": 1,
+        "max": 1,
+        "samples": [
+          1,
+          1
+        ]
+      },
+      "candidates": [
+        [
+          {
+            "startTime": 152,
+            "renderTime": 152,
+            "loadTime": 0,
+            "size": 7200,
+            "url": "",
+            "element": {
+              "tag": "A",
+              "text": "❦Nguyễn Trãi",
+              "rect": {
+                "x": 104.5,
+                "y": 26,
+                "width": 210.703125,
+                "height": 36,
+                "top": 26,
+                "right": 315.203125,
+                "bottom": 62,
+                "left": 104.5
+              }
+            }
+          },
+          {
+            "startTime": 512,
+            "renderTime": 512,
+            "loadTime": 445.39999999990687,
+            "size": 46548,
+            "url": "http://127.0.0.1:3330/_next/image?url=%2Fnguyen-trai.jpg&w=256&q=75",
+            "element": {
+              "tag": "IMG",
+              "text": "",
+              "rect": {
+                "x": 604.5,
+                "y": 451,
+                "width": 216,
+                "height": 216,
+                "top": 451,
+                "right": 820.5,
+                "bottom": 667,
+                "left": 604.5
+              }
+            }
+          }
+        ],
+        [
+          {
+            "startTime": 164,
+            "renderTime": 164,
+            "loadTime": 80.1999999997206,
+            "size": 46548,
+            "url": "http://127.0.0.1:3330/_next/image?url=%2Fnguyen-trai.jpg&w=256&q=75",
+            "element": {
+              "tag": "IMG",
+              "text": "",
+              "rect": {
+                "x": 604.5,
+                "y": 451,
+                "width": 216,
+                "height": 216,
+                "top": 451,
+                "right": 820.5,
+                "bottom": 667,
+                "left": 604.5
+              }
+            }
+          }
+        ]
+      ],
+      "observedSubparts": {
+        "timeToFirstByte": {
+          "median": 14.012999999761583,
+          "min": 13.015999999523164,
+          "max": 15.01,
+          "samples": [
+            15.01,
+            13.015999999523164
+          ]
+        },
+        "resourceLoadDelay": {
+          "median": 8.635000000238417,
+          "min": 8.575,
+          "max": 8.695000000476837,
+          "samples": [
+            8.575,
+            8.695000000476837
+          ]
+        },
+        "resourceLoadDuration": {
+          "median": 40.572500000000005,
+          "min": 37.847,
+          "max": 43.298,
+          "samples": [
+            43.298,
+            37.847
+          ]
+        },
+        "elementRenderDelay": {
+          "median": 271.867,
+          "min": 100.77,
+          "max": 442.964,
+          "samples": [
+            442.964,
+            100.77
+          ]
+        }
+      }
+    }
+  },
+  "decode-sync": {
+    "mobile-off": {
+      "metrics": {
+        "total-blocking-time": {
+          "median": 187.07955000000015,
+          "min": 157.98704999999973,
+          "max": 267.5,
+          "samples": [
+            267.5,
+            190.15165000000002,
+            165.93989999999962,
+            157.98704999999973,
+            187.07955000000015
+          ]
+        },
+        "largest-contentful-paint": {
+          "median": 2679.602250000001,
+          "min": 2643.40935,
+          "max": 2787.98265,
+          "samples": [
+            2787.98265,
+            2684.74175,
+            2643.8004999999994,
+            2643.40935,
+            2679.602250000001
+          ]
+        },
+        "cumulative-layout-shift": {
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "samples": [
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        "speed-index": {
+          "median": 1439.82755,
+          "min": 1430.1201999999998,
+          "max": 1443.6967,
+          "samples": [
+            1439.82755,
+            1443.6967,
+            1430.1201999999998,
+            1437.9741000000001,
+            1441.8409000000001
+          ]
+        },
+        "interactive": {
+          "median": 2686.6942950000007,
+          "min": 2649.960645,
+          "max": 2791.03265,
+          "samples": [
+            2791.03265,
+            2691.976585,
+            2650.7565099999997,
+            2649.960645,
+            2686.6942950000007
+          ]
+        }
+      },
+      "accessibility": {
+        "median": 1,
+        "min": 1,
+        "max": 1,
+        "samples": [
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      },
+      "candidates": [
+        [
+          {
+            "startTime": 144,
+            "renderTime": 144,
+            "loadTime": 0,
+            "size": 7160,
+            "url": "",
+            "element": {
+              "tag": "A",
+              "text": "❦Nguyễn Trãi",
+              "rect": {
+                "x": 16,
+                "y": 26,
+                "width": 210.703125,
+                "height": 36,
+                "top": 26,
+                "right": 226.703125,
+                "bottom": 62,
+                "left": 16
+              }
+            }
+          },
+          {
+            "startTime": 448,
+            "renderTime": 448,
+            "loadTime": 389.8000000002794,
+            "size": 33856,
+            "url": "http://127.0.0.1:3330/_next/image?url=%2Fnguyen-trai.jpg&w=256&q=75",
+            "element": {
+              "tag": "IMG",
+              "text": "",
+              "rect": {
+                "x": 103,
+                "y": 318,
+                "width": 184,
+                "height": 184,
+                "top": 318,
+                "right": 287,
+                "bottom": 502,
+                "left": 103
+              }
+            }
+          }
+        ],
+        [
+          {
+            "startTime": 140,
+            "renderTime": 140,
+            "loadTime": 0,
+            "size": 7160,
+            "url": "",
+            "element": {
+              "tag": "A",
+              "text": "❦Nguyễn Trãi",
+              "rect": {
+                "x": 16,
+                "y": 26,
+                "width": 210.703125,
+                "height": 36,
+                "top": 26,
+                "right": 226.703125,
+                "bottom": 62,
+                "left": 16
+              }
+            }
+          },
+          {
+            "startTime": 484,
+            "renderTime": 484,
+            "loadTime": 443.40000000037253,
+            "size": 33856,
+            "url": "http://127.0.0.1:3330/_next/image?url=%2Fnguyen-trai.jpg&w=256&q=75",
+            "element": {
+              "tag": "IMG",
+              "text": "",
+              "rect": {
+                "x": 103,
+                "y": 318,
+                "width": 184,
+                "height": 184,
+                "top": 318,
+                "right": 287,
+                "bottom": 502,
+                "left": 103
+              }
+            }
+          }
+        ],
+        [
+          {
+            "startTime": 100,
+            "renderTime": 100,
+            "loadTime": 0,
+            "size": 7160,
+            "url": "",
+            "element": {
+              "tag": "A",
+              "text": "❦Nguyễn Trãi",
+              "rect": {
+                "x": 16,
+                "y": 26,
+                "width": 210.703125,
+                "height": 36,
+                "top": 26,
+                "right": 226.703125,
+                "bottom": 62,
+                "left": 16
+              }
+            }
+          },
+          {
+            "startTime": 444,
+            "renderTime": 444,
+            "loadTime": 408,
+            "size": 33856,
+            "url": "http://127.0.0.1:3330/_next/image?url=%2Fnguyen-trai.jpg&w=256&q=75",
+            "element": {
+              "tag": "IMG",
+              "text": "",
+              "rect": {
+                "x": 103,
+                "y": 318,
+                "width": 184,
+                "height": 184,
+                "top": 318,
+                "right": 287,
+                "bottom": 502,
+                "left": 103
+              }
+            }
+          }
+        ],
+        [
+          {
+            "startTime": 120,
+            "renderTime": 120,
+            "loadTime": 0,
+            "size": 7160,
+            "url": "",
+            "element": {
+              "tag": "A",
+              "text": "❦Nguyễn Trãi",
+              "rect": {
+                "x": 16,
+                "y": 26,
+                "width": 210.703125,
+                "height": 36,
+                "top": 26,
+                "right": 226.703125,
+                "bottom": 62,
+                "left": 16
+              }
+            }
+          },
+          {
+            "startTime": 456,
+            "renderTime": 456,
+            "loadTime": 416.79999999981374,
+            "size": 33856,
+            "url": "http://127.0.0.1:3330/_next/image?url=%2Fnguyen-trai.jpg&w=256&q=75",
+            "element": {
+              "tag": "IMG",
+              "text": "",
+              "rect": {
+                "x": 103,
+                "y": 318,
+                "width": 184,
+                "height": 184,
+                "top": 318,
+                "right": 287,
+                "bottom": 502,
+                "left": 103
+              }
+            }
+          }
+        ],
+        [
+          {
+            "startTime": 124,
+            "renderTime": 124,
+            "loadTime": 0,
+            "size": 7160,
+            "url": "",
+            "element": {
+              "tag": "A",
+              "text": "❦Nguyễn Trãi",
+              "rect": {
+                "x": 16,
+                "y": 26,
+                "width": 210.703125,
+                "height": 36,
+                "top": 26,
+                "right": 226.703125,
+                "bottom": 62,
+                "left": 16
+              }
+            }
+          },
+          {
+            "startTime": 460,
+            "renderTime": 460,
+            "loadTime": 422.8000000002794,
+            "size": 33856,
+            "url": "http://127.0.0.1:3330/_next/image?url=%2Fnguyen-trai.jpg&w=256&q=75",
+            "element": {
+              "tag": "IMG",
+              "text": "",
+              "rect": {
+                "x": 103,
+                "y": 318,
+                "width": 184,
+                "height": 184,
+                "top": 318,
+                "right": 287,
+                "bottom": 502,
+                "left": 103
+              }
+            }
+          }
+        ]
+      ],
+      "observedSubparts": {
+        "timeToFirstByte": {
+          "median": 15.123,
+          "min": 14.149,
+          "max": 20.234,
+          "samples": [
+            15.123,
+            20.234,
+            15.101,
+            14.149,
+            16.016
+          ]
+        },
+        "resourceLoadDelay": {
+          "median": 14.524,
+          "min": 11.387,
+          "max": 15.323,
+          "samples": [
+            14.219,
+            15.323,
+            11.387,
+            14.524,
+            14.979
+          ]
+        },
+        "resourceLoadDuration": {
+          "median": 35.824,
+          "min": 28.502,
+          "max": 39.88,
+          "samples": [
+            39.88,
+            35.824,
+            28.502,
+            38.835,
+            33.971
+          ]
+        },
+        "elementRenderDelay": {
+          "median": 388.104,
+          "min": 374.833,
+          "max": 409.577,
+          "samples": [
+            374.833,
+            409.577,
+            388.104,
+            386.227,
+            394.816
+          ]
+        }
+      }
+    },
+    "desktop-off": {
+      "metrics": {
+        "total-blocking-time": {
+          "median": 20.99999999999997,
+          "min": 14,
+          "max": 27.999999999999943,
+          "samples": [
+            27.999999999999943,
+            14
+          ]
+        },
+        "largest-contentful-paint": {
+          "median": 596.0382125000001,
+          "min": 583.3230500000001,
+          "max": 608.753375,
+          "samples": [
+            608.753375,
+            583.3230500000001
+          ]
+        },
+        "cumulative-layout-shift": {
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "samples": [
+            0,
+            0
+          ]
+        },
+        "speed-index": {
+          "median": 400.03785,
+          "min": 394.30135,
+          "max": 405.77434999999997,
+          "samples": [
+            394.30135,
+            405.77434999999997
+          ]
+        },
+        "interactive": {
+          "median": 598.1022675000002,
+          "min": 585.3004850000001,
+          "max": 610.9040500000001,
+          "samples": [
+            610.9040500000001,
+            585.3004850000001
+          ]
+        }
+      },
+      "accessibility": {
+        "median": 1,
+        "min": 1,
+        "max": 1,
+        "samples": [
+          1,
+          1
+        ]
+      },
+      "candidates": [
+        [
+          {
+            "startTime": 168,
+            "renderTime": 168,
+            "loadTime": 66.20000000018626,
+            "size": 46548,
+            "url": "http://127.0.0.1:3330/_next/image?url=%2Fnguyen-trai.jpg&w=256&q=75",
+            "element": {
+              "tag": "IMG",
+              "text": "",
+              "rect": {
+                "x": 604.5,
+                "y": 451,
+                "width": 216,
+                "height": 216,
+                "top": 451,
+                "right": 820.5,
+                "bottom": 667,
+                "left": 604.5
+              }
+            }
+          }
+        ],
+        [
+          {
+            "startTime": 128,
+            "renderTime": 128,
+            "loadTime": 0,
+            "size": 7200,
+            "url": "",
+            "element": {
+              "tag": "A",
+              "text": "❦Nguyễn Trãi",
+              "rect": {
+                "x": 104.5,
+                "y": 26,
+                "width": 210.703125,
+                "height": 36,
+                "top": 26,
+                "right": 315.203125,
+                "bottom": 62,
+                "left": 104.5
+              }
+            }
+          },
+          {
+            "startTime": 460,
+            "renderTime": 460,
+            "loadTime": 415.60000000009313,
+            "size": 46548,
+            "url": "http://127.0.0.1:3330/_next/image?url=%2Fnguyen-trai.jpg&w=256&q=75",
+            "element": {
+              "tag": "IMG",
+              "text": "",
+              "rect": {
+                "x": 604.5,
+                "y": 451,
+                "width": 216,
+                "height": 216,
+                "top": 451,
+                "right": 820.5,
+                "bottom": 667,
+                "left": 604.5
+              }
+            }
+          }
+        ]
+      ],
+      "observedSubparts": {
+        "timeToFirstByte": {
+          "median": 15.951500000238418,
+          "min": 12.321,
+          "max": 19.58200000047684,
+          "samples": [
+            12.321,
+            19.58200000047684
+          ]
+        },
+        "resourceLoadDelay": {
+          "median": 7.165999999761581,
+          "min": 6.397,
+          "max": 7.934999999523163,
+          "samples": [
+            6.397,
+            7.934999999523163
+          ]
+        },
+        "resourceLoadDuration": {
+          "median": 30.880499999999998,
+          "min": 29.342,
+          "max": 32.419,
+          "samples": [
+            29.342,
+            32.419
+          ]
+        },
+        "elementRenderDelay": {
+          "median": 257.24399999999997,
+          "min": 117.583,
+          "max": 396.905,
+          "samples": [
+            117.583,
+            396.905
+          ]
+        }
+      }
+    },
+    "comparison-off": {
+      "pairedLcpDeltas": [
+        -20.481700000000274,
+        33.985875000000306,
+        -51.44140000000061,
+        -57.654525000000376,
+        33.71027500000082
+      ],
+      "improvementMs": 15.639649999999165,
+      "improvementPercent": 0.5802688805037932,
+      "passes": false
+    }
+  },
+  "fetch-high": {
+    "mobile-off": {
+      "metrics": {
+        "total-blocking-time": {
+          "median": 251,
+          "min": 219,
+          "max": 298,
+          "samples": [
+            255,
+            251,
+            219,
+            231,
+            298
+          ]
+        },
+        "largest-contentful-paint": {
+          "median": 2752.01965,
+          "min": 2703.26425,
+          "max": 2887.0027499999997,
+          "samples": [
+            2785.9059,
+            2752.01965,
+            2703.26425,
+            2736.63465,
+            2887.0027499999997
+          ]
+        },
+        "cumulative-layout-shift": {
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "samples": [
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        "speed-index": {
+          "median": 1450.0065499999996,
+          "min": 1425.21155,
+          "max": 1462.3342499999999,
+          "samples": [
+            1448.6353,
+            1450.0065499999996,
+            1452.25475,
+            1425.21155,
+            1462.3342499999999
+          ]
+        },
+        "interactive": {
+          "median": 2754.1196500000005,
+          "min": 2704.8142500000004,
+          "max": 2888.60275,
+          "samples": [
+            2787.9059000000007,
+            2754.1196500000005,
+            2704.8142500000004,
+            2736.63465,
+            2888.60275
+          ]
+        }
+      },
+      "accessibility": {
+        "median": 1,
+        "min": 1,
+        "max": 1,
+        "samples": [
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      },
+      "candidates": [
+        [
+          {
+            "startTime": 144,
+            "renderTime": 144,
+            "loadTime": 0,
+            "size": 7160,
+            "url": "",
+            "element": {
+              "tag": "A",
+              "text": "❦Nguyễn Trãi",
+              "rect": {
+                "x": 16,
+                "y": 26,
+                "width": 210.703125,
+                "height": 36,
+                "top": 26,
+                "right": 226.703125,
+                "bottom": 62,
+                "left": 16
+              }
+            }
+          },
+          {
+            "startTime": 472,
+            "renderTime": 472,
+            "loadTime": 435.10000000009313,
+            "size": 33856,
+            "url": "http://127.0.0.1:3330/_next/image?url=%2Fnguyen-trai.jpg&w=256&q=75",
+            "element": {
+              "tag": "IMG",
+              "text": "",
+              "rect": {
+                "x": 103,
+                "y": 318,
+                "width": 184,
+                "height": 184,
+                "top": 318,
+                "right": 287,
+                "bottom": 502,
+                "left": 103
+              }
+            }
+          }
+        ],
+        [
+          {
+            "startTime": 144,
+            "renderTime": 144,
+            "loadTime": 0,
+            "size": 7160,
+            "url": "",
+            "element": {
+              "tag": "A",
+              "text": "❦Nguyễn Trãi",
+              "rect": {
+                "x": 16,
+                "y": 26,
+                "width": 210.703125,
+                "height": 36,
+                "top": 26,
+                "right": 226.703125,
+                "bottom": 62,
+                "left": 16
+              }
+            }
+          },
+          {
+            "startTime": 492,
+            "renderTime": 492,
+            "loadTime": 452.09999999962747,
+            "size": 33856,
+            "url": "http://127.0.0.1:3330/_next/image?url=%2Fnguyen-trai.jpg&w=256&q=75",
+            "element": {
+              "tag": "IMG",
+              "text": "",
+              "rect": {
+                "x": 103,
+                "y": 318,
+                "width": 184,
+                "height": 184,
+                "top": 318,
+                "right": 287,
+                "bottom": 502,
+                "left": 103
+              }
+            }
+          }
+        ],
+        [
+          {
+            "startTime": 120,
+            "renderTime": 120,
+            "loadTime": 0,
+            "size": 7160,
+            "url": "",
+            "element": {
+              "tag": "A",
+              "text": "❦Nguyễn Trãi",
+              "rect": {
+                "x": 16,
+                "y": 26,
+                "width": 210.703125,
+                "height": 36,
+                "top": 26,
+                "right": 226.703125,
+                "bottom": 62,
+                "left": 16
+              }
+            }
+          },
+          {
+            "startTime": 456,
+            "renderTime": 456,
+            "loadTime": 415,
+            "size": 33856,
+            "url": "http://127.0.0.1:3330/_next/image?url=%2Fnguyen-trai.jpg&w=256&q=75",
+            "element": {
+              "tag": "IMG",
+              "text": "",
+              "rect": {
+                "x": 103,
+                "y": 318,
+                "width": 184,
+                "height": 184,
+                "top": 318,
+                "right": 287,
+                "bottom": 502,
+                "left": 103
+              }
+            }
+          }
+        ],
+        [
+          {
+            "startTime": 100,
+            "renderTime": 100,
+            "loadTime": 0,
+            "size": 7160,
+            "url": "",
+            "element": {
+              "tag": "A",
+              "text": "❦Nguyễn Trãi",
+              "rect": {
+                "x": 16,
+                "y": 26,
+                "width": 210.703125,
+                "height": 36,
+                "top": 26,
+                "right": 226.703125,
+                "bottom": 62,
+                "left": 16
+              }
+            }
+          },
+          {
+            "startTime": 400,
+            "renderTime": 400,
+            "loadTime": 362.6999999997206,
+            "size": 33856,
+            "url": "http://127.0.0.1:3330/_next/image?url=%2Fnguyen-trai.jpg&w=256&q=75",
+            "element": {
+              "tag": "IMG",
+              "text": "",
+              "rect": {
+                "x": 103,
+                "y": 318,
+                "width": 184,
+                "height": 184,
+                "top": 318,
+                "right": 287,
+                "bottom": 502,
+                "left": 103
+              }
+            }
+          }
+        ],
+        [
+          {
+            "startTime": 172,
+            "renderTime": 172,
+            "loadTime": 0,
+            "size": 7160,
+            "url": "",
+            "element": {
+              "tag": "A",
+              "text": "❦Nguyễn Trãi",
+              "rect": {
+                "x": 16,
+                "y": 26,
+                "width": 210.703125,
+                "height": 36,
+                "top": 26,
+                "right": 226.703125,
+                "bottom": 62,
+                "left": 16
+              }
+            }
+          },
+          {
+            "startTime": 512,
+            "renderTime": 512,
+            "loadTime": 475,
+            "size": 33856,
+            "url": "http://127.0.0.1:3330/_next/image?url=%2Fnguyen-trai.jpg&w=256&q=75",
+            "element": {
+              "tag": "IMG",
+              "text": "",
+              "rect": {
+                "x": 103,
+                "y": 318,
+                "width": 184,
+                "height": 184,
+                "top": 318,
+                "right": 287,
+                "bottom": 502,
+                "left": 103
+              }
+            }
+          }
+        ]
+      ],
+      "observedSubparts": {
+        "timeToFirstByte": {
+          "median": 17.29599999952316,
+          "min": 12.129,
+          "max": 20.958,
+          "samples": [
+            16.161,
+            17.609,
+            17.29599999952316,
+            12.129,
+            20.958
+          ]
+        },
+        "resourceLoadDelay": {
+          "median": 15.560000000476837,
+          "min": 11.119,
+          "max": 18.853,
+          "samples": [
+            16.716,
+            14.537,
+            15.560000000476837,
+            11.119,
+            18.853
+          ]
+        },
+        "resourceLoadDuration": {
+          "median": 37.657,
+          "min": 29.014,
+          "max": 56.611,
+          "samples": [
+            37.657,
+            39.929,
+            31.121,
+            29.014,
+            56.611
+          ]
+        },
+        "elementRenderDelay": {
+          "median": 400.837,
+          "min": 346.837,
+          "max": 418.08,
+          "samples": [
+            400.837,
+            418.08,
+            388.097,
+            346.837,
+            413.721
+          ]
+        }
+      }
+    },
+    "desktop-off": {
+      "metrics": {
+        "total-blocking-time": {
+          "median": 26,
+          "min": 25,
+          "max": 27,
+          "samples": [
+            27,
+            25
+          ]
+        },
+        "largest-contentful-paint": {
+          "median": 599.901,
+          "min": 574.7821999999999,
+          "max": 625.0198,
+          "samples": [
+            574.7821999999999,
+            625.0198
+          ]
+        },
+        "cumulative-layout-shift": {
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "samples": [
+            0,
+            0
+          ]
+        },
+        "speed-index": {
+          "median": 410.466175,
+          "min": 408.92740000000003,
+          "max": 412.00495,
+          "samples": [
+            408.92740000000003,
+            412.00495
+          ]
+        },
+        "interactive": {
+          "median": 601.492335,
+          "min": 577.96487,
+          "max": 625.0198,
+          "samples": [
+            577.96487,
+            625.0198
+          ]
+        }
+      },
+      "accessibility": {
+        "median": 1,
+        "min": 1,
+        "max": 1,
+        "samples": [
+          1,
+          1
+        ]
+      },
+      "candidates": [
+        [
+          {
+            "startTime": 188,
+            "renderTime": 188,
+            "loadTime": 94.10000000009313,
+            "size": 46548,
+            "url": "http://127.0.0.1:3330/_next/image?url=%2Fnguyen-trai.jpg&w=256&q=75",
+            "element": {
+              "tag": "IMG",
+              "text": "",
+              "rect": {
+                "x": 604.5,
+                "y": 451,
+                "width": 216,
+                "height": 216,
+                "top": 451,
+                "right": 820.5,
+                "bottom": 667,
+                "left": 604.5
+              }
+            }
+          }
+        ],
+        [
+          {
+            "startTime": 176,
+            "renderTime": 176,
+            "loadTime": 0,
+            "size": 7200,
+            "url": "",
+            "element": {
+              "tag": "A",
+              "text": "❦Nguyễn Trãi",
+              "rect": {
+                "x": 104.5,
+                "y": 26,
+                "width": 210.703125,
+                "height": 36,
+                "top": 26,
+                "right": 315.203125,
+                "bottom": 62,
+                "left": 104.5
+              }
+            }
+          },
+          {
+            "startTime": 532,
+            "renderTime": 532,
+            "loadTime": 464.3000000002794,
+            "size": 46548,
+            "url": "http://127.0.0.1:3330/_next/image?url=%2Fnguyen-trai.jpg&w=256&q=75",
+            "element": {
+              "tag": "IMG",
+              "text": "",
+              "rect": {
+                "x": 604.5,
+                "y": 451,
+                "width": 216,
+                "height": 216,
+                "top": 451,
+                "right": 820.5,
+                "bottom": 667,
+                "left": 604.5
+              }
+            }
+          }
+        ]
+      ],
+      "observedSubparts": {
+        "timeToFirstByte": {
+          "median": 15.954999999999998,
+          "min": 15.024,
+          "max": 16.886,
+          "samples": [
+            16.886,
+            15.024
+          ]
+        },
+        "resourceLoadDelay": {
+          "median": 9.6675,
+          "min": 9.469,
+          "max": 9.866,
+          "samples": [
+            9.469,
+            9.866
+          ]
+        },
+        "resourceLoadDuration": {
+          "median": 48.5,
+          "min": 42.729,
+          "max": 54.271,
+          "samples": [
+            42.729,
+            54.271
+          ]
+        },
+        "elementRenderDelay": {
+          "median": 283.081,
+          "min": 116.159,
+          "max": 450.003,
+          "samples": [
+            116.159,
+            450.003
+          ]
+        }
+      }
+    },
+    "comparison-off": {
+      "pairedLcpDeltas": [
+        -22.558449999999993,
+        101.26377500000035,
+        8.022350000000188,
+        35.570774999999685,
+        241.11077499999965
+      ],
+      "improvementMs": -56.7777500000002,
+      "improvementPercent": -2.106591990871031,
+      "passes": false
+    }
+  }
+}

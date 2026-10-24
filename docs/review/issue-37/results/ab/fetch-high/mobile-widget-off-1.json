@@ -1,0 +1,1089 @@
+{
+  "observedAt": "2026-10-24T00:26:54.611Z",
+  "revision": "5f345d8e32c1105b01d8bf55f68373f3a7d6590f",
+  "nodeVersion": "v24.22.1",
+  "lighthouseVersion": "13.5.0",
+  "browser": "Chrome/155.0.8059.12",
+  "platform": {
+    "os": "Linux",
+    "release": "7.2.10-200.fc44.x86_64",
+    "arch": "x64",
+    "cpu": "13th Gen Intel(R) Core(TM) i7-13620H",
+    "cores": 16,
+    "loadBefore": [
+      3.07,
+      3.74,
+      2.99
+    ],
+    "loadAfter": [
+      2.82,
+      3.66,
+      2.98
+    ]
+  },
+  "presentation": {
+    "candidates": [
+      {
+        "startTime": 144,
+        "renderTime": 144,
+        "loadTime": 0,
+        "size": 7160,
+        "url": "",
+        "element": {
+          "tag": "A",
+          "text": "❦Nguyễn Trãi",
+          "rect": {
+            "x": 16,
+            "y": 26,
+            "width": 210.703125,
+            "height": 36,
+            "top": 26,
+            "right": 226.703125,
+            "bottom": 62,
+            "left": 16
+          }
+        }
+      },
+      {
+        "startTime": 472,
+        "renderTime": 472,
+        "loadTime": 435.10000000009313,
+        "size": 33856,
+        "url": "http://127.0.0.1:3330/_next/image?url=%2Fnguyen-trai.jpg&w=256&q=75",
+        "element": {
+          "tag": "IMG",
+          "text": "",
+          "rect": {
+            "x": 103,
+            "y": 318,
+            "width": 184,
+            "height": 184,
+            "top": 318,
+            "right": 287,
+            "bottom": 502,
+            "left": 103
+          }
+        }
+      }
+    ],
+    "fontsReady": 246.70000000018626,
+    "imageLoad": 465.10000000009313,
+    "timeOrigin": 1792801608615.2,
+    "navigation": {
+      "name": "http://127.0.0.1:3330/",
+      "entryType": "navigation",
+      "startTime": 0,
+      "duration": 239.10000000009313,
+      "navigationId": 8068,
+      "initiatorType": "navigation",
+      "deliveryType": "",
+      "nextHopProtocol": "http/1.1",
+      "renderBlockingStatus": "non-blocking",
+      "contentType": "text/html",
+      "contentEncoding": "gzip",
+      "workerStart": 0,
+      "workerRouterEvaluationStart": 0,
+      "workerCacheLookupStart": 0,
+      "workerMatchedSourceType": "",
+      "workerFinalSourceType": "",
+      "redirectStart": 0,
+      "redirectEnd": 0,
+      "fetchStart": 1.2000000001862645,
+      "domainLookupStart": 1.2000000001862645,
+      "domainLookupEnd": 1.2000000001862645,
+      "connectStart": 1.2000000001862645,
+      "secureConnectionStart": 0,
+      "connectEnd": 1.2000000001862645,
+      "requestStart": 9.400000000372529,
+      "responseStart": 16.100000000093132,
+      "firstInterimResponseStart": 0,
+      "finalResponseHeadersStart": 16.100000000093132,
+      "responseEnd": 17.300000000279397,
+      "transferSize": 8059,
+      "encodedBodySize": 7759,
+      "decodedBodySize": 35642,
+      "responseStatus": 200,
+      "serverTiming": [],
+      "unloadEventStart": 0,
+      "unloadEventEnd": 0,
+      "domInteractive": 237,
+      "domContentLoadedEventStart": 237.10000000009313,
+      "domContentLoadedEventEnd": 237.5,
+      "domComplete": 239.10000000009313,
+      "loadEventStart": 239.10000000009313,
+      "loadEventEnd": 239.10000000009313,
+      "type": "navigate",
+      "redirectCount": 0,
+      "activationStart": 0,
+      "criticalCHRestart": 0,
+      "notRestoredReasons": null,
+      "confidence": {}
+    },
+    "image": {
+      "rect": {
+        "x": 274.5,
+        "y": 436,
+        "width": 216,
+        "height": 216,
+        "top": 436,
+        "right": 490.5,
+        "bottom": 652,
+        "left": 274.5
+      },
+      "intersection": {
+        "width": 216,
+        "height": 1
+      },
+      "src": "http://127.0.0.1:3330/_next/image?url=%2Fnguyen-trai.jpg&w=3840&q=75",
+      "currentSrc": "http://127.0.0.1:3330/_next/image?url=%2Fnguyen-trai.jpg&w=256&q=75",
+      "srcset": "/_next/image?url=%2Fnguyen-trai.jpg&w=32&q=75 32w, /_next/image?url=%2Fnguyen-trai.jpg&w=48&q=75 48w, /_next/image?url=%2Fnguyen-trai.jpg&w=64&q=75 64w, /_next/image?url=%2Fnguyen-trai.jpg&w=96&q=75 96w, /_next/image?url=%2Fnguyen-trai.jpg&w=128&q=75 128w, /_next/image?url=%2Fnguyen-trai.jpg&w=256&q=75 256w, /_next/image?url=%2Fnguyen-trai.jpg&w=384&q=75 384w, /_next/image?url=%2Fnguyen-trai.jpg&w=640&q=75 640w, /_next/image?url=%2Fnguyen-trai.jpg&w=750&q=75 750w, /_next/image?url=%2Fnguyen-trai.jpg&w=828&q=75 828w, /_next/image?url=%2Fnguyen-trai.jpg&w=1080&q=75 1080w, /_next/image?url=%2Fnguyen-trai.jpg&w=1200&q=75 1200w, /_next/image?url=%2Fnguyen-trai.jpg&w=1920&q=75 1920w, /_next/image?url=%2Fnguyen-trai.jpg&w=2048&q=75 2048w, /_next/image?url=%2Fnguyen-trai.jpg&w=3840&q=75 3840w",
+      "sizes": "(min-width: 768px) 224px, 192px",
+      "loading": "auto",
+      "decoding": "async",
+      "fetchPriority": "high",
+      "complete": true,
+      "naturalWidth": 223
+    },
+    "quotation": {
+      "rect": {
+        "x": 210.5625,
+        "y": 688,
+        "width": 343.859375,
+        "height": 78,
+        "top": 688,
+        "right": 554.421875,
+        "bottom": 766,
+        "left": 210.5625
+      },
+      "intersection": {
+        "width": 343.859375,
+        "height": 0
+      }
+    },
+    "fontStatus": "loaded",
+    "preloads": [
+      "<link rel=\"preload\" as=\"image\" imagesrcset=\"/_next/image?url=%2Fnguyen-trai.jpg&amp;w=32&amp;q=75 32w, /_next/image?url=%2Fnguyen-trai.jpg&amp;w=48&amp;q=75 48w, /_next/image?url=%2Fnguyen-trai.jpg&amp;w=64&amp;q=75 64w, /_next/image?url=%2Fnguyen-trai.jpg&amp;w=96&amp;q=75 96w, /_next/image?url=%2Fnguyen-trai.jpg&amp;w=128&amp;q=75 128w, /_next/image?url=%2Fnguyen-trai.jpg&amp;w=256&amp;q=75 256w, /_next/image?url=%2Fnguyen-trai.jpg&amp;w=384&amp;q=75 384w, /_next/image?url=%2Fnguyen-trai.jpg&amp;w=640&amp;q=75 640w, /_next/image?url=%2Fnguyen-trai.jpg&amp;w=750&amp;q=75 750w, /_next/image?url=%2Fnguyen-trai.jpg&amp;w=828&amp;q=75 828w, /_next/image?url=%2Fnguyen-trai.jpg&amp;w=1080&amp;q=75 1080w, /_next/image?url=%2Fnguyen-trai.jpg&amp;w=1200&amp;q=75 1200w, /_next/image?url=%2Fnguyen-trai.jpg&amp;w=1920&amp;q=75 1920w, /_next/image?url=%2Fnguyen-trai.jpg&amp;w=2048&amp;q=75 2048w, /_next/image?url=%2Fnguyen-trai.jpg&amp;w=3840&amp;q=75 3840w\" imagesizes=\"(min-width: 768px) 224px, 192px\" fetchpriority=\"high\" referrerpolicy=\"no-referrer\">"
+    ],
+    "resources": [
+      {
+        "name": "http://127.0.0.1:3330/_next/static/media/4ead58c4dcc3f285-s.p.woff2",
+        "entryType": "resource",
+        "startTime": 32.3000000002794,
+        "duration": 26.299999999813735,
+        "navigationId": 8068,
+        "initiatorType": "link",
+        "deliveryType": "",
+        "nextHopProtocol": "http/1.1",
+        "renderBlockingStatus": "non-blocking",
+        "contentType": "",
+        "contentEncoding": "",
+        "workerStart": 0,
+        "workerRouterEvaluationStart": 0,
+        "workerCacheLookupStart": 0,
+        "workerMatchedSourceType": "",
+        "workerFinalSourceType": "",
+        "redirectStart": 0,
+        "redirectEnd": 0,
+        "fetchStart": 32.3000000002794,
+        "domainLookupStart": 32.3000000002794,
+        "domainLookupEnd": 32.3000000002794,
+        "connectStart": 32.3000000002794,
+        "secureConnectionStart": 0,
+        "connectEnd": 32.3000000002794,
+        "requestStart": 48.200000000186265,
+        "responseStart": 56,
+        "firstInterimResponseStart": 0,
+        "finalResponseHeadersStart": 56,
+        "responseEnd": 58.60000000009313,
+        "transferSize": 9356,
+        "encodedBodySize": 9056,
+        "decodedBodySize": 9056,
+        "responseStatus": 200,
+        "serverTiming": []
+      },
+      {
+        "name": "http://127.0.0.1:3330/_next/static/media/eaead17c7dbfcd5d-s.p.woff2",
+        "entryType": "resource",
+        "startTime": 32.8000000002794,
+        "duration": 25.899999999906868,
+        "navigationId": 8068,
+        "initiatorType": "link",
+        "deliveryType": "",
+        "nextHopProtocol": "http/1.1",
+        "renderBlockingStatus": "non-blocking",
+        "contentType": "",
+        "contentEncoding": "",
+        "workerStart": 0,
+        "workerRouterEvaluationStart": 0,
+        "workerCacheLookupStart": 0,
+        "workerMatchedSourceType": "",
+        "workerFinalSourceType": "",
+        "redirectStart": 0,
+        "redirectEnd": 0,
+        "fetchStart": 32.8000000002794,
+        "domainLookupStart": 32.8000000002794,
+        "domainLookupEnd": 32.8000000002794,
+        "connectStart": 32.8000000002794,
+        "secureConnectionStart": 0,
+        "connectEnd": 32.8000000002794,
+        "requestStart": 48.40000000037253,
+        "responseStart": 56.10000000009313,
+        "firstInterimResponseStart": 0,
+        "finalResponseHeadersStart": 56.10000000009313,
+        "responseEnd": 58.700000000186265,
+        "transferSize": 38760,
+        "encodedBodySize": 38460,
+        "decodedBodySize": 38460,
+        "responseStatus": 200,
+        "serverTiming": []
+      },
+      {
+        "name": "http://127.0.0.1:3330/_next/image?url=%2Fnguyen-trai.jpg&w=256&q=75",
+        "entryType": "resource",
+        "startTime": 33,
+        "duration": 37.60000000009313,
+        "navigationId": 8068,
+        "initiatorType": "link",
+        "deliveryType": "",
+        "nextHopProtocol": "http/1.1",
+        "renderBlockingStatus": "non-blocking",
+        "contentType": "image/avif",
+        "contentEncoding": "",
+        "workerStart": 0,
+        "workerRouterEvaluationStart": 0,
+        "workerCacheLookupStart": 0,
+        "workerMatchedSourceType": "",
+        "workerFinalSourceType": "",
+        "redirectStart": 0,
+        "redirectEnd": 0,
+        "fetchStart": 33,
+        "domainLookupStart": 57.3000000002794,
+        "domainLookupEnd": 57.3000000002794,
+        "connectStart": 57.3000000002794,
+        "secureConnectionStart": 0,
+        "connectEnd": 57.60000000009313,
+        "requestStart": 59.10000000009313,
+        "responseStart": 68.20000000018626,
+        "firstInterimResponseStart": 0,
+        "finalResponseHeadersStart": 68.20000000018626,
+        "responseEnd": 70.60000000009313,
+        "transferSize": 10436,
+        "encodedBodySize": 10136,
+        "decodedBodySize": 10136,
+        "responseStatus": 200,
+        "serverTiming": []
+      },
+      {
+        "name": "http://127.0.0.1:3330/_next/static/media/28a2004cf8372660-s.woff2",
+        "entryType": "resource",
+        "startTime": 108.90000000037253,
+        "duration": 33.89999999990687,
+        "navigationId": 8068,
+        "initiatorType": "css",
+        "deliveryType": "",
+        "nextHopProtocol": "http/1.1",
+        "renderBlockingStatus": "non-blocking",
+        "contentType": "",
+        "contentEncoding": "",
+        "workerStart": 0,
+        "workerRouterEvaluationStart": 0,
+        "workerCacheLookupStart": 0,
+        "workerMatchedSourceType": "",
+        "workerFinalSourceType": "",
+        "redirectStart": 0,
+        "redirectEnd": 0,
+        "fetchStart": 108.90000000037253,
+        "domainLookupStart": 108.90000000037253,
+        "domainLookupEnd": 108.90000000037253,
+        "connectStart": 108.90000000037253,
+        "secureConnectionStart": 0,
+        "connectEnd": 108.90000000037253,
+        "requestStart": 138.5,
+        "responseStart": 141,
+        "firstInterimResponseStart": 0,
+        "finalResponseHeadersStart": 141,
+        "responseEnd": 142.8000000002794,
+        "transferSize": 21280,
+        "encodedBodySize": 20980,
+        "decodedBodySize": 20980,
+        "responseStatus": 200,
+        "serverTiming": []
+      }
+    ]
+  },
+  "imageRequests": [
+    {
+      "event": "request",
+      "id": "138775.4",
+      "url": "http://127.0.0.1:3330/_next/image?url=%2Fnguyen-trai.jpg&w=256&q=75",
+      "timestamp": 2791.5397,
+      "initiator": {
+        "type": "parser",
+        "url": "http://127.0.0.1:3330/",
+        "lineNumber": 0,
+        "columnNumber": 1478
+      },
+      "priority": "High"
+    },
+    {
+      "event": "response",
+      "id": "138775.4",
+      "timestamp": 2791.578037,
+      "mimeType": "image/avif",
+      "encodedDataLength": 665,
+      "timing": {
+        "requestTime": 2791.554839,
+        "proxyStart": -1,
+        "proxyEnd": -1,
+        "dnsStart": 9.227,
+        "dnsEnd": 9.247,
+        "connectStart": 9.247,
+        "connectEnd": 9.545,
+        "sslStart": -1,
+        "sslEnd": -1,
+        "workerStart": -1,
+        "workerReady": -1,
+        "workerFetchStart": -1,
+        "workerRespondWithSettled": -1,
+        "sendStart": 11.09,
+        "sendEnd": 11.193,
+        "pushStart": 0,
+        "pushEnd": 0,
+        "receiveHeadersStart": 20.2,
+        "receiveHeadersEnd": 20.251
+      }
+    },
+    {
+      "event": "finished",
+      "id": "138775.4",
+      "timestamp": 2791.577357,
+      "encodedDataLength": 10801
+    }
+  ],
+  "tools": {
+    "puppeteer": "25.14.0",
+    "chromeLauncher": "1.2.2"
+  },
+  "collectorSourceSha256": "d48692f03fe93874cad2d7d93b7e00f1c1e47ba9e7167dbab7848057132eafed",
+  "metricsHelperSha256": "8ce34be01baee202ef719044f3f1d200a40937a9ede3353941b700fdfa152543",
+  "adminPrefetchPolicy": "blocked",
+  "blockedAdminRequests": 1,
+  "networkTimingUnit": "milliseconds since navigation start",
+  "profile": "mobile",
+  "widget": "off",
+  "widgetRendered": false,
+  "animation": "on",
+  "sample": 1,
+  "assetManifestSha256": "ca3d163bab055381827226140568f3bef7eaac187cebd76878e0b63e9e442356",
+  "settings": {
+    "output": "json",
+    "maxWaitForFcp": 30000,
+    "maxWaitForLoad": 45000,
+    "pauseAfterFcpMs": 1000,
+    "pauseAfterLoadMs": 1000,
+    "networkQuietThresholdMs": 1000,
+    "cpuQuietThresholdMs": 1000,
+    "formFactor": "mobile",
+    "throttling": {
+      "rttMs": 150,
+      "throughputKbps": 1638.4,
+      "requestLatencyMs": 562.5,
+      "downloadThroughputKbps": 1474.5600000000002,
+      "uploadThroughputKbps": 675,
+      "cpuSlowdownMultiplier": 4
+    },
+    "throttlingMethod": "simulate",
+    "screenEmulation": {
+      "mobile": true,
+      "width": 390,
+      "height": 844,
+      "deviceScaleFactor": 1,
+      "disabled": false
+    },
+    "emulatedUserAgent": "Mozilla/5.0 (Linux; Android 11; moto g power (2022)) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Mobile Safari/537.36",
+    "auditMode": false,
+    "gatherMode": false,
+    "clearStorageTypes": [
+      "file_systems",
+      "shader_cache",
+      "service_workers",
+      "cache_storage"
+    ],
+    "disableStorageReset": false,
+    "debugNavigation": false,
+    "channel": "node",
+    "usePassiveGathering": false,
+    "disableFullPageScreenshot": false,
+    "skipAboutBlank": false,
+    "blankPage": "about:blank",
+    "ignoreStatusCode": false,
+    "locale": "en-US",
+    "blockedUrlPatterns": [
+      "*vercel*"
+    ],
+    "additionalTraceCategories": null,
+    "extraHeaders": null,
+    "precomputedLanternData": null,
+    "onlyAudits": null,
+    "onlyCategories": [
+      "performance",
+      "accessibility"
+    ],
+    "skipAudits": null
+  },
+  "metrics": {
+    "total-blocking-time": 255,
+    "largest-contentful-paint": 2785.9059,
+    "cumulative-layout-shift": 0,
+    "speed-index": 1448.6353,
+    "interactive": 2787.9059000000007
+  },
+  "scores": {
+    "performance": 0.91,
+    "accessibility": 1
+  },
+  "diagnostics": {
+    "mainthread-work-breakdown": {
+      "id": "mainthread-work-breakdown",
+      "title": "Minimizes main-thread work",
+      "description": "Consider reducing the time spent parsing, compiling and executing JS. You may find delivering smaller JS payloads helps with this. [Learn how to minimize main-thread work](https://developer.chrome.com/docs/lighthouse/performance/mainthread-work-breakdown/)",
+      "score": 1,
+      "scoreDisplayMode": "metricSavings",
+      "numericValue": 1254.9000000000024,
+      "numericUnit": "millisecond",
+      "displayValue": "1.3 s",
+      "metricSavings": {
+        "TBT": 250
+      },
+      "details": {
+        "type": "table",
+        "headings": [
+          {
+            "key": "groupLabel",
+            "valueType": "text",
+            "label": "Category"
+          },
+          {
+            "key": "duration",
+            "valueType": "ms",
+            "granularity": 1,
+            "label": "Time Spent"
+          }
+        ],
+        "items": [
+          {
+            "group": "scriptEvaluation",
+            "groupLabel": "Script Evaluation",
+            "duration": 571.4760000000017
+          },
+          {
+            "group": "other",
+            "groupLabel": "Other",
+            "duration": 276.5560000000006
+          },
+          {
+            "group": "styleLayout",
+            "groupLabel": "Style & Layout",
+            "duration": 254.5
+          },
+          {
+            "group": "scriptParseCompile",
+            "groupLabel": "Script Parsing & Compilation",
+            "duration": 81.908
+          },
+          {
+            "group": "parseHTML",
+            "groupLabel": "Parse HTML & CSS",
+            "duration": 28.892
+          },
+          {
+            "group": "garbageCollection",
+            "groupLabel": "Garbage Collection",
+            "duration": 22.43599999999997
+          },
+          {
+            "group": "paintCompositeRender",
+            "groupLabel": "Rendering",
+            "duration": 19.131999999999987
+          }
+        ],
+        "sortedBy": [
+          "duration"
+        ]
+      },
+      "guidanceLevel": 1
+    },
+    "bootup-time": {
+      "id": "bootup-time",
+      "title": "JavaScript execution time",
+      "description": "Consider reducing the time spent parsing, compiling, and executing JS. You may find delivering smaller JS payloads helps with this. [Learn how to reduce Javascript execution time](https://developer.chrome.com/docs/lighthouse/performance/bootup-time/).",
+      "score": 1,
+      "scoreDisplayMode": "metricSavings",
+      "numericValue": 635.6240000000005,
+      "numericUnit": "millisecond",
+      "displayValue": "0.6 s",
+      "metricSavings": {
+        "TBT": 250
+      },
+      "details": {
+        "type": "table",
+        "headings": [
+          {
+            "key": "url",
+            "valueType": "url",
+            "label": "URL"
+          },
+          {
+            "key": "total",
+            "granularity": 1,
+            "valueType": "ms",
+            "label": "Total CPU Time"
+          },
+          {
+            "key": "scripting",
+            "granularity": 1,
+            "valueType": "ms",
+            "label": "Script Evaluation"
+          },
+          {
+            "key": "scriptParseCompile",
+            "granularity": 1,
+            "valueType": "ms",
+            "label": "Script Parse"
+          }
+        ],
+        "items": [
+          {
+            "url": "http://127.0.0.1:3330/",
+            "total": 347.95599999999996,
+            "scripting": 25.483999999999988,
+            "scriptParseCompile": 8.135999999999997
+          },
+          {
+            "url": "http://127.0.0.1:3330/_next/static/chunks/webpack-1c7e54eb92818659.js",
+            "total": 296.87200000000007,
+            "scripting": 277.53600000000006,
+            "scriptParseCompile": 0.7320000000000001
+          },
+          {
+            "url": "http://127.0.0.1:3330/_next/static/chunks/794-0ac5e2f0e81d2e0d.js",
+            "total": 293.3520000000005,
+            "scripting": 228.52800000000047,
+            "scriptParseCompile": 38.14
+          },
+          {
+            "url": "Unattributable",
+            "total": 217.55200000000025,
+            "scripting": 14.895999999999999,
+            "scriptParseCompile": 0
+          },
+          {
+            "url": "http://127.0.0.1:3330/_next/static/chunks/4bd1b696-c7408084347438ae.js",
+            "total": 67.92799999999998,
+            "scripting": 17.087999999999973,
+            "scriptParseCompile": 25.084
+          }
+        ],
+        "summary": {
+          "wastedMs": 635.6240000000005
+        },
+        "sortedBy": [
+          "total"
+        ]
+      },
+      "guidanceLevel": 1
+    },
+    "long-tasks": {
+      "id": "long-tasks",
+      "title": "Avoid long main-thread tasks",
+      "description": "Lists the longest tasks on the main thread, useful for identifying worst contributors to input delay. [Learn how to avoid long main-thread tasks](https://web.dev/articles/optimize-long-tasks)",
+      "score": 1,
+      "scoreDisplayMode": "informative",
+      "displayValue": "3 long tasks found",
+      "metricSavings": {
+        "TBT": 250
+      },
+      "details": {
+        "type": "table",
+        "headings": [
+          {
+            "key": "url",
+            "valueType": "url",
+            "label": "URL"
+          },
+          {
+            "key": "startTime",
+            "valueType": "ms",
+            "granularity": 1,
+            "label": "Start Time"
+          },
+          {
+            "key": "duration",
+            "valueType": "ms",
+            "granularity": 1,
+            "label": "Duration"
+          }
+        ],
+        "items": [
+          {
+            "url": "http://127.0.0.1:3330/_next/static/chunks/webpack-1c7e54eb92818659.js",
+            "duration": 305,
+            "startTime": 2419.9059
+          },
+          {
+            "url": "http://127.0.0.1:3330/",
+            "duration": 96,
+            "startTime": 678.6353
+          },
+          {
+            "url": "Unattributable",
+            "duration": 62,
+            "startTime": 606.6353
+          }
+        ],
+        "sortedBy": [
+          "duration"
+        ],
+        "skipSumming": [
+          "startTime"
+        ],
+        "debugData": {
+          "type": "debugdata",
+          "urls": [
+            "http://127.0.0.1:3330/_next/static/chunks/webpack-1c7e54eb92818659.js",
+            "http://127.0.0.1:3330/",
+            "Unattributable"
+          ],
+          "tasks": [
+            {
+              "urlIndex": 0,
+              "startTime": 2419.9,
+              "duration": 305,
+              "other": 305,
+              "scriptEvaluation": 0
+            },
+            {
+              "urlIndex": 1,
+              "startTime": 678.6,
+              "duration": 96,
+              "other": 96,
+              "paintCompositeRender": 0,
+              "scriptEvaluation": 0,
+              "styleLayout": 0
+            },
+            {
+              "urlIndex": 2,
+              "startTime": 606.6,
+              "duration": 62,
+              "other": 62,
+              "scriptEvaluation": 0
+            }
+          ]
+        }
+      },
+      "guidanceLevel": 1
+    },
+    "unused-javascript": {
+      "id": "unused-javascript",
+      "title": "Reduce unused JavaScript",
+      "description": "Reduce unused JavaScript and defer loading scripts until they are required to decrease bytes consumed by network activity. [Learn how to reduce unused JavaScript](https://developer.chrome.com/docs/lighthouse/performance/unused-javascript/).",
+      "score": 0,
+      "scoreDisplayMode": "metricSavings",
+      "numericValue": 300,
+      "numericUnit": "millisecond",
+      "displayValue": "Est savings of 49 KiB",
+      "metricSavings": {
+        "FCP": 0,
+        "LCP": 300
+      },
+      "details": {
+        "type": "opportunity",
+        "headings": [
+          {
+            "key": "url",
+            "valueType": "url",
+            "subItemsHeading": {
+              "key": "source",
+              "valueType": "code"
+            },
+            "label": "URL"
+          },
+          {
+            "key": "totalBytes",
+            "valueType": "bytes",
+            "subItemsHeading": {
+              "key": "sourceBytes"
+            },
+            "label": "Transfer Size"
+          },
+          {
+            "key": "wastedBytes",
+            "valueType": "bytes",
+            "subItemsHeading": {
+              "key": "sourceWastedBytes"
+            },
+            "label": "Est Savings"
+          }
+        ],
+        "items": [
+          {
+            "url": "http://127.0.0.1:3330/_next/static/chunks/4bd1b696-c7408084347438ae.js",
+            "totalBytes": 64114,
+            "wastedBytes": 26388,
+            "wastedPercent": 41.157269010067694
+          },
+          {
+            "url": "http://127.0.0.1:3330/_next/static/chunks/794-0ac5e2f0e81d2e0d.js",
+            "totalBytes": 67398,
+            "wastedBytes": 23472,
+            "wastedPercent": 34.825086538739235
+          }
+        ],
+        "overallSavingsMs": 300,
+        "overallSavingsBytes": 49860,
+        "sortedBy": [
+          "wastedBytes"
+        ],
+        "debugData": {
+          "type": "debugdata",
+          "metricSavings": {
+            "FCP": 0,
+            "LCP": 300
+          }
+        }
+      },
+      "guidanceLevel": 1
+    },
+    "lcp-breakdown-insight": {
+      "id": "lcp-breakdown-insight",
+      "title": "LCP breakdown",
+      "description": "Each [subpart has specific improvement strategies](https://developer.chrome.com/docs/performance/insights/lcp-breakdown). Ideally, most of the LCP time should be spent on loading the resources, not within delays.",
+      "score": 1,
+      "scoreDisplayMode": "informative",
+      "metricSavings": {
+        "LCP": 0
+      },
+      "details": {
+        "type": "list",
+        "items": [
+          {
+            "type": "table",
+            "headings": [
+              {
+                "key": "label",
+                "valueType": "text",
+                "label": "Subpart"
+              },
+              {
+                "key": "duration",
+                "valueType": "ms",
+                "label": "Duration"
+              }
+            ],
+            "items": [
+              {
+                "subpart": "timeToFirstByte",
+                "label": "Time to first byte",
+                "duration": 16.161
+              },
+              {
+                "subpart": "resourceLoadDelay",
+                "label": "Resource load delay",
+                "duration": 16.716
+              },
+              {
+                "subpart": "resourceLoadDuration",
+                "label": "Resource load duration",
+                "duration": 37.657
+              },
+              {
+                "subpart": "elementRenderDelay",
+                "label": "Element render delay",
+                "duration": 400.837
+              }
+            ]
+          },
+          {
+            "type": "node",
+            "lhId": "page-0-IMG",
+            "path": "1,HTML,1,BODY,1,DIV,4,DIV,0,MAIN,0,DIV,2,DIV,0,DIV,0,IMG",
+            "selector": "div.text-center > div.flex > div.relative > img.object-cover",
+            "boundingRect": {
+              "top": 318,
+              "bottom": 502,
+              "left": 103,
+              "right": 287,
+              "width": 184,
+              "height": 184
+            },
+            "snippet": "<img alt=\"Chân dung Nguyễn Trãi\" referrerpolicy=\"no-referrer\" fetchpriority=\"high\" decoding=\"async\" data-nimg=\"fill\" class=\"object-cover object-top\" style=\"position: absolute; height: 100%; width: 100%; inset: 0px;\" sizes=\"(min-width: 768px) 224px, 192px\" srcset=\"/_next/image?url=%2Fnguyen-trai.jpg&amp;w=32&amp;q=75 32w, /_next/image?url=%2Fngu…\" src=\"http://127.0.0.1:3330/_next/image?url=%2Fnguyen-trai.jpg&amp;w=256&amp;q=75\">",
+            "nodeLabel": "Chân dung Nguyễn Trãi"
+          }
+        ]
+      },
+      "guidanceLevel": 3
+    },
+    "lcp-discovery-insight": {
+      "id": "lcp-discovery-insight",
+      "title": "LCP request discovery",
+      "description": "[Optimize LCP](https://developer.chrome.com/docs/performance/insights/lcp-discovery) by making the LCP image discoverable from the HTML immediately, and avoiding lazy-loading",
+      "score": 1,
+      "scoreDisplayMode": "numeric",
+      "metricSavings": {
+        "LCP": 0
+      },
+      "details": {
+        "type": "list",
+        "items": [
+          {
+            "type": "checklist",
+            "items": {
+              "priorityHinted": {
+                "label": "fetchpriority=high applied",
+                "value": true
+              },
+              "requestDiscoverable": {
+                "label": "Request is discoverable in initial document",
+                "value": true
+              },
+              "eagerlyLoaded": {
+                "label": "LCP resources should not use loading=lazy",
+                "value": true
+              }
+            }
+          },
+          {
+            "type": "node",
+            "lhId": "page-0-IMG",
+            "path": "1,HTML,1,BODY,1,DIV,4,DIV,0,MAIN,0,DIV,2,DIV,0,DIV,0,IMG",
+            "selector": "div.text-center > div.flex > div.relative > img.object-cover",
+            "boundingRect": {
+              "top": 318,
+              "bottom": 502,
+              "left": 103,
+              "right": 287,
+              "width": 184,
+              "height": 184
+            },
+            "snippet": "<img alt=\"Chân dung Nguyễn Trãi\" referrerpolicy=\"no-referrer\" fetchpriority=\"high\" decoding=\"async\" data-nimg=\"fill\" class=\"object-cover object-top\" style=\"position: absolute; height: 100%; width: 100%; inset: 0px;\" sizes=\"(min-width: 768px) 224px, 192px\" srcset=\"/_next/image?url=%2Fnguyen-trai.jpg&amp;w=32&amp;q=75 32w, /_next/image?url=%2Fngu…\" src=\"http://127.0.0.1:3330/_next/image?url=%2Fnguyen-trai.jpg&amp;w=256&amp;q=75\">",
+            "nodeLabel": "Chân dung Nguyễn Trãi"
+          }
+        ]
+      },
+      "guidanceLevel": 3
+    },
+    "color-contrast": {
+      "id": "color-contrast",
+      "title": "Background and foreground colors have a sufficient contrast ratio",
+      "description": "Low-contrast text is difficult or impossible for many users to read. [Learn how to provide sufficient color contrast](https://dequeuniversity.com/rules/axe/4.13/color-contrast).",
+      "score": 1,
+      "scoreDisplayMode": "binary",
+      "details": {
+        "type": "table",
+        "headings": [
+          {
+            "key": "node",
+            "valueType": "node",
+            "subItemsHeading": {
+              "key": "relatedNode",
+              "valueType": "node"
+            },
+            "label": "Failing Elements"
+          }
+        ],
+        "items": []
+      }
+    }
+  },
+  "network": [
+    {
+      "url": "http://127.0.0.1:3330/",
+      "resourceType": "Document",
+      "transferSize": 8519,
+      "resourceSize": 35642,
+      "networkRequestTime": 7.306000000331551,
+      "networkEndTime": 16.06400000024587,
+      "statusCode": 200
+    },
+    {
+      "url": "http://127.0.0.1:3330/_next/static/media/4ead58c4dcc3f285-s.p.woff2",
+      "resourceType": "Font",
+      "transferSize": 9596,
+      "resourceSize": 9056,
+      "networkRequestTime": 45.37099999981001,
+      "networkEndTime": 57.28599999984726,
+      "statusCode": 200
+    },
+    {
+      "url": "http://127.0.0.1:3330/_next/static/media/eaead17c7dbfcd5d-s.p.woff2",
+      "resourceType": "Font",
+      "transferSize": 39001,
+      "resourceSize": 38460,
+      "networkRequestTime": 46.23700000019744,
+      "networkEndTime": 57.45699999993667,
+      "statusCode": 200
+    },
+    {
+      "url": "http://127.0.0.1:3330/_next/image",
+      "resourceType": "Image",
+      "transferSize": 10801,
+      "resourceSize": 10136,
+      "networkRequestTime": 46.76299999980256,
+      "networkEndTime": 69.28100000042468,
+      "statusCode": 200
+    },
+    {
+      "url": "http://127.0.0.1:3330/_next/static/css/3b2ca8dbea40c879.css",
+      "resourceType": "Stylesheet",
+      "transferSize": 10020,
+      "resourceSize": 47022,
+      "networkRequestTime": 54.06600000010803,
+      "networkEndTime": 68.36900000041351,
+      "statusCode": 200
+    },
+    {
+      "url": "http://127.0.0.1:3330/_next/static/chunks/webpack-1c7e54eb92818659.js",
+      "resourceType": "Script",
+      "transferSize": 2319,
+      "resourceSize": 3336,
+      "networkRequestTime": 54.43999999994412,
+      "networkEndTime": 67.67400000011548,
+      "statusCode": 200
+    },
+    {
+      "url": "http://127.0.0.1:3330/_next/static/chunks/4bd1b696-c7408084347438ae.js",
+      "resourceType": "Script",
+      "transferSize": 64735,
+      "resourceSize": 203721,
+      "networkRequestTime": 54.54699999978766,
+      "networkEndTime": 84.0730000003241,
+      "statusCode": 200
+    },
+    {
+      "url": "http://127.0.0.1:3330/_next/static/chunks/794-0ac5e2f0e81d2e0d.js",
+      "resourceType": "Script",
+      "transferSize": 68020,
+      "resourceSize": 242379,
+      "networkRequestTime": 58.0910000000149,
+      "networkEndTime": 84.4210000000894,
+      "statusCode": 200
+    },
+    {
+      "url": "http://127.0.0.1:3330/_next/static/chunks/main-app-b709567dd9615fca.js",
+      "resourceType": "Script",
+      "transferSize": 1101,
+      "resourceSize": 513,
+      "networkRequestTime": 58.29700000025332,
+      "networkEndTime": 66.69400000013411,
+      "statusCode": 200
+    },
+    {
+      "url": "http://127.0.0.1:3330/_next/static/chunks/app/layout-93f2d23c433dc389.js",
+      "resourceType": "Script",
+      "transferSize": 4934,
+      "resourceSize": 13308,
+      "networkRequestTime": 66.87000000011176,
+      "networkEndTime": 74.95800000056624,
+      "statusCode": 200
+    },
+    {
+      "url": "http://127.0.0.1:3330/_next/static/chunks/200-6e30e7e675c1bb93.js",
+      "resourceType": "Script",
+      "transferSize": 6840,
+      "resourceSize": 16631,
+      "networkRequestTime": 68.78200000012293,
+      "networkEndTime": 80.11200000019744,
+      "statusCode": 200
+    },
+    {
+      "url": "http://127.0.0.1:3330/_next/static/chunks/500-8af45f63ef5e66a0.js",
+      "resourceType": "Script",
+      "transferSize": 3743,
+      "resourceSize": 6893,
+      "networkRequestTime": 69.0679999999702,
+      "networkEndTime": 79.3859999999404,
+      "statusCode": 200
+    },
+    {
+      "url": "http://127.0.0.1:3330/_next/static/chunks/app/(public)/page-0297404115c0fcac.js",
+      "resourceType": "Script",
+      "transferSize": 5645,
+      "resourceSize": 13676,
+      "networkRequestTime": 69.66100000031292,
+      "networkEndTime": 80.57500000018626,
+      "statusCode": 200
+    },
+    {
+      "url": "http://127.0.0.1:3330/_next/static/chunks/app/(public)/layout-28698c696b1205f8.js",
+      "resourceType": "Script",
+      "transferSize": 3402,
+      "resourceSize": 7072,
+      "networkRequestTime": 75.41500000003725,
+      "networkEndTime": 82.80299999983981,
+      "statusCode": 200
+    },
+    {
+      "url": "https://unpkg.com/@elevenlabs/convai-widget-embed",
+      "resourceType": "Script",
+      "transferSize": 0,
+      "resourceSize": 0,
+      "networkRequestTime": 33.10800000047311,
+      "networkEndTime": 54.73600000003353,
+      "statusCode": -1
+    },
+    {
+      "url": "http://127.0.0.1:3330/_next/static/media/28a2004cf8372660-s.woff2",
+      "resourceType": "Font",
+      "transferSize": 21521,
+      "resourceSize": 20980,
+      "networkRequestTime": 136.3640000000596,
+      "networkEndTime": 141.51200000056997,
+      "statusCode": 200
+    },
+    {
+      "url": "http://127.0.0.1:3330/favicon.ico",
+      "resourceType": "Other",
+      "transferSize": 534,
+      "resourceSize": 9,
+      "networkRequestTime": 266.79400000022724,
+      "networkEndTime": 270.0200000000186,
+      "statusCode": 404
+    },
+    {
+      "url": "http://127.0.0.1:3330/_vercel/insights/script.js",
+      "resourceType": "Script",
+      "transferSize": 0,
+      "resourceSize": 0,
+      "networkRequestTime": 268.66500000003725,
+      "networkEndTime": 268.80600000033155,
+      "statusCode": -1
+    },
+    {
+      "url": "http://127.0.0.1:3330/_vercel/speed-insights/script.js",
+      "resourceType": "Script",
+      "transferSize": 0,
+      "resourceSize": 0,
+      "networkRequestTime": 269.77799999993294,
+      "networkEndTime": 269.905999999959,
+      "statusCode": -1
+    },
+    {
+      "url": "http://127.0.0.1:3330/",
+      "resourceType": "Fetch",
+      "transferSize": 938,
+      "resourceSize": 416,
+      "networkRequestTime": 289.02900000009686,
+      "networkEndTime": 302.38400000007823,
+      "statusCode": 200
+    },
+    {
+      "url": "http://127.0.0.1:3330/",
+      "resourceType": "Fetch",
+      "transferSize": 3124,
+      "resourceSize": 7445,
+      "networkRequestTime": 309.76599999982864,
+      "networkEndTime": 317.574000000488,
+      "statusCode": 200
+    }
+  ]
+}
