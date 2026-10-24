@@ -1,4 +1,5 @@
 import type {Metadata} from 'next';
+import { PRODUCTION_ORIGIN } from '@/lib/seo';
 import { Playfair_Display } from 'next/font/google';
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
@@ -13,8 +14,9 @@ const playfair = Playfair_Display({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(PRODUCTION_ORIGIN),
+  robots: { index: false, follow: false },
   title: 'Nguyễn Trãi - Danh nhân văn hóa thế giới',
-  description: 'Tìm hiểu về cuộc đời và sự nghiệp của Nguyễn Trãi',
 };
 
 export default function RootLayout({children}: {children: React.ReactNode}) {

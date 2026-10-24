@@ -1,0 +1,22 @@
+{
+  "observedAt": "2026-10-24T12:33:27.675Z",
+  "revision": "d26ef67055cf0d9921607d5c8f877f363cc5fa4a",
+  "nodeVersion": "v24.22.1",
+  "origin": "http://127.0.0.1:3356",
+  "result": [
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 1000
+      },
+      "assertions": "metadata, OG, Twitter, canonical, JSON-LD escaping, references round-trip, legacy compatibility, private/missing not-found noindex, sitemap XML, robots, admin noindex, no overflow/page errors"
+    },
+    {
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "assertions": "metadata, OG, Twitter, canonical, JSON-LD escaping, references round-trip, legacy compatibility, private/missing not-found noindex, sitemap XML, robots, admin noindex, no overflow/page errors"
+    }
+  ]
+}
