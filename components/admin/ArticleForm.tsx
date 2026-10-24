@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { X } from 'lucide-react';
+import { ArrowUp, ArrowDown, X } from 'lucide-react';
 import { SECTIONS } from '@/lib/constants';
 import MediaEditor from '@/components/admin/MediaEditor';
 import StatusMessage from '@/components/admin/StatusMessage';
@@ -318,12 +318,13 @@ export default function ArticleForm({ isMutationPending, setIsMutationPending }:
               ></textarea>
             </div>
 
-            <fieldset disabled={isMutationPending} className="space-y-4 min-w-0">
+            <fieldset disabled={isMutationPending} className="space-y-4 min-w-0 scroll-mt-24">
               <legend className="text-lg font-bold text-[#2C1E16] mb-2">Nguồn tham khảo (Tùy chọn)</legend>
               <p className="text-sm text-[#5C4033]">Tối đa 20 nguồn, theo thứ tự hiển thị. Sách in không cần URL.</p>
               {references.map((reference, index) => (
                 <fieldset key={reference.key} className="min-w-0 border border-[#D4C4A8] rounded-sm p-4 space-y-3">
                   <legend className="px-1 font-bold text-[#2C1E16]">Nguồn {index + 1}</legend>
+                  <div className="grid gap-3 sm:grid-cols-2">
                   {([
                     ['title', 'Tên nguồn *', 300],
                     ['url', 'URL (Tùy chọn)', 2048],
@@ -333,7 +334,7 @@ export default function ArticleForm({ isMutationPending, setIsMutationPending }:
                     const id = `reference-${reference.key}-${field}`;
                     const error = referenceErrors[`${index}.${field}`];
                     return (
-                      <div key={field}>
+                      <div key={field} className="min-w-0">
                         <label htmlFor={id} className="block text-sm font-bold text-[#2C1E16] mb-1">{label}</label>
                         <input id={id} type="text" inputMode={field === 'url' ? 'url' : 'text'}
                           maxLength={maxLength} value={reference[field] || ''} aria-required={field === 'title'}
@@ -347,20 +348,22 @@ export default function ArticleForm({ isMutationPending, setIsMutationPending }:
                       </div>
                     );
                   })}
-                  <div className="flex flex-wrap gap-3 text-sm text-[#8B3A3A]">
+                  </div>
+                  <div className="flex items-center gap-2 text-sm text-[#8B3A3A]">
                     {([-1, 1] as const).map(direction => (
                       <button key={direction} type="button" disabled={index + direction < 0 || index + direction >= references.length}
                         aria-label={`Chuyển nguồn ${index + 1} ${direction < 0 ? 'lên' : 'xuống'}`}
-                        className="px-2 py-2 underline disabled:opacity-50"
+                        title={direction < 0 ? 'Chuyển lên' : 'Chuyển xuống'}
+                        className="h-11 w-11 shrink-0 inline-flex items-center justify-center border border-[#D4C4A8] rounded-sm disabled:opacity-50"
                         onClick={() => {
                           const reordered = [...references];
                           [reordered[index], reordered[index + direction]] = [reordered[index + direction], reordered[index]];
                           referenceFocus.current = `reference-${reference.key}-title`;
                           setReferences(reordered);
                           setReferenceErrors({});
-                        }}>{direction < 0 ? 'Chuyển lên' : 'Chuyển xuống'}</button>
+                        }}>{direction < 0 ? <ArrowUp aria-hidden="true" className="h-4 w-4" /> : <ArrowDown aria-hidden="true" className="h-4 w-4" />}</button>
                     ))}
-                    <button type="button" aria-label={`Xóa nguồn ${index + 1}`} className="px-2 py-2 underline"
+                    <button type="button" aria-label={`Xóa nguồn ${index + 1}`} className="ml-auto min-h-11 px-2 py-2 underline whitespace-nowrap"
                       onClick={() => {
                         referenceFocus.current = 'add-article-reference';
                         setReferences(references.filter(item => item.key !== reference.key));

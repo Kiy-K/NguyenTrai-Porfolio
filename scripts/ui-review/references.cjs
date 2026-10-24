@@ -96,8 +96,16 @@ let browser;
     assert.deepEqual(payload.references, [{ title: 'Nguồn web', url: 'https://example.org' }, { title: 'Sách in' }]);
     assert.equal(await page.locator('#reference-0-title').inputValue(), ' Sách in ');
     assert.equal(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth), false);
-    await page.locator('#reference-1-title').scrollIntoViewIfNeeded();
-    await page.screenshot({ path: artifact(`references-admin-${viewport.width}.png`) });
+    const firstSource = page.getByRole('group', { name: 'Nguồn 1', exact: true });
+    const actionTops = await firstSource.locator('button').evaluateAll(buttons => buttons.map(button => button.getBoundingClientRect().top));
+    assert.ok(Math.max(...actionTops) - Math.min(...actionTops) < 1, 'source actions must stay on one row');
+    if (viewport.width === 1440) {
+      const fields = await firstSource.locator('input').evaluateAll(inputs => inputs.map(input => ({ top: input.getBoundingClientRect().top, left: input.getBoundingClientRect().left })));
+      assert.ok(Math.abs(fields[0].top - fields[1].top) < 1 && fields[1].left > fields[0].left, 'desktop source fields must use two columns');
+    }
+    const editor = page.getByRole('group', { name: 'Nguồn tham khảo (Tùy chọn)', exact: true });
+    await editor.evaluate(element => element.scrollIntoView({ block: 'start' }));
+    await editor.screenshot({ path: artifact(`references-admin-${viewport.width}.png`) });
     await page.getByRole('button', { name: 'Xóa nguồn 1', exact: true }).focus();
     await page.keyboard.press('Enter');
     assert.equal(await add.evaluate(el => el === document.activeElement), true);
