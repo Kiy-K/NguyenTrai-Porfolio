@@ -78,12 +78,15 @@ function buildVideoList(product: {
 
 export default async function ProductDetail({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
+  // Next page params encode each segment; decode once to preserve literal percent IDs.
+  let productId: string;
+  try { productId = decodeURIComponent(id); } catch { notFound(); }
   return (
     <div className="flex-1 bg-[#F4EBD0] font-playfair">
       <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="mb-8"><BackButton /></div>
         <Suspense fallback={<ProductSkeleton />}>
-          <ProductContent id={id} />
+          <ProductContent id={productId} />
         </Suspense>
       </main>
     </div>

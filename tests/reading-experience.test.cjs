@@ -89,6 +89,11 @@ test('article body and related cards share one list read and gate invalid record
   const rendered = await content.type(content.props);
   assert.equal(reads, 1);
   assert.deepEqual(rendered.props.children[0].props.items, seo.articleBreadcrumbs(products[0]));
+  for (const id of ['a b', 'a%20b', 'a/b', 'bài & nguồn']) {
+    const encoded = await page.default({ params: Promise.resolve({ id: encodeURIComponent(id) }) });
+    assert.equal(encoded.props.children.props.children[1].props.children.props.id, id);
+  }
+  await assert.rejects(page.default({ params: Promise.resolve({ id: '%' }) }), /NOT_FOUND/);
   for (const invalid of [undefined, article('self', { status: 'draft' }), article('self', { images: ['bad'] })]) {
     products = invalid ? [invalid] : [];
     await assert.rejects(content.type(content.props), /NOT_FOUND/);

@@ -6,7 +6,7 @@ export default function BreadcrumbNav({ items }: { items: { name: string; path: 
     <nav aria-label="Đường dẫn trang" className="mb-6 min-w-0 text-sm text-[#5C4033]">
       <ol className="flex min-w-0 items-center gap-2">
         {trail.map((item, index) => (
-          <li key={item.path} className="flex min-w-0 items-center gap-2">
+          <li key={item.path} className={`flex min-w-0 items-center gap-2 ${index === trail.length - 1 ? 'flex-1' : 'max-w-[35%] shrink-0'}`}>
             {index > 0 && <span aria-hidden="true">›</span>}
             {index === trail.length - 1 ? (
               <span aria-current="page" className="truncate font-semibold text-[#2C1E16]">{item.name}</span>

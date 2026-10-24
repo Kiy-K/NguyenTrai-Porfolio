@@ -8,15 +8,15 @@ const fixture = { id: 'reading & legacy', title: 'Bài viết dài '.repeat(12) 
 const additions = [fixture,
   { ...fixture, id: 'reading-first', title: 'Bài viết cùng chuyên mục', tags: ['dao duc'] },
   { ...fixture, id: 'reading-backfill', title: 'Bài viết cùng thẻ', section: 'unknown' },
-  { ...fixture, id: 'reading-malformed', images: ['javascript:alert(1)'] },
+  { ...fixture, id: 'reading-malformed', section: 'unknown', videos: {} },
   { ...fixture, id: 'reading-draft', status: 'draft' },
   { ...fixture, id: 'reading-archived', status: 'archived' },
   { ...fixture, id: 'reading-unknown', title: 'Bài viết không rõ chuyên mục', section: 'unknown', tags: [] },
-  { ...fixture, id: 'reading-first' },
+  { ...fixture, id: 'reading%20literal', title: 'ID có phần trăm', section: 'unknown', tags: [] },
 ];
 const log = fs.openSync(artifact('reading-server.log'), 'w');
 const server = spawn(process.execPath, ['-e', `require('./scripts/ui-review/fixtures.cjs').push(...${JSON.stringify(additions)}); require('./scripts/ui-review/server.cjs');`], { env: localEnv(), stdio: ['ignore', log, log] });
-let browser;
+let browser, debugPage;
 const results = [];
 (async () => {
   for (let i = 0; ; i++) {
@@ -35,6 +35,7 @@ const results = [];
       return route.continue();
     });
     const page = await context.newPage();
+    debugPage = page;
     const errors = [];
     page.on('pageerror', error => errors.push(error.message));
     const articleUrl = origin + '/products/' + encodeURIComponent(fixture.id);
@@ -86,6 +87,9 @@ const results = [];
     await page.keyboard.press('Enter');
     await page.waitForURL('**/products/reading-first');
     await page.getByRole('heading', { level: 1, name: 'Bài viết cùng chuyên mục', exact: true }).waitFor();
+    await page.goto(origin + '/products/reading%2520literal', { waitUntil: 'networkidle' });
+    await page.getByRole('heading', { level: 1, name: 'ID có phần trăm', exact: true }).waitFor();
+    assert.equal(await nav.locator('[aria-current="page"]').textContent(), 'ID có phần trăm');
     await page.goto(origin + '/products/reading-unknown', { waitUntil: 'networkidle' });
     assert.equal(await nav.locator('li').count(), 2);
     assert.equal(await related.count(), 0);
@@ -105,4 +109,4 @@ const results = [];
   }
   receipt('reading-browser.json', results);
   console.log(JSON.stringify(results, null, 2));
-})().catch(error => { console.error(error); process.exitCode = 1; }).finally(async () => { await browser?.close(); server.kill('SIGTERM'); fs.closeSync(log); });
+})().catch(async error => { console.error(error); if (debugPage) { console.error('Failed URL:', debugPage.url(), await debugPage.locator('body').innerText()); await debugPage.screenshot({ path: artifact('reading-failure.png'), fullPage: true }); } process.exitCode = 1; }).finally(async () => { await browser?.close(); server.kill('SIGTERM'); fs.closeSync(log); });
