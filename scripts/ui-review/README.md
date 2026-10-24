@@ -72,3 +72,7 @@ The committed historic `results/*.json` are output evidence, not fixtures or a r
 ## Issue 37 mobile LCP investigation
 
 [lcp-matrix.cjs](lcp-matrix.cjs) and [lcp-lighthouse.cjs](lcp-lighthouse.cjs) reuse the matched collector profile for sequential historical/current and one-factor image experiments. [Frozen protocols, exact tool locks and reproduction commands](../../docs/review/issue-37/reproduce.md) define the inputs; [the report](../../docs/review/issue-37/report.md) preserves all 35 raw samples and explains the report-only negative result. `summarize-lcp.cjs` rejects incomplete/mixed cells and checks the preregistered benefit threshold; `lcp-browser.cjs` captures fixed-viewport geometry, no-JavaScript discovery and synthetic fallback failures. No live widget, provider writes, production measurement or P4 work is included.
+
+## P7 reading experience
+
+`reading.cjs` starts and stops its own synthetic server. It checks visible breadcrumbs against P6 JSON-LD, deterministic related cards, keyboard navigation, encoded/literal-percent article IDs, private/malformed routes, references, reduced motion and overflow at 390×844 and 1440×1000. Run it after `build.cjs`, with external Playwright tools as above. Screenshots and `reading-browser.json` go to `UI_REVIEW_OUTPUT`. See [Issue #46 evidence](../../docs/review/issue-46/README.md) for review and rollback.

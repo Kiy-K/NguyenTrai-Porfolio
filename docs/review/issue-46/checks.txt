@@ -1,0 +1,8 @@
+
+> ai-studio-applet@0.1.0 lint
+> eslint .
+
+
+> ai-studio-applet@0.1.0 typecheck
+> tsc --noEmit
+
