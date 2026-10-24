@@ -10,7 +10,8 @@
       "review-ui-roadmap-integration": false,
       "perf/issue-34-matched-lighthouse": false,
       "security/node24-october-patches": false,
-      "perf/issue-37-mobile-lcp": false
+      "perf/issue-37-mobile-lcp": false,
+      "fix/issue39-placeholder-contrast": false
     }
   }
 }

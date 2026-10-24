@@ -43,7 +43,7 @@ export default function ProjectCard({
             </>
           ) : (
             <div className="flex flex-col items-center justify-center p-6 text-center transform motion-safe:group-hover/card:scale-105 transition-transform duration-300 ease-[cubic-bezier(0.25,0.1,0.25,1)]">
-              <div className="text-[#B8860B] font-playfair italic text-xl mb-2">Nguyễn Trãi</div>
+              <div className="text-[#8B3A3A] font-playfair italic text-xl mb-2">Nguyễn Trãi</div>
             </div>
           )}
         </div>
