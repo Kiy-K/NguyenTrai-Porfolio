@@ -1,11 +1,14 @@
 import JsonLd from '@/components/JsonLd';
-import { articleMetadata, articleStructuredData, isDiscoverableArticle } from '@/lib/seo';
+import { articleBreadcrumbs, articleMetadata, articleStructuredData, isDiscoverableArticle } from '@/lib/seo';
+import BreadcrumbNav from '@/components/BreadcrumbNav';
+import RelatedArticles from '@/components/RelatedArticles';
+import { relatedArticles } from '@/lib/related-articles';
 
 import { Suspense } from 'react';
 import { ProductSkeleton } from '@/components/ContentSkeletons';
 import { notFound } from 'next/navigation';
 import Image from 'next/image';
-import { getProduct } from '@/lib/data';
+import { getProduct, getProducts } from '@/lib/data';
 import { ProductVideo } from '@/data/products';
 import ShareButton from '@/components/ShareButton';
 import VideoPlayer from '@/components/VideoPlayer';
@@ -75,12 +78,15 @@ function buildVideoList(product: {
 
 export default async function ProductDetail({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
+  // Next page params encode each segment; decode once to preserve literal percent IDs.
+  let productId: string;
+  try { productId = decodeURIComponent(id); } catch { notFound(); }
   return (
     <div className="flex-1 bg-[#F4EBD0] font-playfair">
       <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="mb-8"><BackButton /></div>
         <Suspense fallback={<ProductSkeleton />}>
-          <ProductContent id={id} />
+          <ProductContent id={productId} />
         </Suspense>
       </main>
     </div>
@@ -88,7 +94,8 @@ export default async function ProductDetail({ params }: { params: Promise<{ id: 
 }
 
 async function ProductContent({ id }: { id: string }) {
-  const product = await getProduct(id);
+  const products = await getProducts();
+  const product = products.find(product => String(product.id) === String(id));
 
   if (!isDiscoverableArticle(product)) {
     notFound();
@@ -100,6 +107,8 @@ async function ProductContent({ id }: { id: string }) {
     parseTextWithUrls(productText).find((segment) => segment.type === 'url')?.value ?? null;
 
   return (
+    <>
+        <BreadcrumbNav items={articleBreadcrumbs(product)} />
         <div className="bg-white rounded-sm shadow-sm border border-[#D4C4A8] overflow-hidden relative">
           <JsonLd data={articleStructuredData(product)} />
           {/* Main Media */}
@@ -202,7 +211,9 @@ async function ProductContent({ id }: { id: string }) {
               </div>
             )}
             <ArticleReferences references={product.references} />
+            <RelatedArticles products={relatedArticles(product, products)} />
           </div>
         </div>
+    </>
   );
 }

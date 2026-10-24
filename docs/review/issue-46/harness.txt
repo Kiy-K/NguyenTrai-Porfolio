@@ -1,0 +1,10 @@
+✔ synthetic harness pins loopback, pauses writes and clears provider credentials (0.80482ms)
+✔ generated receipts include runtime and source provenance (4.01842ms)
+ℹ tests 2
+ℹ suites 0
+ℹ pass 2
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 47.657213

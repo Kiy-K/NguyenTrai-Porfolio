@@ -93,9 +93,9 @@ test('sitemap calls public reads and propagates backend errors without emitting 
 });
 
 test('page metadata rejects missing, unpublished and malformed articles, and unknown sections', async () => {
-  const mocks = { '@/lib/seo': seo, '@/components/JsonLd': {}, '@/components/ContentSkeletons': {}, '@/lib/data': {}, '@/data/products': {}, '@/components/ShareButton': {}, '@/components/VideoPlayer': {}, '@/components/MuxVideoPlayer': {}, '@/components/BackButton': {}, '@/components/RichTextWithEmbeds': {}, '@/components/SmartEmbed': {}, '@/components/ArticleReferences': {}, '@/lib/url-parser': {}, 'next/navigation': { notFound: () => { throw Error('NOT_FOUND'); } } };
+  const mocks = { '@/lib/seo': seo, '@/components/BreadcrumbNav': {}, '@/components/RelatedArticles': {}, '@/lib/related-articles': {}, '@/components/JsonLd': {}, '@/components/ContentSkeletons': {}, '@/lib/data': {}, '@/data/products': {}, '@/components/ShareButton': {}, '@/components/VideoPlayer': {}, '@/components/MuxVideoPlayer': {}, '@/components/BackButton': {}, '@/components/RichTextWithEmbeds': {}, '@/components/SmartEmbed': {}, '@/components/ArticleReferences': {}, '@/lib/url-parser': {}, 'next/navigation': { notFound: () => { throw Error('NOT_FOUND'); } } };
   for (const product of [undefined, { ...article, status: 'draft' }, { ...article, status: 'archived' }, { ...article, title: null }, { ...article, videos: {} }]) {
-    const page = loadTs('app/(public)/products/[id]/page.tsx', { ...mocks, '@/lib/data': { getProduct: async () => product } });
+    const page = loadTs('app/(public)/products/[id]/page.tsx', { ...mocks, '@/lib/data': { getProduct: async () => product, getProducts: async () => [product] } });
     await assert.rejects(page.generateMetadata({ params: Promise.resolve({ id: 'missing' }) }), /NOT_FOUND/);
   }
   const page = loadTs('app/(public)/products/[id]/page.tsx', { ...mocks, '@/lib/data': { getProduct: async () => article } });
@@ -113,8 +113,8 @@ test('malformed renderer fields are neither advertised nor rendered, while safe 
     assert.equal(seo.isDiscoverableArticle(product), false);
     assert.deepEqual(seo.buildSitemap([product]), seo.buildSitemap([]));
     const page = loadTs('app/(public)/products/[id]/page.tsx', {
-      '@/lib/seo': seo, '@/components/JsonLd': {}, '@/components/ContentSkeletons': {},
-      '@/lib/data': { getProduct: async () => product }, '@/data/products': {},
+      '@/lib/seo': seo, '@/components/BreadcrumbNav': {}, '@/components/RelatedArticles': {}, '@/lib/related-articles': {}, '@/components/JsonLd': {}, '@/components/ContentSkeletons': {},
+      '@/lib/data': { getProduct: async () => product, getProducts: async () => [product] }, '@/data/products': {},
       '@/components/ShareButton': {}, '@/components/VideoPlayer': {}, '@/components/MuxVideoPlayer': {},
       '@/components/BackButton': () => null, '@/components/RichTextWithEmbeds': {}, '@/components/SmartEmbed': {},
       '@/components/ArticleReferences': {}, '@/lib/url-parser': {},

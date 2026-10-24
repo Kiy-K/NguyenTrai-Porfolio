@@ -1,5 +1,6 @@
 import JsonLd from '@/components/JsonLd';
 import { breadcrumbs, sectionMetadata } from '@/lib/seo';
+import BreadcrumbNav from '@/components/BreadcrumbNav';
 
 import { Suspense } from 'react';
 import { ProjectListSkeleton } from '@/components/ContentSkeletons';
@@ -35,6 +36,7 @@ export default async function SectionPage({ params }: { params: Promise<{ id: st
       <JsonLd data={breadcrumbs([{ name: section.name, path: section.path }])} />
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-16 flex-grow w-full relative">
         <div className="w-full">
+          <BreadcrumbNav items={[{ name: section.name, path: section.path }]} />
           {/* Section Title */}
           <div className="flex flex-col items-start sm:items-center sm:justify-center gap-4 mb-12 relative">
             <div className="sm:absolute sm:left-0">

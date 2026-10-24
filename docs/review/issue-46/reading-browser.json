@@ -1,0 +1,26 @@
+{
+  "observedAt": "2026-10-24T13:11:01.921Z",
+  "revision": "1770905b6fe71b82dd5a72cdb26c5455d63636db",
+  "nodeVersion": "v24.22.1",
+  "origin": "http://127.0.0.1:3360",
+  "result": [
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 1000
+      },
+      "reducedMotion": true,
+      "assertions": "visible/JSON-LD names and ancestor paths, default/unknown sections, keyboard focus and real ancestor/card navigation, references, canonical, escaped XSS, deterministic unique max-three links, no media, one/three columns, empty/backfill states, no overflow, private/malformed/missing noindex without navigation",
+      "pageErrors": []
+    },
+    {
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "reducedMotion": true,
+      "assertions": "visible/JSON-LD names and ancestor paths, default/unknown sections, keyboard focus and real ancestor/card navigation, references, canonical, escaped XSS, deterministic unique max-three links, no media, one/three columns, empty/backfill states, no overflow, private/malformed/missing noindex without navigation",
+      "pageErrors": []
+    }
+  ]
+}

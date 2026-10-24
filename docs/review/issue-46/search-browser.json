@@ -1,0 +1,48 @@
+{
+  "observedAt": "2026-10-24T13:10:39.401Z",
+  "revision": "1770905b6fe71b82dd5a72cdb26c5455d63636db",
+  "nodeVersion": "v24.22.1",
+  "origin": "http://127.0.0.1:3366",
+  "result": [
+    {
+      "checks": [
+        "accent-folded query: 11 matches",
+        "title-desc: 31 first",
+        "tag intersection: 6 matches",
+        "no-results/reset",
+        "offline typo query: 11 matches",
+        "retired endpoint: 404"
+      ],
+      "viewport": {
+        "width": 1440,
+        "height": 1000
+      },
+      "url": "http://127.0.0.1:3366/products/p0-1",
+      "title": "Nguyễn Trãi và nhân nghĩa 01 | Nguyễn Trãi",
+      "errors": [],
+      "forbidden": [],
+      "overflow": false,
+      "externalBlocked": 1
+    },
+    {
+      "checks": [
+        "accent-folded query: 11 matches",
+        "title-desc: 31 first",
+        "tag intersection: 6 matches",
+        "no-results/reset",
+        "offline typo query: 11 matches",
+        "retired endpoint: 404"
+      ],
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "url": "http://127.0.0.1:3366/products/p0-1",
+      "title": "Nguyễn Trãi và nhân nghĩa 01 | Nguyễn Trãi",
+      "errors": [],
+      "forbidden": [],
+      "overflow": false,
+      "externalBlocked": 1
+    }
+  ]
+}
