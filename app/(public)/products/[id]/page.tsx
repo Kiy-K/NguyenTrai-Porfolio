@@ -92,7 +92,7 @@ export default async function ProductDetail({ params }: { params: Promise<{ id: 
 
 async function ProductContent({ id }: { id: string }) {
   const products = await getProducts();
-  const product = products.find(product => String(product.id) === id);
+  const product = products.find(product => String(product.id) === String(id));
 
   if (!isDiscoverableArticle(product)) {
     notFound();

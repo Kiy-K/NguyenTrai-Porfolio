@@ -84,7 +84,7 @@ test('article body and related cards share one list read and gate invalid record
     '@/lib/url-parser': { parseTextWithUrls: () => [] },
     'next/navigation': { notFound: () => { throw Error('NOT_FOUND'); } },
   });
-  const shell = await page.default({ params: Promise.resolve({ id: 'self' }) });
+  const shell = await page.default({ params: Promise.resolve({ id: new String('self') }) });
   const content = shell.props.children.props.children[1].props.children;
   const rendered = await content.type(content.props);
   assert.equal(reads, 1);
