@@ -26,6 +26,10 @@
       "bytes": 12503,
       "sha256": "ef5a287b42710fc947a4659586e14898dd8a5ce996e3f87e5ed2802c2f2adfe2"
     },
+    "ci-followup.md": {
+      "bytes": 3558,
+      "sha256": "e1cc16a1fcee13b3ec5e5113447ad66a4af59d8dcdbe6b0a34f8f5eff912146e"
+    },
     "decode-sync-build-retry.txt": {
       "bytes": 3613,
       "sha256": "974dde0f16764c58e2e18e86345b0221e87bd07504cf058d5eab44aa18b6cab7"
@@ -75,8 +79,8 @@
       "sha256": "d920dd8d724793d7a8dec3d23b79f162d0c1ebbfd2a9d9b313f90b49cb5971f6"
     },
     "report.md": {
-      "bytes": 14630,
-      "sha256": "841b70cc3fd8f05e1eadfc1dfabe38b4ccafdbbf3eab48b0331f2e60ed65ad83"
+      "bytes": 15066,
+      "sha256": "ce24a107422cb32d3bd7f53a7cc57626c1209425e4ecb709e6cca0194cab3095"
     },
     "reproduce.md": {
       "bytes": 6134,
@@ -462,6 +466,62 @@
       "bytes": 1280,
       "sha256": "a84f336c86a800babc7ea8d78e122679436e9a1cb2ebed3fdf3914e11d41169e"
     },
+    "results/ci-followup/audit-after.json": {
+      "bytes": 367,
+      "sha256": "b88cc2e0e6fa4bd3aede1db53d040a6ace0f353dbf591ef55049eb3551f2e663"
+    },
+    "results/ci-followup/audit-before.json": {
+      "bytes": 7368,
+      "sha256": "8c7bce72fb47921c390b93d1e0576d127d370b84f98eaeb86c18fd47d084b137"
+    },
+    "results/ci-followup/browser.txt": {
+      "bytes": 13404,
+      "sha256": "366f1a69f46859bf225ea09673d75c5a6f06f8a461e69024b8f8484c93a08916"
+    },
+    "results/ci-followup/build.txt": {
+      "bytes": 3413,
+      "sha256": "a939bc8b37fd242204f144ddb85c7d250434b6cc40c4c3944e4fa754c502fc9e"
+    },
+    "results/ci-followup/clean-install.txt": {
+      "bytes": 689,
+      "sha256": "9f695f1f778dbd930c5e61f1cdf8f005462e7982322fdb06b9a75051b4406ee5"
+    },
+    "results/ci-followup/gate-status.json": {
+      "bytes": 825,
+      "sha256": "385e07ff53c55cac8ea9e6acc83ede54501d66769f2871f59c1eb8660bfb03b3"
+    },
+    "results/ci-followup/lcp-browser.json": {
+      "bytes": 14561,
+      "sha256": "21bd5f3c1f67b7044179bfacc3809ba8957154ddd3fa0a8839e0704c7502bb3d"
+    },
+    "results/ci-followup/lint.txt": {
+      "bytes": 42,
+      "sha256": "761a072801ad091a7eae1d335100559da9d2327bcc44808f2b5a8245e5fe2568"
+    },
+    "results/ci-followup/public-browser.json": {
+      "bytes": 811,
+      "sha256": "f6732c4e19d7a33d1fe23bbaf5a130a468afd79ad283b1acab537010d2c7b7e1"
+    },
+    "results/ci-followup/public.txt": {
+      "bytes": 406,
+      "sha256": "0078ce82d1efee692988c8d1829227b9757f78afcd22b046b76efe663f4f6345"
+    },
+    "results/ci-followup/search-browser.json": {
+      "bytes": 1280,
+      "sha256": "69e3800de52a9f1bfec3906e1ab2694fd4bce1d16d0c4be0fdccf54978a56f2a"
+    },
+    "results/ci-followup/search.txt": {
+      "bytes": 1015,
+      "sha256": "0e0da1ca863a259bf2bd9a9c0d90161e1aa503cecaa5a61813f1455221ce7664"
+    },
+    "results/ci-followup/tests.txt": {
+      "bytes": 10401,
+      "sha256": "13c8242a6c8e269f80e24bfcc79b69034d2fa71da94bc004860f43c27c76f5a9"
+    },
+    "results/ci-followup/typecheck.txt": {
+      "bytes": 51,
+      "sha256": "1552e44f7f75a8a07537436127b4b72fcc1d0c0df531b375723dcb07aec3f8c1"
+    },
     "results/primary/baseline/desktop-widget-off-1.json": {
       "bytes": 34538,
       "sha256": "9ff5d4e286beb37ff7f583f5ae63509f18b0d790d5f71d4dce027fdff17ed834"
@@ -811,8 +871,8 @@
       "sha256": "e4c841853398b6697131144956759d5bd5389c77cacd09c5c84e5ef0bbff4b7f"
     },
     "review-notes.md": {
-      "bytes": 2077,
-      "sha256": "20229ea37102cd363d01fd9e5dfd529f7c8104b14b0249ccc790d29620ade48a"
+      "bytes": 2230,
+      "sha256": "24113a0bf3dfda580c4e2209716ec60d55c1f49155625bdc62f06523b7f31ad6"
     },
     "screenshots/baseline-mobile.png": {
       "bytes": 102180,

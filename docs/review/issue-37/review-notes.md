@@ -1,5 +1,7 @@
 # Independent review
 
+These reviews cover the original investigation at `9838e17`; the subsequent dependency/security review is recorded in [ci-followup.md](ci-followup.md).
+
 Two independent review agents inspected the final diff against remote main `d5244614acc64bc53956aac7959802c20d433052`. Neither edited files or ran builds/browsers during scoring. They inspected the completed evidence after all 35 runs finished.
 
 ## Standards

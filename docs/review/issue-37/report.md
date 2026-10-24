@@ -2,7 +2,7 @@
 
 ## Disposition
 
-**Report-only: neither preregistered one-factor arm produced a reproducible mobile LCP benefit. No application code, dependency, image, preload, geometry or animation change ships.** Preserve the existing fallback and current responsive layout. This report is separate from issue 34's TBT finding and excludes P4.
+**No LCP optimization:** neither preregistered one-factor arm produced a reproducible mobile LCP benefit. The original investigation head `9838e17` changed no application code or dependencies. After publication, CI failed on production dependency advisories; [a separate security follow-up](ci-followup.md) patches dependencies without changing the portrait, preload, geometry, animations or fallback. The 35 measurements below remain frozen to their original lockfiles and are not measurements of the patched dependency tree. This report is separate from issue 34's TBT finding and excludes P4.
 
 ## Matched historical/current diagnosis
 
@@ -75,13 +75,13 @@ Exact experimental commits and one-line patches are preserved in [experiments](e
 
 ## Bundle accounting
 
-[Raw bundle accounting](bundle-evidence.json) uses only Script resources from each audited mobile navigation; admin prefetch is blocked in all targets. Primary historical/current transfer medians are 160,436/160,721 bytes; decoded 506,769/507,508 bytes. A/B unchanged current, decode-sync and fetch-high transfer 160,721/160,728/160,739 bytes; decoded 507,508/507,522/507,529 bytes. The experimental props add 7/18 transferred bytes and 14/21 decoded bytes respectively. None of those experimental application changes ship. Investigation tools/docs/tests are not imported by the app. Application and dependency source delta from current main is zero. Final standalone-install build hashes are not byte-identical: both builds emit 44 JS chunks; total emitted JS is 2,231,021→2,231,023 bytes (+2), independently gzipped totals 658,044→658,031 bytes (-13). These include non-homepage/admin chunks and are not navigation transfer estimates. Hashes/totals are recorded in bundle-evidence.json; this build variation is not claimed as an optimization. No byte-equivalence assumption is made from unchanged source alone.
+[Raw bundle accounting](bundle-evidence.json) uses only Script resources from each audited mobile navigation; admin prefetch is blocked in all targets. Primary historical/current transfer medians are 160,436/160,721 bytes; decoded 506,769/507,508 bytes. A/B unchanged current, decode-sync and fetch-high transfer 160,721/160,728/160,739 bytes; decoded 507,508/507,522/507,529 bytes. The experimental props add 7/18 transferred bytes and 14/21 decoded bytes respectively. None of those experimental application changes ship. Investigation tools/docs/tests are not imported by the app. At the frozen investigation head `9838e17`, application and dependency source delta from its base main was zero. Final standalone-install build hashes are not byte-identical: both builds emit 44 JS chunks; total emitted JS is 2,231,021→2,231,023 bytes (+2), independently gzipped totals 658,044→658,031 bytes (-13). These include non-homepage/admin chunks and are not navigation transfer estimates. Hashes/totals are recorded in bundle-evidence.json; this build variation is not claimed as an optimization. No byte-equivalence assumption is made from unchanged source alone.
 
 Exact tool dependency lockfiles, installed package source hashes and canonical file-list hashes are committed in [tools](tools/), in addition to the Node/Chromium binary and collector hashes. [Reproduction](reproduce.md) restores those lockfiles, avoiding transitive tool drift.
 
 ## Regression gates and limits
 
-Patched Node **24.22.1**, npm **11.19.1**, on the final rebased branch:
+Original investigation validation at `9838e17`, using patched Node **24.22.1** and npm **11.19.1** (post-CI-fix gates are recorded separately in [ci-followup.md](ci-followup.md)):
 
 - **109/109 tests pass**, including the new incomplete/mixed-cell/outlier and benefit-threshold checks; the reused harness safety/provenance suite passes 2/2.
 - **Lint, typecheck and credential-isolated production webpack build pass**, with a standalone locked dependency installation. Next initially stops after compilation to display a security advisory; the unchanged retry exits 0. The first failure and successful retry are both retained. Passing the build does not resolve or sign off that advisory.

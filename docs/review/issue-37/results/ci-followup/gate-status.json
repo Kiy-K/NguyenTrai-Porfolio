@@ -1,0 +1,36 @@
+{
+  "node": "v24.22.1",
+  "npm": "11.19.1",
+  "tests": {
+    "exit": 0,
+    "passed": 111
+  },
+  "cleanInstall": {
+    "exit": 0
+  },
+  "lint": {
+    "exit": 0
+  },
+  "typecheck": {
+    "exit": 0
+  },
+  "webpackBuild": {
+    "exit": 0
+  },
+  "productionAudit": {
+    "exit": 0,
+    "vulnerabilities": 0
+  },
+  "publicBrowser": {
+    "exit": 0
+  },
+  "searchBrowser": {
+    "exit": 0
+  },
+  "portraitFallbackBrowser": {
+    "exit": 0
+  },
+  "review": "Independent review passes; no blockers. Actual getVideoPlayerOptions path covered. Deprecated override and frozen prepatch measurements documented. Live playback/deployed behavior unverified.",
+  "packageJsonSha256": "d9568c78e675d01e379fa5456f23e4e2b8feaed9c3ce705cb57fc449dda506bf",
+  "lockfileSha256": "7d44a26b528b1854a181c9c6d9e85a2f6cd1635a1547ba4598b52969d8125470"
+}
