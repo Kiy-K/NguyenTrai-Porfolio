@@ -25,6 +25,14 @@ The platform goal is to preserve Nguyễn Trãi's historical legacy and raise aw
 
 `Product` is defined in `data/products.ts` and includes optional media fields (`videos`, `video`, `muxAssetId`, `muxPlaybackId`) plus descriptive fields (`title`, `description`, `fullDescription`, `tags`, `section`, etc.).
 
+New articles may carry an ordered `references?: ArticleReference[]` list of
+human-authored sources (`title`, optional `url`, `author`, `publisher`). The
+create-only admin form and POST validate the same bounded schema; existing
+articles need no sources or backfill. The optional field travels inside the
+existing Redis content object / Neon JSONB payload without a migration or cache
+policy change. Public detail pages render escaped sources after content/media,
+with HTTP(S)-only outbound links and no fetching or automatic citations.
+
 Feedback keeps the same fields/source keys in the selected backend:
 
 - `feedback:record:{uuid}` with fields: `id`, `nameHash`, `classHash`, `emailHash`, `text`, `rating`, `videoId`, `createdAt`, `createdAtUnix`

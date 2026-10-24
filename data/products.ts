@@ -4,6 +4,13 @@ export interface ProductVideo {
   muxPlaybackId?: string;
 }
 
+export interface ArticleReference {
+  title: string;
+  url?: string;
+  author?: string;
+  publisher?: string;
+}
+
 export interface Product {
   id: string | number;
   title: string;
@@ -19,6 +26,7 @@ export interface Product {
   createdAt?: string;
   status?: 'published' | 'draft' | 'archived';
   teamMembers?: string;
+  references?: ArticleReference[];
 }
 
 export const products: Product[] = [];

@@ -33,6 +33,7 @@ const constants = loadTs('lib/constants.ts');
 function form() {
   return mount('components/admin/ArticleForm.tsx', {
     'next/navigation': { useRouter: () => ({ push() {} }) },
+    '@/lib/article-references': loadTs('lib/article-references.ts'),
     '@/lib/constants': constants,
     '@/components/admin/MediaEditor': { default: () => null },
   });
@@ -208,6 +209,7 @@ test('image uploads expose completed-file counts and reject oversized images wit
 
 test('an existing mutation disables save and clear controls', async () => {
   const app = mount('components/admin/ArticleForm.tsx', {
+    '@/lib/article-references': loadTs('lib/article-references.ts'),
     'next/navigation': { useRouter: () => ({ push() {} }) }, '@/lib/constants': constants,
     '@/components/admin/MediaEditor': { default: () => null },
   }, { isMutationPending: true, setIsMutationPending() { throw new Error('must not start another mutation'); } });
@@ -239,4 +241,47 @@ test('confirmation uses native modal focus containment, Escape callback and focu
     tree.props.onCancel(); assert.equal(cancelled, 1);
     cleanup(); assert.deepEqual(calls, ['showModal', 'cancel-focus', 'close', 'restore']);
   } finally { global.document = previous.document; global.HTMLElement = previous.HTMLElement; }
+});
+
+test('reference rows validate, reorder/remove, preserve failed saves and clear only on success', async () => {
+  const app = form();
+  let tree;
+  const render = () => tree = app.render();
+  const button = name => find(tree, n => n.type === 'button' && (n.props['aria-label'] === name || n.props.children === name));
+  const submit = () => find(tree, n => n.type === 'form').props.onSubmit({ preventDefault() {} });
+  const change = (id, value) => find(tree, n => n.props.id === id).props.onChange({ target: { name: id.replace('article-', ''), value } });
+  const previous = { fetch: global.fetch, document: global.document, setTimeout: global.setTimeout };
+  let calls = 0, payload, ok = false, focused;
+  global.document = { getElementById: id => ({ focus() { focused = id; } }) };
+  global.fetch = async (url, init) => { calls++; payload = JSON.parse(init.body); return { ok, json: async () => ok ? { success: true } : { error: 'Thử lại sau' } }; };
+  global.setTimeout = () => 1;
+  try {
+    render(); change('article-title', 'Nguyễn Trãi');
+    render(); change('article-description', 'Authored');
+    render(); button('Thêm nguồn tham khảo').props.onClick();
+    render(); await submit(); render();
+    assert.equal(calls, 0);
+    assert.equal(focused, 'reference-0-title');
+    assert.equal(find(tree, n => n.props.id === 'reference-0-title').props['aria-invalid'], true);
+    assert.match(find(tree, n => n.props.id === 'reference-0-title-error').props.children, /tên nguồn/);
+    change('reference-0-title', ' Book ');
+    render(); change('reference-0-url', 'javascript:alert(1)');
+    render(); await submit(); render();
+    assert.equal(calls, 0); assert.equal(focused, 'reference-0-url');
+    change('reference-0-url', '');
+    render(); button('Thêm nguồn tham khảo').props.onClick();
+    render(); change('reference-1-title', 'Web');
+    render(); change('reference-1-url', 'https://example.org');
+    render(); button('Chuyển nguồn 2 lên').props.onClick();
+    render(); await submit(); render();
+    assert.equal(calls, 1);
+    assert.deepEqual(payload.references, [{ title: 'Web', url: 'https://example.org' }, { title: 'Book' }]);
+    assert.equal(find(tree, n => n.props.id === 'reference-0-title').props.value, ' Book ');
+    assert.match(status(tree).message, /vẫn được giữ lại/);
+    button('Xóa nguồn 1').props.onClick();
+    render(); ok = true; await submit(); render();
+    assert.deepEqual(payload.references, [{ title: 'Book' }]);
+    assert.equal(nodes(tree).filter(n => n.type === 'input' && n.props.id.startsWith('reference-')).length, 0);
+    assert.equal(status(tree).type, 'success');
+  } finally { global.fetch = previous.fetch; global.document = previous.document; global.setTimeout = previous.setTimeout; }
 });

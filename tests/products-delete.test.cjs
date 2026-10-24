@@ -5,7 +5,7 @@ const { NextResponse } = require('next/server');
 const env = { ...process.env };
 afterEach(() => { process.env = { ...env }; });
 
-const existing = [{ id: 'a', title: 'A', description: 'a', images: ['https://res.cloudinary.com/demo/a.jpg'], muxPlaybackId: 'Play01' }];
+const existing = [{ id: 'a', title: 'A', description: 'a', images: ['https://res.cloudinary.com/demo/a.jpg'], muxPlaybackId: 'Play01', references: [{ title: 'Print source' }, { title: 'Web source', url: 'https://example.org' }] }];
 
 function deleteRoute() {
   process.env.UPSTASH_REDIS_REST_URL = 'https://test.invalid';
@@ -20,6 +20,7 @@ function deleteRoute() {
     '@/lib/admin-auth': { getClientIpFromHeaders: () => 'test-ip', getActiveAdminSession: async () => ({ sessionId: 'test' }) },
     '@/lib/rate-limit': { consumeRateLimit: async () => ({ allowed: true }) },
     '@/lib/request-security': loadTs('lib/request-security.ts'),
+    '@/lib/article-references': loadTs('lib/article-references.ts'),
     '@/lib/constants': constants,
   });
   const del = (body) => route.DELETE(new Request('https://test.invalid/api/products', {

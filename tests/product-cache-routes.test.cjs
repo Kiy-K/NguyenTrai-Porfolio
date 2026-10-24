@@ -11,6 +11,7 @@ function route({ authenticated = false, failure = false } = {}) {
     'next/server': { NextResponse }, 'next/cache': { revalidatePath() {} },
     '@/lib/data': { getProducts: async () => { publicReads++; return all.slice(0, 1); } },
     '@/lib/persistence': { readContent: async () => { freshReads++; if (failure) throw Error('Neon unavailable'); return { products: all }; } },
+    '@/lib/article-references': loadTs('lib/article-references.ts'),
     '@/lib/constants': loadTs('lib/constants.ts'),
     '@/lib/admin-auth': { getClientIpFromHeaders: () => 'ip', getActiveAdminSession: async () => authenticated ? {} : null },
     '@/lib/request-security': {}, '@/lib/rate-limit': {},
