@@ -1,0 +1,30 @@
+{
+  "observedAt": "2026-10-24T11:33:51.962Z",
+  "revision": "55482d51051897a2b2644f36faef7d0c399f72be",
+  "nodeVersion": "v24.22.1",
+  "origin": "http://127.0.0.1:3346",
+  "result": [
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 1000
+      },
+      "public": "escaped text, safe links, book, ordered sources, no overflow, focus visible",
+      "legacy": "no sources section",
+      "private": "draft/archived hidden on API and page",
+      "admin": "keyboard add/reorder/remove, row errors, failed-save retention, success reset, 20-source cap and focus restoration after removal",
+      "pageErrors": []
+    },
+    {
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "public": "escaped text, safe links, book, ordered sources, no overflow, focus visible",
+      "legacy": "no sources section",
+      "private": "draft/archived hidden on API and page",
+      "admin": "keyboard add/reorder/remove, row errors, failed-save retention, success reset, 20-source cap and focus restoration after removal",
+      "pageErrors": []
+    }
+  ]
+}
