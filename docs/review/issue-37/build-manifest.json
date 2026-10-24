@@ -137,5 +137,14 @@
     },
     "gitStatus": " M next-env.d.ts\n",
     "buildId": "74H2VcjjBd91b1CMJU4Wd"
+  },
+  "final": {
+    "revisionBeforeFinalEvidenceCommit": "942c1e7de932aba7ee2d7c37812ef80c4d36cc99",
+    "base": "d5244614acc64bc53956aac7959802c20d433052",
+    "buildId": "AF71z3LnKzGgW7DpvSzfu",
+    "node": "v24.22.1",
+    "npm": "11.19.1",
+    "gitStatus": " M docs/review/issue-37/bundle-evidence.json\n M docs/review/issue-37/report.md\n M next-env.d.ts\n?? docs/review/issue-37/raw-integrity.json\n?? docs/review/issue-37/results/ab/commands.log.gz\n?? docs/review/issue-37/results/ab/commands.txt\n?? docs/review/issue-37/results/ab/current-server.log.gz\n?? docs/review/issue-37/results/ab/current-server.txt\n?? docs/review/issue-37/results/ab/decode-sync-server.log.gz\n?? docs/review/issue-37/results/ab/decode-sync-server.txt\n?? docs/review/issue-37/results/ab/fetch-high-server.log.gz\n?? docs/review/issue-37/results/ab/fetch-high-server.txt\n?? docs/review/issue-37/results/primary/baseline-server.log.gz\n?? docs/review/issue-37/results/primary/baseline-server.txt\n?? docs/review/issue-37/results/primary/commands.log.gz\n?? docs/review/issue-37/results/primary/commands.txt\n?? docs/review/issue-37/results/primary/current-server.log.gz\n?? docs/review/issue-37/results/primary/current-server.txt\n?? docs/review/issue-37/results/validation/\n?? docs/review/issue-37/review-notes.md\n?? tsconfig.tsbuildinfo\n",
+    "applicationSourceDiff": ""
   }
 }

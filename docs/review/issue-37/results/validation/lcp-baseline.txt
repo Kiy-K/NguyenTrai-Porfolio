@@ -1,0 +1,233 @@
+[
+  {
+    "width": 390,
+    "height": 844,
+    "dpr": 1,
+    "javascriptEnabled": true,
+    "image": {
+      "rect": {
+        "x": 103,
+        "y": 457,
+        "width": 184,
+        "height": 184,
+        "top": 457,
+        "right": 287,
+        "bottom": 641,
+        "left": 103
+      },
+      "visibleArea": 33856,
+      "currentSrc": "http://127.0.0.1:3330/_next/image?url=%2Fnguyen-trai.jpg&w=640&q=75",
+      "complete": true,
+      "naturalWidth": 390,
+      "alt": "Chân dung Nguyễn Trãi"
+    },
+    "quotation": {
+      "rect": {
+        "x": 64,
+        "y": 677,
+        "width": 262,
+        "height": 156,
+        "top": 677,
+        "right": 326,
+        "bottom": 833,
+        "left": 64
+      },
+      "visibleArea": 40872
+    },
+    "fonts": "loaded",
+    "imagePreloads": 0,
+    "resources": [
+      {
+        "name": "http://127.0.0.1:3330/_next/image?url=%2Fnguyen-trai.jpg&w=640&q=75",
+        "entryType": "resource",
+        "startTime": 174.40000000037253,
+        "duration": 31.5,
+        "navigationId": 5490,
+        "initiatorType": "img",
+        "deliveryType": "",
+        "nextHopProtocol": "http/1.1",
+        "renderBlockingStatus": "non-blocking",
+        "contentType": "image/avif",
+        "contentEncoding": "",
+        "workerStart": 0,
+        "workerRouterEvaluationStart": 0,
+        "workerCacheLookupStart": 0,
+        "workerMatchedSourceType": "",
+        "workerFinalSourceType": "",
+        "redirectStart": 0,
+        "redirectEnd": 0,
+        "fetchStart": 174.40000000037253,
+        "domainLookupStart": 174.40000000037253,
+        "domainLookupEnd": 174.40000000037253,
+        "connectStart": 174.40000000037253,
+        "secureConnectionStart": 0,
+        "connectEnd": 174.40000000037253,
+        "requestStart": 180.3000000002794,
+        "responseStart": 204.90000000037253,
+        "firstInterimResponseStart": 0,
+        "finalResponseHeadersStart": 204.90000000037253,
+        "responseEnd": 205.90000000037253,
+        "transferSize": 33713,
+        "encodedBodySize": 33413,
+        "decodedBodySize": 33413,
+        "responseStatus": 200,
+        "serverTiming": []
+      }
+    ],
+    "overflow": false
+  },
+  {
+    "width": 1440,
+    "height": 1000,
+    "dpr": 1,
+    "javascriptEnabled": true,
+    "image": {
+      "rect": {
+        "x": 612,
+        "y": 433,
+        "width": 216,
+        "height": 216,
+        "top": 433,
+        "right": 828,
+        "bottom": 649,
+        "left": 612
+      },
+      "visibleArea": 46656,
+      "currentSrc": "http://127.0.0.1:3330/_next/image?url=%2Fnguyen-trai.jpg&w=1920&q=75",
+      "complete": true,
+      "naturalWidth": 960,
+      "alt": "Chân dung Nguyễn Trãi"
+    },
+    "quotation": {
+      "rect": {
+        "x": 547.5,
+        "y": 685,
+        "width": 345,
+        "height": 78,
+        "top": 685,
+        "right": 892.5,
+        "bottom": 763,
+        "left": 547.5
+      },
+      "visibleArea": 26910
+    },
+    "fonts": "loaded",
+    "imagePreloads": 0,
+    "resources": [
+      {
+        "name": "http://127.0.0.1:3330/_next/image?url=%2Fnguyen-trai.jpg&w=1920&q=75",
+        "entryType": "resource",
+        "startTime": 78.1999999997206,
+        "duration": 9.600000000093132,
+        "navigationId": 8737,
+        "initiatorType": "img",
+        "deliveryType": "",
+        "nextHopProtocol": "http/1.1",
+        "renderBlockingStatus": "non-blocking",
+        "contentType": "image/avif",
+        "contentEncoding": "",
+        "workerStart": 0,
+        "workerRouterEvaluationStart": 0,
+        "workerCacheLookupStart": 0,
+        "workerMatchedSourceType": "",
+        "workerFinalSourceType": "",
+        "redirectStart": 0,
+        "redirectEnd": 0,
+        "fetchStart": 78.1999999997206,
+        "domainLookupStart": 78.1999999997206,
+        "domainLookupEnd": 78.1999999997206,
+        "connectStart": 78.1999999997206,
+        "secureConnectionStart": 0,
+        "connectEnd": 78.1999999997206,
+        "requestStart": 83.39999999990687,
+        "responseStart": 86.60000000009313,
+        "firstInterimResponseStart": 0,
+        "finalResponseHeadersStart": 86.60000000009313,
+        "responseEnd": 87.79999999981374,
+        "transferSize": 73838,
+        "encodedBodySize": 73538,
+        "decodedBodySize": 73538,
+        "responseStatus": 200,
+        "serverTiming": []
+      }
+    ],
+    "overflow": false
+  },
+  {
+    "width": 390,
+    "height": 844,
+    "dpr": 3,
+    "javascriptEnabled": true,
+    "image": {
+      "rect": {
+        "x": 103,
+        "y": 457,
+        "width": 184,
+        "height": 184,
+        "top": 457,
+        "right": 287,
+        "bottom": 641,
+        "left": 103
+      },
+      "visibleArea": 33856,
+      "currentSrc": "http://127.0.0.1:3330/_next/image?url=%2Fnguyen-trai.jpg&w=1200&q=75",
+      "complete": true,
+      "naturalWidth": 390,
+      "alt": "Chân dung Nguyễn Trãi"
+    },
+    "quotation": {
+      "rect": {
+        "x": 64,
+        "y": 677,
+        "width": 262,
+        "height": 156,
+        "top": 677,
+        "right": 326,
+        "bottom": 833,
+        "left": 64
+      },
+      "visibleArea": 40872
+    },
+    "fonts": "loaded",
+    "imagePreloads": 0,
+    "resources": [
+      {
+        "name": "http://127.0.0.1:3330/_next/image?url=%2Fnguyen-trai.jpg&w=1200&q=75",
+        "entryType": "resource",
+        "startTime": 88.1999999997206,
+        "duration": 1413.6000000000931,
+        "navigationId": 5175,
+        "initiatorType": "img",
+        "deliveryType": "",
+        "nextHopProtocol": "http/1.1",
+        "renderBlockingStatus": "non-blocking",
+        "contentType": "image/avif",
+        "contentEncoding": "",
+        "workerStart": 0,
+        "workerRouterEvaluationStart": 0,
+        "workerCacheLookupStart": 0,
+        "workerMatchedSourceType": "",
+        "workerFinalSourceType": "",
+        "redirectStart": 0,
+        "redirectEnd": 0,
+        "fetchStart": 88.1999999997206,
+        "domainLookupStart": 88.1999999997206,
+        "domainLookupEnd": 88.1999999997206,
+        "connectStart": 88.1999999997206,
+        "secureConnectionStart": 0,
+        "connectEnd": 88.1999999997206,
+        "requestStart": 95.29999999981374,
+        "responseStart": 1501,
+        "firstInterimResponseStart": 0,
+        "finalResponseHeadersStart": 1501,
+        "responseEnd": 1501.7999999998137,
+        "transferSize": 67523,
+        "encodedBodySize": 67223,
+        "decodedBodySize": 67223,
+        "responseStatus": 200,
+        "serverTiming": []
+      }
+    ],
+    "overflow": false
+  }
+]

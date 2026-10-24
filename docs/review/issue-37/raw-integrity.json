@@ -1,0 +1,7 @@
+{
+  "checkedSamples": 35,
+  "collectorSha256": "d48692f03fe93874cad2d7d93b7e00f1c1e47ba9e7167dbab7848057132eafed",
+  "allReceiptMetricsEqualRawLighthouseAudits": true,
+  "allTracesContainLcpCandidates": true,
+  "noSampleOverwriteOrDiscard": true
+}
