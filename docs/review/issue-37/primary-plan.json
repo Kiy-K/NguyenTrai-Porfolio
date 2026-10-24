@@ -1,0 +1,17 @@
+{
+  "targets": [
+    {
+      "label": "baseline",
+      "cwd": "/tmp/nguyentrai-p32-baseline",
+      "revision": "97da6087a6969975fbb360c3ec966ac6c723fb6d"
+    },
+    {
+      "label": "current",
+      "cwd": "/tmp/nguyentrai-p32-current",
+      "revision": "e081fff4317e75205b02066bf23668674425a791"
+    }
+  ],
+  "widgets": [
+    "off"
+  ]
+}
