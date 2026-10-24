@@ -1,0 +1,26 @@
+[
+  {
+    "width": 256,
+    "duration": 24.872746999986703,
+    "bytes": 10136,
+    "type": "image/avif",
+    "cache": "HIT",
+    "sha256": "78cc39827e531b8c8523c982f0160196fec49c63205491975a10607f7d60471d"
+  },
+  {
+    "width": 640,
+    "duration": 4.042591999983415,
+    "bytes": 33413,
+    "type": "image/avif",
+    "cache": "HIT",
+    "sha256": "28ef06b4a5ac07090beaa4c14f6a6f4323c90ef5f0d4a21781f9387bc7cea2c5"
+  },
+  {
+    "width": 1920,
+    "duration": 3.0387619999819435,
+    "bytes": 73538,
+    "type": "image/avif",
+    "cache": "HIT",
+    "sha256": "2066143e2755512fa77b71ee052a205ea5098702756aac719564cb818a5aec7c"
+  }
+]

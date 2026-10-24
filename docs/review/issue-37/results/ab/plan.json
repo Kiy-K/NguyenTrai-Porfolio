@@ -1,0 +1,22 @@
+{
+  "targets": [
+    {
+      "label": "current",
+      "cwd": "/tmp/nguyentrai-p32-current",
+      "revision": "e081fff4317e75205b02066bf23668674425a791"
+    },
+    {
+      "label": "decode-sync",
+      "cwd": "/tmp/nguyentrai-p32-decode-sync",
+      "revision": "213f95f2cac1dea08fbadb43e2c541012f788d3c"
+    },
+    {
+      "label": "fetch-high",
+      "cwd": "/tmp/nguyentrai-p32-fetch-high",
+      "revision": "5f345d8e32c1105b01d8bf55f68373f3a7d6590f"
+    }
+  ],
+  "widgets": [
+    "off"
+  ]
+}

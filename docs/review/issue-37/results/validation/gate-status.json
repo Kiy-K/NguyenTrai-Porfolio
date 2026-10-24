@@ -1,0 +1,45 @@
+{
+  "node": "v24.22.1",
+  "npm": "11.19.1",
+  "tests": {
+    "exit": 0,
+    "passed": 109
+  },
+  "lint": {
+    "exit": 0
+  },
+  "typecheck": {
+    "exit": 0
+  },
+  "harnessSafetyTests": {
+    "exit": 0,
+    "passed": 2
+  },
+  "publicBrowser": {
+    "exit": 0
+  },
+  "searchBrowser": {
+    "exit": 0
+  },
+  "fixedViewportAndFallback": {
+    "exit": 0
+  },
+  "buildFirstAttempt": {
+    "exit": 1,
+    "reason": "Next.js advisory stop after successful compilation; unchanged retry passes"
+  },
+  "build": {
+    "exit": 0,
+    "webpack": true,
+    "independentLockedInstall": true
+  },
+  "finalStandalonePublicBrowser": {
+    "exit": 0
+  },
+  "finalStandaloneSearchBrowser": {
+    "exit": 0
+  },
+  "finalStandalonePortraitFallbackBrowser": {
+    "exit": 0
+  }
+}

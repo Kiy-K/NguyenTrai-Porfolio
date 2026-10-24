@@ -1,0 +1,42 @@
+[
+  {
+    "checks": [
+      "accent-folded query: 11 matches",
+      "title-desc: 31 first",
+      "tag intersection: 6 matches",
+      "no-results/reset",
+      "offline typo query: 11 matches",
+      "retired endpoint: 404"
+    ],
+    "viewport": {
+      "width": 1440,
+      "height": 1000
+    },
+    "url": "http://127.0.0.1:3330/products/p0-1",
+    "title": "Nguyễn Trãi - Danh nhân văn hóa thế giới",
+    "errors": [],
+    "forbidden": [],
+    "overflow": false,
+    "externalBlocked": 1
+  },
+  {
+    "checks": [
+      "accent-folded query: 11 matches",
+      "title-desc: 31 first",
+      "tag intersection: 6 matches",
+      "no-results/reset",
+      "offline typo query: 11 matches",
+      "retired endpoint: 404"
+    ],
+    "viewport": {
+      "width": 390,
+      "height": 844
+    },
+    "url": "http://127.0.0.1:3330/products/p0-1",
+    "title": "Nguyễn Trãi - Danh nhân văn hóa thế giới",
+    "errors": [],
+    "forbidden": [],
+    "overflow": false,
+    "externalBlocked": 1
+  }
+]

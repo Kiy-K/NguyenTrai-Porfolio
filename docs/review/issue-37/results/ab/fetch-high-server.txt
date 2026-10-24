@@ -1,0 +1,40 @@
+Synthetic app: http://127.0.0.1:3330; no real storage or provider credentials
+▲ Next.js 16.4.0
+- Local:         http://127.0.0.1:3330
+- Network:       http://127.0.0.1:3330
+✓ Ready in 153ms
+✓ Running next.config.ts took 38ms
+⚠ "next start" does not work with "output: standalone" configuration. Use "node .next/standalone/server.js" instead.
+[runtime] node=v24.22.1
+Synthetic app: http://127.0.0.1:3330; no real storage or provider credentials
+▲ Next.js 16.4.0
+- Local:         http://127.0.0.1:3330
+- Network:       http://127.0.0.1:3330
+✓ Ready in 151ms
+✓ Running next.config.ts took 34ms
+⚠ "next start" does not work with "output: standalone" configuration. Use "node .next/standalone/server.js" instead.
+[runtime] node=v24.22.1
+Synthetic app: http://127.0.0.1:3330; no real storage or provider credentials
+▲ Next.js 16.4.0
+- Local:         http://127.0.0.1:3330
+- Network:       http://127.0.0.1:3330
+✓ Ready in 149ms
+✓ Running next.config.ts took 33ms
+⚠ "next start" does not work with "output: standalone" configuration. Use "node .next/standalone/server.js" instead.
+[runtime] node=v24.22.1
+Synthetic app: http://127.0.0.1:3330; no real storage or provider credentials
+▲ Next.js 16.4.0
+- Local:         http://127.0.0.1:3330
+- Network:       http://127.0.0.1:3330
+✓ Ready in 153ms
+✓ Running next.config.ts took 33ms
+⚠ "next start" does not work with "output: standalone" configuration. Use "node .next/standalone/server.js" instead.
+[runtime] node=v24.22.1
+Synthetic app: http://127.0.0.1:3330; no real storage or provider credentials
+▲ Next.js 16.4.0
+- Local:         http://127.0.0.1:3330
+- Network:       http://127.0.0.1:3330
+✓ Ready in 174ms
+✓ Running next.config.ts took 41ms
+⚠ "next start" does not work with "output: standalone" configuration. Use "node .next/standalone/server.js" instead.
+[runtime] node=v24.22.1

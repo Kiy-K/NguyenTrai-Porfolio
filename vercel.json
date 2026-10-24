@@ -9,7 +9,8 @@
       "review-ui-roadmap-integrated": false,
       "review-ui-roadmap-integration": false,
       "perf/issue-34-matched-lighthouse": false,
-      "security/node24-october-patches": false
+      "security/node24-october-patches": false,
+      "perf/issue-37-mobile-lcp": false
     }
   }
 }

@@ -1,0 +1,195 @@
+{
+  "primary": {
+    "baseline": {
+      "scriptTransferMedian": 160436,
+      "scriptDecodedMedian": 506769,
+      "rawTransferSamples": [
+        160436,
+        160436,
+        160436,
+        160436,
+        160436
+      ],
+      "rawDecodedSamples": [
+        506769,
+        506769,
+        506769,
+        506769,
+        506769
+      ]
+    },
+    "current": {
+      "scriptTransferMedian": 160721,
+      "scriptDecodedMedian": 507508,
+      "rawTransferSamples": [
+        160721,
+        160721,
+        160721,
+        160721,
+        160721
+      ],
+      "rawDecodedSamples": [
+        507508,
+        507508,
+        507508,
+        507508,
+        507508
+      ]
+    }
+  },
+  "ab": {
+    "current": {
+      "scriptTransferMedian": 160721,
+      "scriptDecodedMedian": 507508,
+      "rawTransferSamples": [
+        160721,
+        160721,
+        160721,
+        160721,
+        160721
+      ],
+      "rawDecodedSamples": [
+        507508,
+        507508,
+        507508,
+        507508,
+        507508
+      ]
+    },
+    "decode-sync": {
+      "scriptTransferMedian": 160728,
+      "scriptDecodedMedian": 507522,
+      "rawTransferSamples": [
+        160728,
+        160728,
+        160728,
+        160728,
+        160728
+      ],
+      "rawDecodedSamples": [
+        507522,
+        507522,
+        507522,
+        507522,
+        507522
+      ]
+    },
+    "fetch-high": {
+      "scriptTransferMedian": 160739,
+      "scriptDecodedMedian": 507529,
+      "rawTransferSamples": [
+        160739,
+        160739,
+        160739,
+        160739,
+        160739
+      ],
+      "rawDecodedSamples": [
+        507529,
+        507529,
+        507529,
+        507529,
+        507529
+      ]
+    }
+  },
+  "finalVsCurrent": {
+    "currentChunks": {
+      "300-5d8fec91f7b0bc6e.js": "b8a5e7fe940c4d9858c7cb8c656c772a4a3c9b7229c8a4bd9f32a791b122e20c",
+      "334-32ce3337736cd648.js": "7c86693a5ec84774655e5893c05143bb82e58b3cde8a9c2ab2d4fc08fbae4780",
+      "794-0ac5e2f0e81d2e0d.js": "0dc21a19d3b557b90c3baaf5199d63b727cea3b1e084db730dfb886905eef732",
+      "34-64a2899135ea3d97.js": "99ef9a32b5ddb8da76caa89e943d70935ec26190e83e45028f70912cfda006fc",
+      "500-8af45f63ef5e66a0.js": "51e0d6adae1da48e6123a370fb9ec7751fe0c338e5f74d030fb706789a9a1c8d",
+      "200-6e30e7e675c1bb93.js": "1e4da11318b47da2569e9432cd2aba50e9164c124bdecc4faaed772df09c6502",
+      "4bd1b696-c7408084347438ae.js": "7d5ccf185a6f85ab38ce400a7f10aa0a3496eb4e9aee1e500a85e01c4222fcec",
+      "a4634e51-ae0e4d75d0acaf67.js": "b2ebe2c3496ffd30bf5e8d1b3a6acac5131dd53f035116c0466a50d227605d64",
+      "framework-f31921ad0ba0a6c2.js": "6f35e972e12900b3d3a555e0e3cffe4cad37e979aa85f25a593016c69df14dd1",
+      "webpack-1c7e54eb92818659.js": "017b94cb7736919d2b10b1460c01d8530b6b8c9529d9d3d853d3eaf43a01d8bf",
+      "main-app-d41e2ba950341836.js": "9d5dfcc46c65b109e86268552a4bf37c39d511a006f0cb23704e27779e38339d",
+      "main-790bfbb81250b413.js": "76802480a7599d3bcbe99b28a2a7dca7f138810ba27d14081eb202c1162afd1a",
+      "polyfills-42372ed130431b0a.js": "0973c1d64c88adc8e3c950410cb58b288f72118d5965b78049438deb8f2f9683",
+      "app/layout-ec850e40c0d3dd98.js": "a4323aa0bd82a470164e54df9e32c62aabc28a583804b9ecc3dfab2fc839253c",
+      "app/(public)/page-8e40e4a5dedf8980.js": "e270ed7d4b48d5df25ca44b027768ba8c1dbfc26b95b02464e92f02853470a73",
+      "app/(public)/loading-1ecd2260dc18401d.js": "2ab4481fdb4a7f9f5532499c48ebeab4a695ad233e8130618fd28b9a6c95ed96",
+      "app/(public)/layout-2bc947a08a467031.js": "c9ef21e53a7e062575671c35124399b581d7ba658c2068fb006cb092e601b173",
+      "app/admin/page-46d230bbf8c32230.js": "c897d2a56e5a75f2deabf86ef8d41c388e132c7461a6f5be255063ed6d49e415",
+      "app/admin/loading-35f4b7971552d0da.js": "5a647dbb1904c81bdda095edd982c8acecb6708bd24096468e21625f2e6a923c",
+      "app/_global-error/page-35f4b7971552d0da.js": "5a647dbb1904c81bdda095edd982c8acecb6708bd24096468e21625f2e6a923c",
+      "app/_not-found/page-384e7365bdb3d13e.js": "4f998ce4bec102ba23f0cafe3877126fd95aa703fa2dc0883f4bf221741d0b74",
+      "app/api/products/route-35f4b7971552d0da.js": "5a647dbb1904c81bdda095edd982c8acecb6708bd24096468e21625f2e6a923c",
+      "app/api/upload/route-35f4b7971552d0da.js": "5a647dbb1904c81bdda095edd982c8acecb6708bd24096468e21625f2e6a923c",
+      "app/api/suggest-title/route-35f4b7971552d0da.js": "5a647dbb1904c81bdda095edd982c8acecb6708bd24096468e21625f2e6a923c",
+      "app/api/preview/route-35f4b7971552d0da.js": "5a647dbb1904c81bdda095edd982c8acecb6708bd24096468e21625f2e6a923c",
+      "app/api/feedback/route-35f4b7971552d0da.js": "5a647dbb1904c81bdda095edd982c8acecb6708bd24096468e21625f2e6a923c",
+      "app/api/admin/auth/bootstrap/route-35f4b7971552d0da.js": "5a647dbb1904c81bdda095edd982c8acecb6708bd24096468e21625f2e6a923c",
+      "app/api/admin/auth/status/route-35f4b7971552d0da.js": "5a647dbb1904c81bdda095edd982c8acecb6708bd24096468e21625f2e6a923c",
+      "app/api/admin/auth/logout/route-35f4b7971552d0da.js": "5a647dbb1904c81bdda095edd982c8acecb6708bd24096468e21625f2e6a923c",
+      "app/api/admin/auth/login/route-35f4b7971552d0da.js": "5a647dbb1904c81bdda095edd982c8acecb6708bd24096468e21625f2e6a923c",
+      "app/api/admin/feedback/read/route-35f4b7971552d0da.js": "5a647dbb1904c81bdda095edd982c8acecb6708bd24096468e21625f2e6a923c",
+      "app/api/mux/upload-url/route-35f4b7971552d0da.js": "5a647dbb1904c81bdda095edd982c8acecb6708bd24096468e21625f2e6a923c",
+      "app/api/mux/asset/[uploadId]/route-35f4b7971552d0da.js": "5a647dbb1904c81bdda095edd982c8acecb6708bd24096468e21625f2e6a923c",
+      "app/api/products/[id]/route-35f4b7971552d0da.js": "5a647dbb1904c81bdda095edd982c8acecb6708bd24096468e21625f2e6a923c",
+      "app/admin/login/page-ce3788b34b4d4dba.js": "d6681eb43f4c8ff0e0661fb3e0fb7a1940a9bf4107019e74a42ce79358a13d06",
+      "app/(public)/sections/[id]/page-bc54e04550713d34.js": "2527c750c61f64171f0e143c0eaa5bb519e06da07f39c2c54cedc73320bf7ca1",
+      "app/(public)/sections/[id]/loading-bf747a3ec007f18d.js": "2fdb79c5df8b83cf0d54ccba6a5f6fda594145816d7b6b1d054b353b9fddc978",
+      "app/(public)/products/[id]/page-91c1708530cf9930.js": "622f472c912c1cd4da3ca5973bc2a3bafecf0a040aba950de00cbe993a6b477a",
+      "app/(public)/products/[id]/loading-a2c31349f9ee33bb.js": "9bc3b37473237d8466c28dc8fbe49f31a4535e0ec2b96c3e4ec45e651c3b1e36",
+      "next/dist/client/components/builtin/forbidden-35f4b7971552d0da.js": "5a647dbb1904c81bdda095edd982c8acecb6708bd24096468e21625f2e6a923c",
+      "next/dist/client/components/builtin/global-error-4425e549711eaa40.js": "29d134c5cbc146844eb440579195c356759e7a0216b285354c26b4d2f4fd4a2c",
+      "next/dist/client/components/builtin/not-found-35f4b7971552d0da.js": "5a647dbb1904c81bdda095edd982c8acecb6708bd24096468e21625f2e6a923c",
+      "next/dist/client/components/builtin/app-error-35f4b7971552d0da.js": "5a647dbb1904c81bdda095edd982c8acecb6708bd24096468e21625f2e6a923c",
+      "next/dist/client/components/builtin/unauthorized-35f4b7971552d0da.js": "5a647dbb1904c81bdda095edd982c8acecb6708bd24096468e21625f2e6a923c"
+    },
+    "finalChunks": {
+      "300-5d8fec91f7b0bc6e.js": "b8a5e7fe940c4d9858c7cb8c656c772a4a3c9b7229c8a4bd9f32a791b122e20c",
+      "334-32ce3337736cd648.js": "7c86693a5ec84774655e5893c05143bb82e58b3cde8a9c2ab2d4fc08fbae4780",
+      "794-0ac5e2f0e81d2e0d.js": "0dc21a19d3b557b90c3baaf5199d63b727cea3b1e084db730dfb886905eef732",
+      "34-64a2899135ea3d97.js": "99ef9a32b5ddb8da76caa89e943d70935ec26190e83e45028f70912cfda006fc",
+      "500-8af45f63ef5e66a0.js": "51e0d6adae1da48e6123a370fb9ec7751fe0c338e5f74d030fb706789a9a1c8d",
+      "200-6e30e7e675c1bb93.js": "1e4da11318b47da2569e9432cd2aba50e9164c124bdecc4faaed772df09c6502",
+      "4bd1b696-c7408084347438ae.js": "7d5ccf185a6f85ab38ce400a7f10aa0a3496eb4e9aee1e500a85e01c4222fcec",
+      "a4634e51-ae0e4d75d0acaf67.js": "b2ebe2c3496ffd30bf5e8d1b3a6acac5131dd53f035116c0466a50d227605d64",
+      "framework-f31921ad0ba0a6c2.js": "6f35e972e12900b3d3a555e0e3cffe4cad37e979aa85f25a593016c69df14dd1",
+      "webpack-1c7e54eb92818659.js": "017b94cb7736919d2b10b1460c01d8530b6b8c9529d9d3d853d3eaf43a01d8bf",
+      "main-app-90ee6e868f7f8c06.js": "a84d3684d109e4ad520fa49ce6501c23bfe63a77dfc667d60b2378c91854bab1",
+      "main-790bfbb81250b413.js": "76802480a7599d3bcbe99b28a2a7dca7f138810ba27d14081eb202c1162afd1a",
+      "polyfills-42372ed130431b0a.js": "0973c1d64c88adc8e3c950410cb58b288f72118d5965b78049438deb8f2f9683",
+      "app/layout-969bbc63bcd9517a.js": "60b7257422c72c9d42defc52e3d7e5fe8358304f671faaf744bfec1cb499410b",
+      "app/(public)/page-d6462bf616e1cb2b.js": "a69aa4a7bfce54560db063f54b8aef29f384eaa670724f3792733dbf49340dab",
+      "app/(public)/loading-f4ca6700471bd16b.js": "1c032d2acb47bd8b2d82ff7f8703c4105c025052b1fd7b164a10de53f253e363",
+      "app/(public)/layout-1f401492daa05384.js": "632a78e26726e934adf95fc84c6a54ceb97adcfbf5b54dccfce5ee2df3364ff8",
+      "app/admin/page-0f0c14d96ff832a6.js": "46c24b90dba93ea47ea86f5c6bc83403f860079a44016a90db7e01e795bc4dee",
+      "app/admin/loading-35f4b7971552d0da.js": "5a647dbb1904c81bdda095edd982c8acecb6708bd24096468e21625f2e6a923c",
+      "app/_global-error/page-35f4b7971552d0da.js": "5a647dbb1904c81bdda095edd982c8acecb6708bd24096468e21625f2e6a923c",
+      "app/_not-found/page-bd35fae9cece866b.js": "f44b2f13e6b1467e7034807cd0400a7bc661d84fc39137e7f357676b85365e36",
+      "app/api/products/route-35f4b7971552d0da.js": "5a647dbb1904c81bdda095edd982c8acecb6708bd24096468e21625f2e6a923c",
+      "app/api/upload/route-35f4b7971552d0da.js": "5a647dbb1904c81bdda095edd982c8acecb6708bd24096468e21625f2e6a923c",
+      "app/api/suggest-title/route-35f4b7971552d0da.js": "5a647dbb1904c81bdda095edd982c8acecb6708bd24096468e21625f2e6a923c",
+      "app/api/preview/route-35f4b7971552d0da.js": "5a647dbb1904c81bdda095edd982c8acecb6708bd24096468e21625f2e6a923c",
+      "app/api/feedback/route-35f4b7971552d0da.js": "5a647dbb1904c81bdda095edd982c8acecb6708bd24096468e21625f2e6a923c",
+      "app/api/admin/auth/status/route-35f4b7971552d0da.js": "5a647dbb1904c81bdda095edd982c8acecb6708bd24096468e21625f2e6a923c",
+      "app/api/admin/auth/logout/route-35f4b7971552d0da.js": "5a647dbb1904c81bdda095edd982c8acecb6708bd24096468e21625f2e6a923c",
+      "app/api/admin/auth/login/route-35f4b7971552d0da.js": "5a647dbb1904c81bdda095edd982c8acecb6708bd24096468e21625f2e6a923c",
+      "app/api/admin/auth/bootstrap/route-35f4b7971552d0da.js": "5a647dbb1904c81bdda095edd982c8acecb6708bd24096468e21625f2e6a923c",
+      "app/api/admin/feedback/read/route-35f4b7971552d0da.js": "5a647dbb1904c81bdda095edd982c8acecb6708bd24096468e21625f2e6a923c",
+      "app/api/mux/upload-url/route-35f4b7971552d0da.js": "5a647dbb1904c81bdda095edd982c8acecb6708bd24096468e21625f2e6a923c",
+      "app/api/mux/asset/[uploadId]/route-35f4b7971552d0da.js": "5a647dbb1904c81bdda095edd982c8acecb6708bd24096468e21625f2e6a923c",
+      "app/api/products/[id]/route-35f4b7971552d0da.js": "5a647dbb1904c81bdda095edd982c8acecb6708bd24096468e21625f2e6a923c",
+      "app/admin/login/page-3862dddf949bf4c3.js": "86fc62bc34ba627ca634103c1fe2c7f292b48645c1105516af3feac195865fbb",
+      "app/(public)/sections/[id]/page-9961e1ab5fffbe45.js": "1a78dd6ab7ee2521d791edb0aaa5c89538b8de5d358a51cec658af9c6c6e52af",
+      "app/(public)/sections/[id]/loading-45a4e855a7d742ac.js": "8f9c0cf66f7dc109310fa57720f94485e06f234c7b746c176509ab10b3039510",
+      "app/(public)/products/[id]/page-9301d955b107bd08.js": "e713896196a6bd344087cdce0b2fb8b1793685a8cedfa183a3234ee5040cab6f",
+      "app/(public)/products/[id]/loading-0621ca1d161bd659.js": "150b82a4dc2e6f2abccf8eed72385ecf12dc624fac895d4949f5549c6d15e087",
+      "next/dist/client/components/builtin/forbidden-35f4b7971552d0da.js": "5a647dbb1904c81bdda095edd982c8acecb6708bd24096468e21625f2e6a923c",
+      "next/dist/client/components/builtin/global-error-5f2cac3662eff047.js": "02eb06c2ce484169d532e4e5cc1a7f92d9c9ca73e312c5b37580d061dc636877",
+      "next/dist/client/components/builtin/not-found-35f4b7971552d0da.js": "5a647dbb1904c81bdda095edd982c8acecb6708bd24096468e21625f2e6a923c",
+      "next/dist/client/components/builtin/app-error-35f4b7971552d0da.js": "5a647dbb1904c81bdda095edd982c8acecb6708bd24096468e21625f2e6a923c",
+      "next/dist/client/components/builtin/unauthorized-35f4b7971552d0da.js": "5a647dbb1904c81bdda095edd982c8acecb6708bd24096468e21625f2e6a923c"
+    },
+    "identical": false,
+    "currentAllEmittedJsBytes": 2231021,
+    "currentAllEmittedJsGzipBytes": 658044,
+    "finalAllEmittedJsBytes": 2231023,
+    "finalAllEmittedJsGzipBytes": 658031
+  }
+}

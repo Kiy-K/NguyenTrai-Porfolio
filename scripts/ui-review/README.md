@@ -68,3 +68,7 @@ node "$HARNESS/lighthouse.cjs"
 Repeat sequentially on an otherwise quiet machine. Timings/scores will vary; preserve outliers, record tool/OS changes, and do not overwrite the dated original measurements with a new run. Generated JSON receipts include revision, Node version, UTC time, loopback origin and results. `server.cjs` exits on server/child errors; browser assertion failures exit nonzero.
 
 The committed historic `results/*.json` are output evidence, not fixtures or a release approval. Firefox/Safari, real provider playback/uploads, post-release CDN checks and field performance remain separate gates. P4 remains deferred.
+
+## Issue 37 mobile LCP investigation
+
+[lcp-matrix.cjs](lcp-matrix.cjs) and [lcp-lighthouse.cjs](lcp-lighthouse.cjs) reuse the matched collector profile for sequential historical/current and one-factor image experiments. [Frozen protocols, exact tool locks and reproduction commands](../../docs/review/issue-37/reproduce.md) define the inputs; [the report](../../docs/review/issue-37/report.md) preserves all 35 raw samples and explains the report-only negative result. `summarize-lcp.cjs` rejects incomplete/mixed cells and checks the preregistered benefit threshold; `lcp-browser.cjs` captures fixed-viewport geometry, no-JavaScript discovery and synthetic fallback failures. No live widget, provider writes, production measurement or P4 work is included.
