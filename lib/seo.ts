@@ -14,11 +14,20 @@ function plainText(value: unknown): string {
     : '';
 }
 
+function isHttpImage(value: unknown): value is string {
+  if (typeof value !== 'string' || !value.isWellFormed() || value !== value.trim() || value.includes('\\')) return false;
+  try {
+    const url = new URL(value);
+    return ['https:', 'http:'].includes(url.protocol) && !url.username && !url.password;
+  } catch { return false; }
+}
+
 // Validate fields consumed by the public renderer without rewriting legacy payloads.
 const renderableArticle = z.object({
   title: z.string().trim().min(1),
   description: z.string().nullish(), fullDescription: z.string().nullish(), section: z.string().nullish(),
-  images: z.array(z.string().min(1)).nullish(), tags: z.array(z.string()).nullish(),
+  images: z.array(z.string().refine(image =>
+    (image.startsWith('/') && !image.startsWith('//') && !image.includes('\\') && image.isWellFormed()) || isHttpImage(image))).nullish(), tags: z.array(z.string()).nullish(),
   video: z.string().nullish(), muxAssetId: z.string().nullish(), muxPlaybackId: z.string().nullish(),
   videos: z.array(z.object({ video: z.string().nullish(), muxAssetId: z.string().nullish(), muxPlaybackId: z.string().nullish() })).nullish(),
   references: z.array(z.object({ title: z.string(), url: z.string().nullish(), author: z.string().nullish(), publisher: z.string().nullish() })).nullish(),
@@ -38,13 +47,7 @@ export const articlePath = (product: Product) => `/products/${encodeURIComponent
 
 function articleImages(product: Product): string[] {
   if (!Array.isArray(product.images)) return [];
-  return product.images.filter((image): image is string => {
-    if (typeof image !== 'string') return false;
-    try {
-      const url = new URL(image);
-      return ['https:', 'http:'].includes(url.protocol) && !url.username && !url.password;
-    } catch { return false; }
-  });
+  return product.images.filter(isHttpImage);
 }
 
 export function pageMetadata(title: string, description: string, path: string, product?: Product): Metadata {

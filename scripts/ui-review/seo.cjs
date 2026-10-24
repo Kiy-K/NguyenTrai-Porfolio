@@ -56,7 +56,7 @@ const results = [];
         await page.screenshot({ path: artifact(`seo-public-${viewport.width}.png`), fullPage: true });
       }
       // Blocking bot response must contain metadata without JavaScript execution.
-      const response = await context.request.get(origin + path, { headers: { 'user-agent': 'Googlebot' } });
+      const response = await context.request.get(origin + path, { headers: { 'user-agent': 'Twitterbot' } });
       assert.equal(response.status(), 200);
       const html = await response.text();
       assert.ok(html.includes('rel="canonical" href="' + canonical + (path === '/' ? '' : path) + '"'));
@@ -64,9 +64,12 @@ const results = [];
       assert.ok(!html.includes('<img src=x onerror='));
     }
     for (const path of ['/products/draft', '/products/archived', '/products/p6-missing', '/products/seo-malformed', '/sections/p6-missing']) {
-      const response = await context.request.get(origin + path, { headers: { 'user-agent': 'Googlebot' } });
+      const response = await context.request.get(origin + path, { headers: { 'user-agent': 'Twitterbot' } });
       assert.equal(response.status(), 404);
       assert.match(await response.text(), /name="robots" content="noindex/);
+      await page.goto(origin + path, { waitUntil: 'networkidle' });
+      assert.ok(await page.locator('meta[name="robots"]').evaluateAll(nodes => nodes.some(node => node.content.includes('noindex'))));
+      assert.equal(await page.locator('script[type="application/ld+json"]').count(), 0);
     }
     const api = await context.request.get(origin + '/api/products/seo-legacy');
     assert.deepEqual((await api.json()).product.references, fixture.references);

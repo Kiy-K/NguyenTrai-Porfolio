@@ -17,7 +17,7 @@ No default image, AI copy, external SEO service or dependency was added.
 `/sitemap.xml` is dynamic and reads through existing public `getProducts` filtering
 and the unchanged Redis/Neon/cache contract. It includes home, nine configured
 sections (including currently empty ones), and unique valid published/legacy article
-URLs. Drafts, archived/unknown statuses, malformed IDs/titles and internal routes
+URLs. Drafts, archived/unknown statuses, malformed IDs/titles/renderer fields and internal routes
 are excluded. Article IDs are encoded as a single path segment. Backend failures
 propagate as generic framework 5xx rather than returning private data, a partial
 success sitemap, or falling back to another backend.
@@ -37,6 +37,8 @@ termination; references remain in the existing safe public renderer and API.
 Root metadata defaults to `noindex, nofollow` for administrative/login and other
 internal pages; valid public pages override to `index, follow`. Missing, malformed
 or unpublished article metadata invokes notFound without reading private storage.
+Next.js streaming clients may receive HTTP 200 with not-found UI and noindex;
+HTML-limited crawlers (tested with Twitterbot) receive HTTP 404 before streaming.
 `/robots.txt` allows public crawling, discourages `/admin` and `/api/`, and advertises
 the canonical sitemap. These hints are not access controls: existing session,
 origin, rate-limit and API filtering boundaries remain authoritative.

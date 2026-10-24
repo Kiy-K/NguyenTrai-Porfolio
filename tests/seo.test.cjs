@@ -107,7 +107,7 @@ test('page metadata rejects missing, unpublished and malformed articles, and unk
 
 
 test('malformed renderer fields are neither advertised nor rendered, while safe legacy references stay eligible', async () => {
-  const malformed = [{ videos: {} }, { videos: [null] }, { videos: [{ muxPlaybackId: 1 }] }, { images: {} }, { images: [{}] }, { tags: {} }, { tags: [{}] }, { description: {} }, { fullDescription: 123 }, { references: [null] }, { references: [{ title: {} }] }, { references: { length: 1 } }];
+  const malformed = [{ videos: {} }, { videos: [null] }, { videos: [{ muxPlaybackId: 1 }] }, { images: {} }, { images: [{}] }, { images: ['not-a-url'] }, { images: ['//example.org/x'] }, { images: ['javascript:alert(1)'] }, { images: ['\ud800'] }, { tags: {} }, { tags: [{}] }, { description: {} }, { fullDescription: 123 }, { references: [null] }, { references: [{ title: {} }] }, { references: { length: 1 } }];
   for (const fields of malformed) {
     const product = { ...article, ...fields };
     assert.equal(seo.isDiscoverableArticle(product), false);
@@ -125,4 +125,13 @@ test('malformed renderer fields are neither advertised nor rendered, while safe 
     await assert.rejects(suspense.props.children.type(suspense.props.children.props), /NOT_FOUND/);
   }
   assert.equal(seo.isDiscoverableArticle({ ...article, references: [{ title: 'Unsafe legacy URL stays displayable', url: 'javascript:alert(1)' }] }), true);
+});
+
+
+test('advertised legacy local image sources render through real next/image', () => {
+  const Image = require('next/image').default;
+  for (const src of ['/nguyen-trai.jpg', '/image%20name.jpg']) {
+    assert.equal(seo.isDiscoverableArticle({ ...article, images: [src] }), true);
+    assert.match(renderToStaticMarkup(require('react').createElement(Image, { src, alt: article.title, width: 100, height: 100 })), /<img/);
+  }
 });
