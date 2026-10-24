@@ -71,7 +71,7 @@ test('JSON-LD matches stored data and safely escapes script/HTML injection witho
   const html = renderToStaticMarkup(JsonLd({ data: graph }));
   assert.equal((html.match(/<script/g) || []).length, 1);
   assert.doesNotMatch(html, /<img|<!--/);
-  const parsed = JSON.parse(html.replace(/^<script[^>]*>/, '').replace(/<\/script>$/, ''));
+  const parsed = JSON.parse(html.slice(html.indexOf('>') + 1, html.lastIndexOf('</script>')));
   assert.equal(parsed[0].headline, title);
   assert.equal(parsed[0]['@type'], 'Article');
   assert.equal(parsed[1].itemListElement[1].name, article.section);

@@ -121,7 +121,11 @@ Two read-only reviewers independently examined `origin/main...HEAD`:
   re-reviewed through `d26ef67`. Ten SEO tests independently passed.
 
 Reviewers did not independently rerun the full suite, production build or browsers;
-those are implementer results above. No issue-tracker agent configuration was
+those are implementer results above. Hosted security-baseline verification and
+both CodeQL analysis jobs passed on the initial PR head. The aggregate CodeQL check
+flagged a test-only lowercase script-wrapper extraction regex as unsafe HTML
+filtering; the test now slices the known React-generated wrapper instead. This is
+not a runtime sanitizer. Final hosted check status is recorded in the PR checks. No issue-tracker agent configuration was
 present; the user's supplied P6 task served as the specification.
 
 Implementation follows the official Next.js guidance for
