@@ -16,7 +16,8 @@
       "fix/issue39-placeholder-contrast": false,
       "docs/issue39-production-field-ux": false,
       "feat/p6-seo": false,
-      "docs/issue39-production-ux-refresh": false
+      "docs/issue39-production-ux-refresh": false,
+      "fix/issue39-preview-failures": false
     }
   }
 }

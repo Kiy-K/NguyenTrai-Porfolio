@@ -5,6 +5,7 @@ import { z } from 'zod';
 import sanitizeHtml from 'sanitize-html';
 import { consumeRateLimit } from '@/lib/rate-limit';
 import { getClientIpFromHeaders } from '@/lib/admin-auth';
+import { isAllowedPreviewHost } from '@/lib/preview-policy';
 
 interface PreviewPayload {
   url: string;
@@ -22,20 +23,6 @@ const PREVIEW_USER_AGENT =
   'Mozilla/5.0 (compatible; NguyenTraiPortfolioPreviewBot/1.0; +https://example.com)';
 const MAX_REDIRECTS = 5;
 const PREVIEW_RATE_LIMIT = { limit: 60, windowSeconds: 60 };
-
-const DEFAULT_ALLOWED_PREVIEW_DOMAINS = [
-  'youtube.com',
-  'youtu.be',
-  'vimeo.com',
-  'wikipedia.org',
-  'wikimedia.org',
-  'vnexpress.net',
-  'tuoitre.vn',
-  'thanhnien.vn',
-  'dantri.com.vn',
-  'github.com',
-  'medium.com',
-] as const;
 
 const BLOCKED_HOSTNAMES = new Set(['localhost']);
 
@@ -59,22 +46,6 @@ const IPV4_BLOCKED_CIDRS: Array<[number, number]> = [
 const previewQuerySchema = z.object({
   url: z.string().trim().url().max(2048),
 });
-
-const parseAllowedPreviewDomains = (): string[] => {
-  const fromEnv = (process.env.PREVIEW_ALLOWED_DOMAINS || '')
-    .split(',')
-    .map((value) => value.trim().toLowerCase())
-    .filter(Boolean)
-    .map((value) => value.replace(/^\./, ''));
-
-  if (fromEnv.length > 0) {
-    return [...new Set(fromEnv)];
-  }
-
-  return [...DEFAULT_ALLOWED_PREVIEW_DOMAINS];
-};
-
-const ALLOWED_PREVIEW_DOMAINS = parseAllowedPreviewDomains();
 
 const getFirstNonEmpty = (...values: Array<string | undefined>): string | undefined => {
   for (const value of values) {
@@ -256,13 +227,6 @@ const isBlockedHost = (host: string): boolean => {
   return false;
 };
 
-const isAllowedHost = (host: string): boolean => {
-  const normalized = host.toLowerCase();
-  return ALLOWED_PREVIEW_DOMAINS.some(
-    (allowedDomain) => normalized === allowedDomain || normalized.endsWith(`.${allowedDomain}`)
-  );
-};
-
 const assertSafeTargetUrl = async (url: URL): Promise<void> => {
   if (url.username || url.password) {
     throw new Error('URL credentials are not allowed');
@@ -277,7 +241,7 @@ const assertSafeTargetUrl = async (url: URL): Promise<void> => {
     throw new Error('Target host is not allowed');
   }
 
-  if (!isAllowedHost(hostname)) {
+  if (!isAllowedPreviewHost(hostname)) {
     throw new Error('Target host is outside the preview allowlist');
   }
 

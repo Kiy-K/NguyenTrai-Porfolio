@@ -298,6 +298,8 @@ Creates a sanitized feedback record with hashed identity fields in the selected 
 
 Fetches link metadata for rich link previews.
 
+Public article rendering uses the same server-side domain allowlist. Links outside it render the existing direct-link fallback immediately, without a metadata request or loading skeleton. Allowed hosts still request metadata; failures retain the direct-link fallback. This rendering decision does not replace the API's URL, DNS/IP or redirect checks, and does not expand the allowlist.
+
 ### Query
 
 - `url` (required): full `http`/`https` URL

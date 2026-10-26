@@ -14,6 +14,7 @@ interface PreviewMetadata {
 
 interface LinkPreviewProps {
   url: string;
+  previewEnabled: boolean;
 }
 
 type PreviewStatus = 'loading' | 'success' | 'error';
@@ -53,13 +54,13 @@ const fetchPreviewMetadata = (url: string): Promise<PreviewMetadata> => {
   return promise;
 };
 
-export default function LinkPreview({ url }: LinkPreviewProps) {
-  return <LinkPreviewContent key={url} url={url} />;
+export default function LinkPreview({ url, previewEnabled }: LinkPreviewProps) {
+  return <LinkPreviewContent key={`${previewEnabled}:${url}`} url={url} previewEnabled={previewEnabled} />;
 }
 
-function LinkPreviewContent({ url }: LinkPreviewProps) {
-  const initialMetadata = previewDataCache.get(url) ?? null;
-  const [status, setStatus] = useState<PreviewStatus>(initialMetadata ? 'success' : 'loading');
+function LinkPreviewContent({ url, previewEnabled }: LinkPreviewProps) {
+  const initialMetadata = previewEnabled ? previewDataCache.get(url) ?? null : null;
+  const [status, setStatus] = useState<PreviewStatus>(initialMetadata ? 'success' : previewEnabled ? 'loading' : 'error');
   const [metadata, setMetadata] = useState<PreviewMetadata | null>(initialMetadata);
 
   useEffect(() => {
