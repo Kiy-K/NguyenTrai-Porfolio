@@ -2,6 +2,7 @@ import LinkPreview from '@/components/LinkPreview';
 import { resolveEmbed } from '@/lib/embeds/resolve-embed';
 import { defaultEmbedPlugins } from '@/lib/embeds/plugins';
 import { EmbedPlugin } from '@/lib/embeds/types';
+import { isAllowedPreviewHost } from '@/lib/preview-policy';
 
 interface SmartEmbedProps {
   url: string;
@@ -26,5 +27,12 @@ export default function SmartEmbed({ url, plugins = defaultEmbedPlugins }: Smart
     );
   }
 
-  return <LinkPreview key={url} url={url} />;
+  let previewEnabled = false;
+  try {
+    previewEnabled = isAllowedPreviewHost(new URL(url).hostname);
+  } catch {
+    // Malformed URLs cannot request metadata.
+  }
+
+  return <LinkPreview key={url} url={url} previewEnabled={previewEnabled} />;
 }

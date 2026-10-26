@@ -73,6 +73,10 @@ The committed historic `results/*.json` are output evidence, not fixtures or a r
 
 [lcp-matrix.cjs](lcp-matrix.cjs) and [lcp-lighthouse.cjs](lcp-lighthouse.cjs) reuse the matched collector profile for sequential historical/current and one-factor image experiments. [Frozen protocols, exact tool locks and reproduction commands](../../docs/review/issue-37/reproduce.md) define the inputs; [the report](../../docs/review/issue-37/report.md) preserves all 35 raw samples and explains the report-only negative result. `summarize-lcp.cjs` rejects incomplete/mixed cells and checks the preregistered benefit threshold; `lcp-browser.cjs` captures fixed-viewport geometry, no-JavaScript discovery and synthetic fallback failures. No live widget, provider writes, production measurement or P4 work is included.
 
+## Issue 39 preview fallback regression
+
+Build as above, then start `node scripts/ui-review/preview-server.cjs` instead of `server.cjs`. It extends only the server process's fixture data with synthetic unsupported, allowed-success and allowed-failure links; frozen fixture files are unchanged. Run `node scripts/ui-review/preview.cjs` with the same port/output settings and `NODE_PATH`. It checks both viewports for zero unsupported-host preview requests, allowed metadata, upstream-error fallback, safe direct links, keyboard focus, overflow and runtime exceptions. Metadata responses are mocked and external requests blocked; this is local regression evidence, not a production provider or performance test. Stop the server afterward.
+
 ## P7 reading experience
 
 `reading.cjs` starts and stops its own synthetic server. It checks visible breadcrumbs against P6 JSON-LD, deterministic related cards, keyboard navigation, encoded/literal-percent article IDs, private/malformed routes, references, reduced motion and overflow at 390×844 and 1440×1000. Run it after `build.cjs`, with external Playwright tools as above. Screenshots and `reading-browser.json` go to `UI_REVIEW_OUTPUT`. See [Issue #46 evidence](../../docs/review/issue-46/README.md) for review and rollback.
