@@ -15,7 +15,8 @@
       "perf/issue-37-mobile-lcp": false,
       "fix/issue39-placeholder-contrast": false,
       "docs/issue39-production-field-ux": false,
-      "feat/p6-seo": false
+      "feat/p6-seo": false,
+      "docs/issue39-production-ux-refresh": false
     }
   }
 }
