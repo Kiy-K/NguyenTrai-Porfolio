@@ -1,5 +1,107 @@
 # P3.3 production UX and field performance verification
 
+## Current verification — 2026-10-26 UTC
+
+**Issue #39 field gate: pending data.** This is a fresh read-only verification of the deployed P7 release. The original report PR [#41](https://github.com/Kiy-K/NguyenTrai-Porfolio/pull/41) and one-color placeholder fix [#42](https://github.com/Kiy-K/NguyenTrai-Porfolio/pull/42) are confirmed merged. Their dated evidence remains below; it is not relabeled as today's measurement. No new application fix is supported by this sample.
+
+This refresh changes only this report and an exact-branch deployment guard in `vercel.json` (`docs/issue39-production-ux-refresh: false`). It adds no collector, dependency, TanStack Query, provider configuration, or auth/storage/cache-policy change. Existing `<SpeedInsights />` stays in place. No merge, deployment, admin access, content mutation, upload, conversation, or microphone permission was performed.
+
+### Current production receipt and bounded HTTP smoke
+
+GitHub main, isolated checkout base, and Vercel production Git SHA: **`3728b0995f67c76c0130e1ce30eb24a349baa9c8`**. Two separate authenticated, read-only CLI metadata reads (project production target and deployment) agree on `READY`, target `production`, deployment **`dpl_E2iJwQHLnRgjbEqoAEEEt3KLpa87`**, ready **2026-10-24 13:21:05.852 UTC**, function region `sin1`. Public alias: **https://nguyen-trai-porfolio.vercel.app**. Function region is not a user-region measurement.
+
+Final HTTP receipt: **2026-10-26 11:05:13.233–11:05:14.858 UTC**. Eight sequential unauthenticated GETs, two per route, following one valid public section/detail link in memory. Each HTML route had a nonempty title and h1; `/api/products` had its actual `{ products: [...] }` shape. No concrete product identifiers, HTML/JSON payloads, cookies, private deployment hosts, or content screenshots are published. This is sampled structural/link verification, not a complete HTML validator or full-site crawl.
+
+| Route template | Status, both | Cache-Control | x-vercel-cache, both | Complete response ms, first / repeat |
+| --- | --- | --- | --- | ---: |
+| `/` | 200 | `public, max-age=0, must-revalidate` | HIT | 442 / 105 |
+| `/sections/[id]` | 200 | `private, no-cache, no-store, max-age=0, must-revalidate` | MISS | 211 / 102 |
+| `/products/[id]` | 200 | `private, no-cache, no-store, max-age=0, must-revalidate` | MISS | 175 / 116 |
+| `/api/products` | 200 | `no-store` | MISS | 313 / 160 |
+
+HTML returned `text/html; charset=utf-8`; API returned `application/json`. Timings are workstation wall time through complete body consumption, not TTFB, field vitals, or percentiles. **CDN MISS does not expose internal Redis hit/miss.** No purge or storage query occurred. Two earlier four-GET attempts stopped at a mistaken audit assertion expecting a top-level array; the source confirmed the object shape and the corrected run above passed. Total standalone HTTP smoke: **16 GETs**, including those diagnostics; no HEAD or load test. Browser navigations below were separate.
+
+### Current Speed Insights field data and access limits
+
+Dashboard first: the computer/browser inventory returned **no available browsers or apps**, so the dashboard and its Production UI filter could not be inspected. The Vercel connector's scoped project read returned **403 forbidden** for this team; its global metric catalog succeeded and listed Speed Insights metrics, but that catalog proves neither project samples nor dashboard access. Existing Vercel CLI authentication independently succeeded for the intended team/project; no new access was granted. These access limits are not evidence that instrumentation is disabled.
+
+Vercel CLI **65.2.0**, Node **24.22.1**, project `nguyen-trai-porfolio`, scope `khois-projects-8dd1e46a`. The live LCP schema supports `p75`, `count`, `route`, `deviceType`, `environment`, `deploymentId`, and `country`. Three p75 and three count reads used identical requested bounds **2026-10-19 11:00–2026-10-26 11:00 UTC**, `--prod`, route/device grouping and limit 100. Returned query bounds aligned to **2026-10-19 08:00–2026-10-26 12:00 UTC**, four-hour buckets, filter `environment:production`. The last bucket extends past capture; this is not seven complete, uniformly sampled days. Values are whole-window `summary` results, never averages of bucket percentiles. Metric collection overlapped this audit's HTTP/browser verification; the additional deployment LCP read below occurred after the final HTTP smoke. The requested 11:00 UTC cutoff predates the audit visits, but the returned aligned final bucket extends past it. Do not infer exclusion of operator traffic from the requested cutoff alone.
+
+| Route | Device | p75 LCP ms (n) | p75 INP ms (n) | p75 CLS (n) |
+| --- | --- | ---: | ---: | ---: |
+| `/` | desktop | 1820 (9) | 24 (2) | 0 (6) |
+| `/` | mobile | 1724 (4) | absent | 0 (1) |
+| `/sections/[id]` | desktop | absent | 56 (1) | 0 (1) |
+| `/sections/[id]` | mobile | absent | 96 (2) | 0 (1) |
+| `/products/[id]` | desktop | 444 (1) | 72 (7) | 0 (4) |
+| `/products/[id]` | mobile | absent | 72 (2) | 0 (2) |
+
+Counts are metric measurements, not unique visitors or sessions. “Absent” means no returned group, not a fabricated zero. Targets remain p75 LCP ≤2500 ms, INP ≤200 ms, CLS ≤0.1; these mixed-deployment observations are numerically below targets but **1–9 samples and missing groups do not pass the release gate**. Operator/synthetic traffic already in telemetry cannot be excluded. Country subdivision would fragment this inadequate sample further and was skipped.
+
+Three additional count reads retained `--prod` and added `deploymentId:dpl_E2iJwQHLnRgjbEqoAEEEt3KLpa87`. They returned only **homepage desktop LCP n=1 and CLS n=1**, with INP and all other cells absent. One further deployment-filtered LCP p75 read returned **1820 ms (n=1)**. No current-release INP or CLS percentile is claimed. A single measurement is not a representative distribution; current-release disposition remains **pending data**, with ingestion/sampling uncertainty unresolved.
+
+Reproduction, using the same range for p75 and count and keeping raw exports private:
+
+```bash
+vercel --scope khois-projects-8dd1e46a metrics schema vercel.speed_insights.lcp_ms --format=json
+vercel --scope khois-projects-8dd1e46a metrics vercel.speed_insights.lcp_ms \
+  --aggregation p75 --group-by route --group-by deviceType --limit 100 \
+  --since 2026-10-19T11:00:00Z --until 2026-10-26T11:00:00Z \
+  --project nguyen-trai-porfolio --prod --format=json
+# Repeat with count and metrics inp_ms / cls.
+# For current-release attribution, retain --prod and add:
+# --filter 'deploymentId:dpl_E2iJwQHLnRgjbEqoAEEEt3KLpa87'
+```
+
+Operator-only: open the project's Speed Insights dashboard with an authorized account; confirm Production, exact UTC range, deployment/date, actual per-metric counts and dashboard sampling notices. Capture the six route/device cells above, reconcile with CLI summaries, and retain missing cells. Agree a representative sample-sufficiency rule before evaluating the gate; no vendor minimum or arbitrary passing count is asserted here. Publish route-template aggregates only. See [official CLI metrics guidance](https://vercel.com/docs/speed-insights/accessing-metrics-with-vercel-cli).
+
+**Lab comparison:** the frozen [#34](issue-34/report.md) widget-off mobile LCP medians were 2181 → 2658 ms with a candidate change and no supported large first-party TBT regression. [#37](issue-37/report.md) recorded widget-off mobile 2260 → 2703 ms, desktop 626 → 615 ms, CLS 0, and failed decode/priority benefit gates. Those local medians and TBT are not field p75 or INP. Today's sparse telemetry has different devices, content, dates and deployments; it establishes no causal improvement. No new Lighthouse run, score, pooled sample, or performance optimization is claimed.
+
+### Current browser and accessibility matrix
+
+Automated browser window **11:03–11:09 UTC**, Chromium **155.0.8059.12**, Playwright **1.64.0-alpha-1790635538000**, axe-core **4.14.0**. Fresh unauthenticated contexts, service workers blocked, all non-GET/HEAD requests aborted, admin navigation/prefetch aborted, AI/retired-search endpoints aborted and counted, WebSockets closed. Static assets and public read-only preview/vendor configuration GETs were allowed. No form submitted, media played, call/chat started, or attribution link activated; analytics POSTs could not be sent. Private screenshots were inspected locally and kept outside Git.
+
+| Check | Mobile Chromium 390×844 | Desktop Chromium 1440×1000 |
+| --- | --- | --- |
+| Home / discovered section / discovered detail | 200; one h1 and title; no horizontal overflow | Same |
+| Hero | Loaded and visible; screenshot inspected | Same |
+| Menu | Enter opens, initial focus inside, Escape closes/returns focus, scroll unlocks | Mobile menu not applicable |
+| Reduced motion | Hero ancestor animation duration `0.00001s` | Same |
+| Search | Accented/unaccented equivalence, nonempty results, no-results/reset | Same |
+| AI requests / summary buttons | Zero / absent on sampled section | Same |
+| First-party focus and names | Sampled back control named, `:focus-visible`, solid outline | Same |
+| Runtime exceptions | None observed | None observed |
+| axe WCAG-tag checks on three routes | No owned violations reported; incomplete checks remain | Same |
+| Console errors / failed responses | 4 console entries; external 403 twice, preview 400 once | 6 console entries; same failed-response categories |
+
+Menu detail: two initial one-home browser attempts stopped on an overly strict eight-Tab containment assertion. In the completed run, five of eight Tab stops were in the native dialog and three were reported as body/browser focus; no background application control received focus. The existing isolated three-Tab menu regression passed. This is sampled native-dialog behavior, not proof of an exhaustive focus trap. All diagnostic attempts remained read-only. The completed main audit made six page navigations, with two additional homes for each of two targeted widget passes; including the two early home attempts, **12 top-level browser navigations** total. Asset/prefetch traffic is additional and was not a load test.
+
+The previously fixed placeholder is confirmed painted rust `rgb(139,58,58)` on parchment `rgb(244,235,208)` in both live viewport samples (two nodes each): **6.382:1**, versus the historical 2.73:1. No repeat code fix is needed. The sampled detail had no main image elements; this is not a successful article-media/playback test. Its preview 400 and external 403 responses remain unresolved, alongside deliberately blocked admin prefetches (one mobile, three desktop). No security/allowlist change is justified by these symptoms. This is **not a clean-console/media sign-off**. Axe incomplete rules included `color-contrast` and mobile `aria-valid-attr-value`; automated checks do not establish WCAG compliance or screen-reader usability.
+
+### ElevenLabs vendor limitation, revalidated
+
+Unfocused attribution remains vendor-owned shadow content: home contrast **2.10:1 mobile** (`#b3b1ae` / `#fffdf8`) and **2.06:1 desktop** (`#aba592` / `#f4ebd0`), 10px normal text against the intended **4.5:1**. Section mobile also measured **2.09:1** on white. The link currently reads “ElevenAgents”, so the initial text-filter probe for “ElevenLabs” missed it; the completed axe pass and targeted `a[href*="elevenlabs.io"]` checks inspected the loaded widget instead.
+
+Targeted keyboard checks at both sizes found an accessible text name, opacity **0.3 unfocused → 1 focused**, `:focus-visible`, and Tab leaving the attribution. Focus screenshots show the darker underlined link; computed outline and box shadow are none, so absence of an outline alone is not evidence of absent focus feedback. The two widget buttons have Vietnamese accessible labels. This improves the precision of the earlier focus limitation but is not an actual screen-reader or complete widget interaction sign-off.
+
+Official [customization](https://elevenlabs.io/docs/eleven-agents/customization/widget) and [widget configuration](https://elevenlabs.io/docs/api-reference/widget/get) documentation were refreshed through Context7 and the vendor site. General appearance/text controls are supported; the retrieved configuration schema also lists a general `focus_color`. No reviewed documentation established an attribution-specific opacity/contrast repair. General focus/color controls are not proof of such a repair. Keep the existing narrow follow-up [#40](https://github.com/Kiy-K/NguyenTrai-Porfolio/issues/40) open; do not duplicate it. Owner/vendor should request a supported unfocused attribution contrast fix and verify screen-reader/Safari states. No external support message or agent configuration change was made. Branding remains visible; no shadow CSS injection or widget disabling.
+
+### Regression receipt, remaining gates, and disposition
+
+Isolated checkout base as above; Node **24.22.1**, npm **11.19.1**, unchanged lockfile. `npm ci --ignore-scripts`; **136/136 tests**, lint, typecheck, existing credential-isolated webpack production build, **2/2 harness self-checks**, and existing public/search browser regressions at both viewports passed. The initial sandbox suite/harness runs failed at subprocess/loopback boundaries; the build first failed parsing its TypeScript subprocess output. Each succeeded outside the sandbox. Synthetic browser tests block external origins and use only the loopback fixture responder, with real credentials blank and persistent writes paused. They are regression evidence, not field metrics or production backend evidence. Build-generated files are excluded from this PR. Reproduce via [the existing harness instructions](../../scripts/ui-review/README.md), pinned tools above, and `UI_REVIEW_PORT=3340` / a private output directory under `/tmp`.
+
+Independent standards review found no findings. Independent Issue #39 acceptance review found no blocking defect and requested one timing-provenance clarification; the collection-overlap wording above incorporates it. Both reviewed the committed report/config diff against the sanitized receipts, with no additional production requests. This branch is deployment-disabled before its first push. Application behavior is unchanged; no new failing first-party behavior has been demonstrated that warrants a separate fix PR.
+
+- **Pending data / owner:** inspect the dashboard, obtain representative post-release route/device counts, then judge the field gate. P4/TanStack Query remains optional and evidence-gated.
+- **Pending vendor / owner:** #40 unfocused attribution contrast; validate supported settings and screen-reader announcements with branding retained.
+- **Pending diagnosis / owner:** public preview 400 and external 403; reproduce the authored-resource/provider cause before any fix. Do not infer Redis behavior from CDN headers.
+- **Coverage not performed:** physical iOS/Android, Safari/WebKit, Firefox, VoiceOver/NVDA, microphone/chat/call flow, video playback, all articles or every focus/hover/disabled state. Only Chromium binaries were available locally; no broader browser or accessibility claim is made.
+- **Approval gate:** draft report review only. Merge/deploy, production mutations, and any new application fix require the separately scoped approval requested in Issue #39. The issue's owner-approved merge criterion remains open.
+
+## Historical record — 2026-10-24
+
+Everything below is the original dated pre-fix/deployment evidence. Its pending actions and PR descriptions describe that capture, not the current state; the refresh above supersedes them for the current release.
+
 ## Disposition
 
 Issue [#39](https://github.com/Kiy-K/NguyenTrai-Porfolio/issues/39), verified 2026-10-24 UTC. **Field release gate: pending data.** Real Speed Insights history is available through the CLI, but each returned route/device/metric group has only 1–9 measurements, several groups are absent, and the current deployment filter returns no rows. The dashboard itself could not be inspected. Do not treat the observations below as a current-release pass.
