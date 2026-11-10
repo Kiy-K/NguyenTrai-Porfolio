@@ -9,11 +9,11 @@ Preserve and promote the legacy of Nguyễn Trãi while increasing awareness and
 ## Commands
 
 ```bash
-npm run dev      # Start dev server
-npm run build    # Production build
-npm run start    # Start production server
-npm run lint     # ESLint check
-npm run clean    # Clean Next.js build cache
+bun run dev      # Start dev server
+bun run build    # Production build
+bun run start    # Start production server
+bun run lint     # ESLint check
+bun run clean    # Clean Next.js build cache
 ```
 
 No test framework is configured.
@@ -59,7 +59,7 @@ Copy `.env.example` to `.env.local` and set values as needed.
 
 ### Data storage
 
-Content retains logical key `portfolio_data_v4` in the selected backend (`lib/persistence.ts`), Redis by default or Neon `portfolio.state` when PERSISTENCE_BACKEND=postgres:
+Content retains logical key `portfolio_data_v4` in the selected backend (`lib/persistence.ts`): Neon `portfolio.state` when PERSISTENCE_BACKEND=postgres (primary), Redis otherwise (legacy/rollback):
 
 ```ts
 { products: Product[] }
@@ -67,7 +67,7 @@ Content retains logical key `portfolio_data_v4` in the selected backend (`lib/pe
 
 `Product` is defined in `data/products.ts`.
 
-Feedback uses Redis hashes/RediSearch before cutover, or Neon `portfolio.feedback` after PERSISTENCE_BACKEND=postgres. Expiring sessions and rate limits remain Redis-backed.
+Feedback uses Neon `portfolio.feedback` with PERSISTENCE_BACKEND=postgres (primary), or Redis hashes/RediSearch otherwise. Expiring sessions, rate limits, and the public product cache remain Redis-backed.
 
 ### Read path
 

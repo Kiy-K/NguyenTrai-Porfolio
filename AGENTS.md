@@ -2,7 +2,7 @@
 
 ## Project Overview
 
-Nguyen Trai Portfolio is a Next.js 16 App Router application for publishing historical content with admin-managed products/articles, AI-assisted writing and search, image/video upload, and selectable Redis/Neon persistent storage.
+Nguyen Trai Portfolio is a Next.js 16 App Router application for publishing historical content with admin-managed products/articles, AI-assisted writing and search, image/video upload, Neon PostgreSQL as primary persistent storage, and Redis for caching, sessions, and rate limits.
 
 ## Product Mission
 
@@ -12,7 +12,7 @@ Core stack:
 
 - Next.js 16 + React 19 + TypeScript
 - Tailwind CSS v4
-- Neon PostgreSQL for content/credential JSONB and feedback after explicit cutover; Redis is the default before cutover.
+- Neon PostgreSQL as primary store for content/credential JSONB and feedback; Upstash Redis for the public product cache, sessions, and rate limits (legacy Redis store kept for rollback).
 - Upstash RediSearch schema/index for feedback reads
 - Cloudinary for image upload and video fallback
 - Mux for direct video uploads and playback
@@ -20,20 +20,21 @@ Core stack:
 
 ## Setup Commands
 
-- Install dependencies: `npm install`
+- Install dependencies: `bun install`
 - Create local env file: `cp .env.example .env.local`
-- Start dev server: `npm run dev`
-- Production build: `npm run build`
-- Run production server: `npm run start`
-- Lint: `npm run lint`
-- Clean Next build cache: `npm run clean`
+- Start dev server: `bun run dev`
+- Production build: `bun run build`
+- Run production server: `bun run start`
+- Lint: `bun run lint`
+- Clean Next build cache: `bun run clean`
 
 ## Environment Notes
 
-Required for Redis-backed CRUD:
+Required:
 
 - `UPSTASH_REDIS_REST_URL`
 - `UPSTASH_REDIS_REST_TOKEN`
+- `DATABASE_URL` (Neon; `APP_DATABASE_URL` runtime role in production)
 
 Optional integrations:
 
@@ -96,12 +97,12 @@ APIs:
 
 ## Testing and Validation
 
-Focused Node regression tests run with `npm test`; real synthetic Neon checks run with `npm run test:neon` when a usable ignored DATABASE_URL is configured.
+Focused Node regression tests run with `bun run test`; real synthetic Neon checks run with `bun run test:neon` when a usable ignored DATABASE_URL is configured.
 
 For most changes, run:
 
-- `npm run lint`
-- `npm run build` (for integration-level confidence when changes affect routing, APIs, or build behavior)
+- `bun run lint`
+- `bun run build` (for integration-level confidence when changes affect routing, APIs, or build behavior)
 
 For API changes, manually sanity-check relevant endpoints from `/admin` and/or HTTP calls.
 
@@ -141,7 +142,7 @@ AI providers:
 
 Before finishing a task:
 
-1. Run relevant checks (`npm run lint`, and `npm run build` when appropriate).
+1. Run relevant checks (`bun run lint`, and `bun run build` when appropriate).
 2. Keep changes scoped to the user request.
 3. Update docs when behavior, env requirements, or routes change.
 4. Note residual risks if checks cannot be run locally.

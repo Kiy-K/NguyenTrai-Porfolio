@@ -25,7 +25,7 @@ Preserve and promote the historical legacy of Nguyễn Trãi while raising aware
 - `next@16` (App Router)
 - `react@19`
 - Tailwind CSS v4
-- Neon PostgreSQL for migrated content, feedback, and credential hashes; Upstash Redis remains the default before explicit cutover and stores sessions/rate limits.
+- Neon PostgreSQL as primary store for content, feedback, and credential hashes; Upstash Redis for the public product cache, sessions, and rate limits (legacy Redis store kept for rollback).
 - Upstash RediSearch schema/index for feedback querying
 - Cloudinary (media upload + Cloudinary video fallback player)
 - Mux (direct video upload + playback)
@@ -35,8 +35,8 @@ Preserve and promote the historical legacy of Nguyễn Trãi while raising aware
 
 ## Prerequisites
 
-- Node.js **24.22.1 or newer patched 24.x** (`.nvmrc` / `mise.toml`); other major versions are rejected by npm tooling.
-- npm **11+** (bundled with the pinned Node release)
+- Node.js **26.13.0 or newer patched 26.x** (`.nvmrc` / `mise.toml`) as the runtime.
+- Bun **1.4.4** (`mise.toml`) as the package manager; `bun.lock` is the lockfile.
 - Optional service accounts:
   - Upstash Redis
   - Cloudinary
@@ -48,10 +48,10 @@ Preserve and promote the historical legacy of Nguyễn Trãi while raising aware
 ```bash
 git clone https://github.com/Kiy-K/NguyenTrai-Porfolio.git
 cd NguyenTrai-Porfolio
-# Select Node 24.22.1 with your runtime manager (mise or nvm).
-npm ci
+# Select Node 26.13.0 with your runtime manager (mise or nvm).
+bun install --frozen-lockfile
 cp .env.example .env.local
-npm run dev
+bun run dev
 ```
 
 Open `http://localhost:3000`.
@@ -67,7 +67,7 @@ Set these in `.env.local`.
 - `ADMIN_AUTH_PEPPER` (optional but recommended; extra secret for admin/session HMAC hashing)
 - `FEEDBACK_HASH_PEPPER` (optional but recommended; dedicated secret for feedback identity hashing)
 
-Redis remains required for sessions and rate limits. When PostgreSQL is selected, a missing DATABASE_URL or imported content is an error; the app never silently falls back to Redis.
+Redis is required for sessions, rate limits, and the 60-second public product cache (cache failures read Neon directly). When PostgreSQL is selected, a missing DATABASE_URL or imported content is an error; the app never silently falls back to Redis storage.
 
 ### Cloudinary
 
@@ -98,18 +98,18 @@ Used by `/api/upload` and Cloudinary video player fallback.
 ## Scripts
 
 ```bash
-npm run dev
-npm run build
-npm run start
-npm run lint
-npm run clean
+bun run dev
+bun run build
+bun run start
+bun run lint
+bun run clean
 ```
 
 No test framework is configured in this repository currently.
 
 ## Data Model and Storage
 
-Content keeps the logical key `portfolio_data_v4` in the selected backend: Redis before cutover, or JSONB in `portfolio.state` when `PERSISTENCE_BACKEND=postgres`:
+Content keeps the logical key `portfolio_data_v4` in the selected backend: JSONB in `portfolio.state` when `PERSISTENCE_BACKEND=postgres` (primary), or Redis otherwise:
 
 ```ts
 { products: Product[] }
@@ -227,4 +227,4 @@ This app requires server runtime APIs (`/api/*`) and should be deployed on a Nex
 
 Security regression checks and deployment/recovery prerequisites: [M0A baseline](docs/security-m0a.md).
 
-Neon migration, protected backups, and cutover/rollback: [operations](docs/neon-migration.md). Run `npm run test:neon` for synthetic checks in a temporary Neon schema.
+Neon migration, protected backups, and cutover/rollback: [operations](docs/neon-migration.md). Run `bun run test:neon` for synthetic checks in a temporary Neon schema.
