@@ -44,7 +44,7 @@
   "devDependencies": {
     "@tailwindcss/postcss": "4.1.11",
     "@tailwindcss/typography": "^0.5.19",
-    "@types/node": "^20",
+    "@types/node": "^26",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "@types/sanitize-html": "^2.16.1",
@@ -55,17 +55,17 @@
     "typescript": "5.9.3"
   },
   "engines": {
-    "node": "24.x"
+    "node": "26.x"
   },
   "devEngines": {
     "runtime": {
       "name": "node",
-      "version": ">=24.22.1 <25",
+      "version": ">=26.13.0 <27",
       "onFail": "error"
     },
     "packageManager": {
-      "name": "npm",
-      "version": ">=11",
+      "name": "bun",
+      "version": ">=1.4.4",
       "onFail": "error"
     }
   },

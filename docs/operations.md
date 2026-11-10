@@ -9,9 +9,9 @@ Operational decisions should support the core product mission: preserve Nguyễn
 ### 1. Install + run
 
 ```bash
-npm install
+bun install
 cp .env.example .env.local
-npm run dev
+bun run dev
 ```
 
 ### 2. Verify baseline
@@ -82,8 +82,8 @@ This operation requires a valid admin session and the exact confirmation phrase 
 ## Build and Production
 
 ```bash
-npm run build
-npm run start
+bun run build
+bun run start
 ```
 
 ## Caching Notes
@@ -163,7 +163,7 @@ For Braintrust LLM traces, set:
 
 - Admin session is IP-bound; changing outbound IP can invalidate active sessions.
 - Build/runtime still requires correct env vars for Redis/Mux/Cloudinary integrations.
-- Focused security tests run with `npm test`; lint and separate TypeScript checks run with `npm run lint` and `npm run typecheck`.
+- Focused security tests run with `bun run test`; lint and separate TypeScript checks run with `bun run lint` and `bun run typecheck`.
 - Deployment verification and recovery prerequisites: [M0A security baseline](security-m0a.md).
 - Section matching uses section names, not IDs.
 - Product IDs are time-based strings when omitted.

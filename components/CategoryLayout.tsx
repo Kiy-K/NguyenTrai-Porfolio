@@ -3,7 +3,7 @@
 import Link from 'next/link';
 
 import { SECTIONS } from '@/lib/constants';
-import { Heart, Leaf, Box, Palette, Gamepad2, Clapperboard, Camera, Mic, Map } from 'lucide-react';
+import { Heart, Leaf, Box, Palette, Gamepad2, Clapperboard, Camera, Map } from 'lucide-react';
 
 // Map sections to icons
 const getIconForSection = (id: string) => {
@@ -14,7 +14,6 @@ const getIconForSection = (id: string) => {
     case 'tranh-ve': return <Palette className="w-8 h-8 mb-2" />;
     case 'tro-choi': return <Gamepad2 className="w-8 h-8 mb-2" />;
     case 'kich': return <Clapperboard className="w-8 h-8 mb-2" />;
-    case 'rap': return <Mic className="w-8 h-8 mb-2" />;
     case 'ban-do-so': return <Map className="w-8 h-8 mb-2" />;
     case 'hinh-anh': return <Camera className="w-8 h-8 mb-2" />;
     default: return <Heart className="w-8 h-8 mb-2" />;

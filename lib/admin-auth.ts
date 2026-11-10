@@ -73,10 +73,10 @@ const safeCompare = (submitted: string, stored: string): boolean => {
 };
 
 export const getClientIpFromHeaders = (headers: Headers): string => {
+  // Vercel appends the connecting IP as the rightmost X-Forwarded-For entry; leftmost entries are client-supplied.
   const forwardedFor = headers.get('x-forwarded-for');
-  const realIp = headers.get('x-real-ip');
-  const fromForwarded = forwardedFor?.split(',')[0]?.trim();
-  return fromForwarded || realIp?.trim() || 'unknown';
+  const fromForwarded = forwardedFor?.split(',').pop()?.trim();
+  return fromForwarded || headers.get('x-real-ip')?.trim() || 'unknown';
 };
 
 export const hashIp = (ip: string): string => hmacSha256(ip, getAdminPepper());

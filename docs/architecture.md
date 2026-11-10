@@ -4,9 +4,9 @@
 
 This project is a Next.js App Router application with a server-backed content store and media integrations:
 
-- Persistent content and credential hash payloads in the selected backend (`lib/persistence.ts`): Redis by default, Neon `portfolio.state` when `PERSISTENCE_BACKEND=postgres`.
-- Feedback records in Redis hashes/RediSearch before cutover, or JSONB in Neon `portfolio.feedback` after cutover.
-- Expiring administrator sessions, IP bindings, rate limits, and dedupe state remain in Redis.
+- Persistent content and credential hash payloads in the selected backend (`lib/persistence.ts`): Neon `portfolio.state` when `PERSISTENCE_BACKEND=postgres` (primary); Redis when unset/redis (legacy and rollback).
+- Feedback records in Neon `portfolio.feedback` (primary), or Redis hashes/RediSearch when the Redis backend is selected.
+- Expiring administrator sessions, IP bindings, rate limits, dedupe state, and the 60-second public product cache remain in Redis.
 - Images in Cloudinary
 - Multiple videos per product via Mux (preferred) with Cloudinary URL fallback
 - AI features powered by Gemini and/or Mistral

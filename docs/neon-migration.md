@@ -16,8 +16,8 @@ and legacy feedback hashes are included.
 
 ## Verification before deployment
 
-Run `npm run lint`, `npm run typecheck`, `npm test`, `npm run test:neon`, both full
-and production dependency audits, and `npm run build` on Node 24. The optional
+Run `bun run lint`, `bun run typecheck`, `bun run test`, `bun run test:neon`, both full
+and production dependency audits, and `bun run build` on Node 26.13.0. The optional
 Neon test uses an independently named synthetic schema, validates transactional
 rollback/idempotence and real storage operations, and removes only its own test
 schema. It never touches Redis or the application tables.
@@ -222,7 +222,7 @@ retry and requires owner investigation and a newly exported/reviewed plan.
 The tool cannot prevent an external writer resuming after verification; keep
 all writers quiesced until the approved switch is complete.
 
-Synthetic checks: `npm test`; real Redis semantics: set dedicated
+Synthetic checks: `bun run test`; real Redis semantics: set dedicated
 `TEST_REDIS_REST_URL`, `TEST_REDIS_REST_TOKEN`, `TEST_REDIS_DISPOSABLE=1` for an
 exclusively assigned, empty throwaway database and run
 `node --test tests/redis-rollback.integration.cjs`. The test rejects the configured

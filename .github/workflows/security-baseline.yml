@@ -16,17 +16,19 @@ jobs:
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version-file: .nvmrc
-          cache: npm
-      - run: node --version && npm --version
-      - run: npm ci
-      - run: npm run lint
-      - run: npm run typecheck
-      - run: npm test
-      - run: npm run build
+      - uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2.2.0
+        with:
+          bun-version: 1.4.4
+      - run: node --version && bun --version
+      - run: bun install --frozen-lockfile
+      - run: bun run lint
+      - run: bun run typecheck
+      - run: bun run test
+      - run: bun run build
         env:
           NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME: ci-placeholder
       - name: Report all dependency advisories
-        run: npm audit --audit-level=high
+        run: bun audit --audit-level=high
         continue-on-error: true
       - name: Block production dependency vulnerabilities
-        run: npm audit --omit=dev --audit-level=high
+        run: bun audit --omit=dev --audit-level=high
