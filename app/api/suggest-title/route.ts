@@ -1,5 +1,8 @@
 import { NextResponse } from 'next/server';
 import { traceLLMCall } from '@/lib/braintrust';
+import { getActiveAdminSession, getClientIpFromHeaders } from '@/lib/admin-auth';
+import { enforceSameOrigin } from '@/lib/request-security';
+import { consumeRateLimit } from '@/lib/rate-limit';
 
 const SYSTEM_PROMPT = (section: string) =>
   `You are an AI assistant helping a user write a title for a literature project about the Vietnamese author Nguyễn Trãi.
@@ -32,6 +35,26 @@ function parseSuggestions(content: string): string[] | null {
 
 export async function POST(request: Request) {
   try {
+    const originError = enforceSameOrigin(request);
+    if (originError) return originError;
+
+    const ip = getClientIpFromHeaders(request.headers);
+    if (!await getActiveAdminSession(ip)) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
+    const rateLimit = await consumeRateLimit({
+      key: `admin:suggest-title:${ip}`,
+      limit: 60,
+      windowSeconds: 10 * 60,
+    });
+    if (!rateLimit.allowed) {
+      return NextResponse.json(
+        { error: 'Bạn yêu cầu gợi ý quá nhanh. Vui lòng thử lại sau.' },
+        { status: 429, headers: { 'Retry-After': String(rateLimit.retryAfterSeconds) } }
+      );
+    }
+
     const { text, section } = await request.json();
 
     if (!text) {
@@ -51,10 +74,10 @@ export async function POST(request: Request) {
         metadata: { route: '/api/suggest-title' },
         call: async () => {
           const response = await fetch(
-            `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${geminiKey}`,
+            'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent',
             {
               method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
+              headers: { 'Content-Type': 'application/json', 'x-goog-api-key': geminiKey },
               body: JSON.stringify({
                 contents: [{
                   parts: [{
@@ -68,7 +91,8 @@ export async function POST(request: Request) {
 
           if (!response.ok) {
             const err = await response.text();
-            throw new Error(`Gemini API returned ${response.status}: ${err}`);
+            console.error('Gemini API error:', response.status, err.slice(0, 500));
+            throw new Error(`Gemini API returned ${response.status}`);
           }
 
           const data = await response.json();
@@ -115,7 +139,8 @@ export async function POST(request: Request) {
 
           if (!response.ok) {
             const err = await response.text();
-            throw new Error(`Mistral API returned ${response.status}: ${err}`);
+            console.error('Mistral API error:', response.status, err.slice(0, 500));
+            throw new Error(`Mistral API returned ${response.status}`);
           }
 
           const data = await response.json();
@@ -143,7 +168,7 @@ export async function POST(request: Request) {
   } catch (error: any) {
     console.error('suggest-title error:', error);
     return NextResponse.json(
-      { error: error.message || 'Failed to generate title suggestions' },
+      { error: 'Không thể tạo gợi ý tiêu đề.' },
       { status: 500 }
     );
   }
