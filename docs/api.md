@@ -189,6 +189,8 @@ Returns 3 Vietnamese title suggestions for a partially typed title.
 - Gemini first, then Mistral fallback
 - Attempts strict JSON parsing, then bracket extraction, then line fallback
 - If `BRAINTRUST_API_KEY` is set, logs LLM trace spans to Braintrust
+- Requires an admin session and same-origin `Origin`; rate-limited to 60 requests per 10 minutes per IP (`429` with `Retry-After`).
+- Provider failures return a generic `500` message; provider response bodies are logged server-side only.
 
 ### Success
 
