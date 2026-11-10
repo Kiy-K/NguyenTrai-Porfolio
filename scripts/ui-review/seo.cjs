@@ -91,7 +91,7 @@ const results = [];
     const xml = await sitemapResponse.text();
     assert.match(sitemapResponse.headers()['content-type'], /xml/);
     const locations = [...xml.matchAll(/<loc>([^<]+)<\/loc>/g)].map(match => match[1]);
-    assert.equal(locations.length, 44); // home + 9 sections + 34 public articles
+    assert.equal(locations.length, 43); // home + 8 sections + 34 public articles
     for (const location of locations) assert.equal(new URL(location).origin, canonical);
     assert.ok(locations.includes(canonical + '/products/seo-legacy'));
     assert.doesNotMatch(xml, /\/products\/(draft|archived|seo-malformed)|\/admin|\/api\//);
