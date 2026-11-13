@@ -7,6 +7,7 @@ import Footer from '@/components/Footer';
 import { AuthSkeleton } from '@/components/ContentSkeletons';
 import ArticleForm from '@/components/admin/ArticleForm';
 import FeedbackPanel from '@/components/admin/FeedbackPanel';
+import ArticleList from '@/components/admin/ArticleList';
 import SecurityActions from '@/components/admin/SecurityActions';
 
 export default function AdminPage() {
@@ -46,7 +47,9 @@ export default function AdminPage() {
       <main className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <SecurityActions isMutationPending={isMutationPending} setIsMutationPending={setIsMutationPending} />
         <FeedbackPanel />
-        <ArticleForm isMutationPending={isMutationPending} setIsMutationPending={setIsMutationPending} />
+        <ArticleList isMutationPending={isMutationPending} setIsMutationPending={setIsMutationPending}>
+          <ArticleForm isMutationPending={isMutationPending} setIsMutationPending={setIsMutationPending} />
+        </ArticleList>
       </main>
       <Footer />
     </div>

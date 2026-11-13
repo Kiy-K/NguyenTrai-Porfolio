@@ -10,7 +10,7 @@ function mount(file, mocks = {}, props = { isMutationPending: false, setIsMutati
     react: {
       useState(initial) {
         const index = stateIndex++;
-        if (!(index in states)) states[index] = initial;
+        if (!(index in states)) states[index] = typeof initial === 'function' ? initial() : initial;
         return [states[index], value => { states[index] = typeof value === 'function' ? value(states[index]) : value; }];
       },
       useRef(initial) { return refs[refIndex++] ??= { current: initial }; },

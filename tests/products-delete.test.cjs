@@ -20,7 +20,7 @@ function deleteRoute() {
     '@/lib/admin-auth': { getClientIpFromHeaders: () => 'test-ip', getActiveAdminSession: async () => ({ sessionId: 'test' }) },
     '@/lib/rate-limit': { consumeRateLimit: async () => ({ allowed: true }) },
     '@/lib/request-security': loadTs('lib/request-security.ts'),
-    '@/lib/article-references': loadTs('lib/article-references.ts'),
+    '@/lib/product-input': loadTs('lib/product-input.ts', { '@/lib/constants': loadTs('lib/constants.ts'), '@/lib/article-references': loadTs('lib/article-references.ts') }), '@/lib/article-references': loadTs('lib/article-references.ts'),
     '@/lib/constants': constants,
   });
   const del = (body) => route.DELETE(new Request('https://test.invalid/api/products', {

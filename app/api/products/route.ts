@@ -1,78 +1,23 @@
 import { NextResponse } from 'next/server';
 import { getProducts } from '@/lib/data';
-import { appendProduct, readContent, writeContent } from '@/lib/persistence';
+import { appendProduct, readContent, readProductsWithRevisions, writeContent } from '@/lib/persistence';
 import { CLEAR_ALL_CONFIRMATION } from '@/lib/constants';
 import { getActiveAdminSession, getClientIpFromHeaders } from '@/lib/admin-auth';
 import { enforceSameOrigin, enforceDataWriteAvailability } from '@/lib/request-security';
 import { consumeRateLimit } from '@/lib/rate-limit';
-import { SECTIONS } from '@/lib/constants';
 import { randomUUID } from 'crypto';
-import { z } from 'zod';
-import { articleReferencesSchema } from '@/lib/article-references';
-
-const isHttpUrl = (value: string) => {
-  try {
-    return ['http:', 'https:'].includes(new URL(value).protocol);
-  } catch {
-    return false;
-  }
-};
-const httpUrl = z.string().trim().max(2048).refine(isHttpUrl);
-const muxId = z.string().trim().regex(/^[A-Za-z0-9]{1,128}$/);
-
-// Mirrors the admin form; unknown keys (id, status, ...) are stripped.
-const productInputSchema = z.object({
-  title: z.string().trim().min(1).max(200),
-  description: z.string().trim().min(1).max(2000),
-  fullDescription: z.string().max(50_000).optional(),
-  images: z.array(httpUrl).max(50).default([]),
-  video: httpUrl.optional(),
-  muxAssetId: muxId.optional(),
-  muxPlaybackId: muxId.optional(),
-  videos: z
-    .array(z.object({ video: httpUrl.optional(), muxAssetId: muxId.optional(), muxPlaybackId: muxId.optional() }))
-    .max(20)
-    .optional(),
-  teamMembers: z.string().trim().max(1000).optional(),
-  references: articleReferencesSchema.optional(),
-  section: z.string().refine((name) => SECTIONS.some((section) => section.name === name)),
-});
+import { productInputSchema, readProductInput } from '@/lib/product-input';
 
 // GET /api/products - Lấy danh sách tất cả sản phẩm
 export const dynamic = 'force-dynamic';
 const noStore = { 'Cache-Control': 'no-store' };
-
-async function readProductInput(request: Request): Promise<unknown> {
-  const reader = request.body?.getReader();
-  if (!reader) return null;
-  const decoder = new TextDecoder();
-  let bytes = 0, text = '';
-  try {
-    while (true) {
-      const { done, value } = await reader.read();
-      if (done) break;
-      bytes += value.byteLength;
-      if (bytes > 1_048_576) {
-        await reader.cancel();
-        return null;
-      }
-      text += decoder.decode(value, { stream: true });
-    }
-    return JSON.parse(text + decoder.decode());
-  } catch {
-    return null;
-  } finally {
-    reader.releaseLock();
-  }
-}
 
 export async function GET(request: Request) {
   try {
     if (new URL(request.url).searchParams.get('fresh') === '1') {
       const ip = getClientIpFromHeaders(request.headers);
       if (!await getActiveAdminSession(ip)) return NextResponse.json({ error: 'Unauthorized' }, { status: 401, headers: noStore });
-      const products = (await readContent())?.products ?? [];
-      return NextResponse.json({ products }, { headers: noStore });
+      return NextResponse.json(await readProductsWithRevisions(), { headers: noStore });
     }
     const products = await getProducts();
     return NextResponse.json({ products }, { headers: noStore });
