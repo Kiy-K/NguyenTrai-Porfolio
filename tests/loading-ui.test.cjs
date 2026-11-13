@@ -43,7 +43,7 @@ test('admin controls remain hidden until session validation succeeds', async () 
       'next/navigation': { useRouter: () => ({ replace: path => redirects.push(path) }) },
       'next/image': { default: () => null },
       '@/lib/constants': constants,
-      '@/components/admin/ArticleList': { default: () => null },
+      '@/components/admin/ArticleList': { default: ({ children }) => children },
       '@/components/admin/ArticleForm': { default: () => require('react').createElement('form') },
       '@/components/admin/FeedbackPanel': { default: () => null },
       '@/components/admin/SecurityActions': { default: () => null },

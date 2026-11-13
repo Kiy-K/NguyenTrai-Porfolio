@@ -6,7 +6,7 @@ import type { MutationState } from '@/components/admin/types';
 import type { Product } from '@/data/products';
 
 // Admin list/search (title + section) that opens the shared ArticleForm in edit mode.
-export default function ArticleList(props: MutationState) {
+export default function ArticleList({ children, ...props }: MutationState & { children?: React.ReactNode }) {
   const [data, setData] = useState<{ products: Product[]; revisions: Record<string, string> } | null>(null);
   const [error, setError] = useState('');
   const [query, setQuery] = useState('');
@@ -38,6 +38,7 @@ export default function ArticleList(props: MutationState) {
   }
 
   return (
+    <>
     <section className="bg-white rounded-sm shadow-sm border border-[#D4C4A8] p-6 sm:p-8 mb-8" aria-labelledby="article-list-title">
       <h2 id="article-list-title" className="text-2xl font-bold text-[#2C1E16] mb-4 font-playfair">Quản lý bài viết</h2>
       <label htmlFor="article-search" className="sr-only">Tìm theo tiêu đề hoặc chuyên mục</label>
@@ -64,5 +65,7 @@ export default function ArticleList(props: MutationState) {
         {data && !shown.length && <li className="py-3 text-[#5C4033]">Không có bài viết phù hợp.</li>}
       </ul>
     </section>
+    {children}
+    </>
   );
 }

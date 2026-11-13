@@ -7,7 +7,7 @@ import { SECTIONS } from '@/lib/constants';
 import MediaEditor from '@/components/admin/MediaEditor';
 import StatusMessage from '@/components/admin/StatusMessage';
 import type { AdminStatus, MutationState, UploadedMuxVideo } from '@/components/admin/types';
-import type { ArticleReference, Product } from '@/data/products';
+import type { ArticleReference, Product, ProductVideo } from '@/data/products';
 import { articleReferencesSchema } from '@/lib/article-references';
 
 type EditProps = { article?: Product; revision?: string; onDone?: (saved: boolean) => void };
@@ -160,15 +160,25 @@ export default function ArticleForm({ isMutationPending, setIsMutationPending, a
       const refsOut = parsedReferences.data;
       if (!same(refsOut, article?.references ?? [])) changes.references = refsOut.length ? refsOut : null;
       if (formData.video !== baseline.formData.video || !same(uploadedMuxVideos, baseline.mux)) {
-        const nextVideos = [
-          ...(formData.video.trim() ? [{ video: formData.video.trim() }] : []),
-          ...baseline.extraPlain.map(video => ({ video })),
-          ...uploadedMuxVideos,
-        ];
+        // Keep original entries (and their extra keys); only touch what the user changed.
+        const keepMux = new Set(uploadedMuxVideos.map(v => v.muxPlaybackId));
+        const added = uploadedMuxVideos.filter(v => !baseline.mux.some(m => m.muxPlaybackId === v.muxPlaybackId));
+        const url = formData.video.trim();
+        let urlDone = false;
+        const nextVideos: ProductVideo[] = [];
+        for (const entry of article?.videos ?? []) {
+          if (entry.muxPlaybackId) { if (keepMux.has(entry.muxPlaybackId)) nextVideos.push(entry); }
+          else if (entry.video && !urlDone) { urlDone = true; if (url) nextVideos.push({ ...entry, video: url }); }
+          else nextVideos.push(entry);
+        }
+        if (!urlDone && url && (article?.videos?.length || formData.video !== baseline.formData.video)) nextVideos.unshift({ video: url });
+        nextVideos.push(...added);
         changes.videos = nextVideos.length ? nextVideos : null;
-        changes.video = formData.video.trim() || null;
-        changes.muxAssetId = uploadedMuxVideos[0]?.muxAssetId ?? null;
-        changes.muxPlaybackId = uploadedMuxVideos[0]?.muxPlaybackId ?? null;
+        if (formData.video !== baseline.formData.video) changes.video = url || null;
+        if (uploadedMuxVideos[0]?.muxPlaybackId !== baseline.mux[0]?.muxPlaybackId) {
+          changes.muxAssetId = uploadedMuxVideos[0]?.muxAssetId ?? null;
+          changes.muxPlaybackId = uploadedMuxVideos[0]?.muxPlaybackId ?? null;
+        }
       }
       if (!Object.keys(changes).length) {
         setIsMutationPending(false);

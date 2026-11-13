@@ -64,7 +64,7 @@ export async function readProductsWithRevisions(): Promise<{ products: Product[]
   const sql = database();
   const [row] = await sql`SELECT payload,
     (SELECT COALESCE(jsonb_object_agg(e->>'id', encode(sha256(convert_to(e::text, 'UTF8')), 'hex')), '{}'::jsonb)
-     FROM jsonb_array_elements(payload->'products') e) AS revisions
+     FROM jsonb_array_elements(payload->'products') e WHERE e->>'id' IS NOT NULL) AS revisions
     FROM portfolio.state WHERE key = ${CONTENT_KEY}`;
   if (!row?.payload || !Array.isArray(row.payload.products)) throw new Error('Imported content is missing or invalid');
   return { products: row.payload.products as Product[], revisions: row.revisions as Record<string, string> };
@@ -85,7 +85,7 @@ export async function updateProduct(id: string, revision: string, set: Record<st
       AND (SELECT count(*) FROM jsonb_array_elements(payload->'products') e WHERE e->>'id' = ${id}) = 1
       AND (SELECT encode(sha256(convert_to(e::text, 'UTF8')), 'hex') FROM jsonb_array_elements(payload->'products') e WHERE e->>'id' = ${id}) = ${revision}
     RETURNING key`;
-  if (rows.length) { await invalidateProductCache(); return 'updated'; }
+  if (rows.length) { await invalidateProductCache().catch(() => console.error('Product cache invalidation failed')); return 'updated'; }
   const [row] = await sql`SELECT count(*)::int AS n FROM portfolio.state s, jsonb_array_elements(s.payload->'products') e
     WHERE s.key = ${CONTENT_KEY} AND e->>'id' = ${id}`;
   return row?.n === 0 ? 'not_found' : row?.n > 1 ? 'duplicate' : 'conflict';

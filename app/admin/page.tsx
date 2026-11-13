@@ -47,8 +47,9 @@ export default function AdminPage() {
       <main className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <SecurityActions isMutationPending={isMutationPending} setIsMutationPending={setIsMutationPending} />
         <FeedbackPanel />
-        <ArticleList isMutationPending={isMutationPending} setIsMutationPending={setIsMutationPending} />
-        <ArticleForm isMutationPending={isMutationPending} setIsMutationPending={setIsMutationPending} />
+        <ArticleList isMutationPending={isMutationPending} setIsMutationPending={setIsMutationPending}>
+          <ArticleForm isMutationPending={isMutationPending} setIsMutationPending={setIsMutationPending} />
+        </ArticleList>
       </main>
       <Footer />
     </div>
