@@ -58,6 +58,39 @@ export async function appendProduct(product: Product): Promise<void> {
   await invalidateProductCache();
 }
 
+// Admin list: products plus an opaque per-article revision (sha256 of the stored element). Redis rollback backend is read-only here.
+export async function readProductsWithRevisions(): Promise<{ products: Product[]; revisions: Record<string, string> }> {
+  if (!usesPostgres()) return { products: (await readContent())?.products ?? [], revisions: {} };
+  const sql = database();
+  const [row] = await sql`SELECT payload,
+    (SELECT COALESCE(jsonb_object_agg(e->>'id', encode(sha256(convert_to(e::text, 'UTF8')), 'hex')), '{}'::jsonb)
+     FROM jsonb_array_elements(payload->'products') e) AS revisions
+    FROM portfolio.state WHERE key = ${CONTENT_KEY}`;
+  if (!row?.payload || !Array.isArray(row.payload.products)) throw new Error('Imported content is missing or invalid');
+  return { products: row.payload.products as Product[], revisions: row.revisions as Record<string, string> };
+}
+
+export type UpdateResult = 'updated' | 'not_found' | 'conflict' | 'duplicate' | 'unsupported';
+
+// One conditional statement: replaces exactly the matching element in place iff its revision is unchanged.
+export async function updateProduct(id: string, revision: string, set: Record<string, unknown>, remove: string[]): Promise<UpdateResult> {
+  if (!usesPostgres()) return 'unsupported';
+  const sql = database();
+  const rows = await sql`UPDATE portfolio.state SET payload = jsonb_set(payload, '{products}', (
+      SELECT jsonb_agg(CASE WHEN e->>'id' = ${id}
+        THEN (e - ARRAY(SELECT jsonb_array_elements_text(${JSON.stringify(remove)}::jsonb))) || ${JSON.stringify(set)}::jsonb
+        ELSE e END ORDER BY ord)
+      FROM jsonb_array_elements(payload->'products') WITH ORDINALITY AS t(e, ord)))
+    WHERE key = ${CONTENT_KEY}
+      AND (SELECT count(*) FROM jsonb_array_elements(payload->'products') e WHERE e->>'id' = ${id}) = 1
+      AND (SELECT encode(sha256(convert_to(e::text, 'UTF8')), 'hex') FROM jsonb_array_elements(payload->'products') e WHERE e->>'id' = ${id}) = ${revision}
+    RETURNING key`;
+  if (rows.length) { await invalidateProductCache(); return 'updated'; }
+  const [row] = await sql`SELECT count(*)::int AS n FROM portfolio.state s, jsonb_array_elements(s.payload->'products') e
+    WHERE s.key = ${CONTENT_KEY} AND e->>'id' = ${id}`;
+  return row?.n === 0 ? 'not_found' : row?.n > 1 ? 'duplicate' : 'conflict';
+}
+
 export async function readCredentials(): Promise<HashRecord | null> {
   if (!usesPostgres()) return redis.hgetall<HashRecord>(CREDENTIALS_KEY);
   const sql = database();

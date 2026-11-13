@@ -120,6 +120,18 @@ The phrase is `CLEAR_ALL_CONFIRMATION` in `lib/constants.ts`.
 - `429` if rate limit exceeded
 - `500` if Redis is missing or operation fails
 
+## `PATCH /api/products/[id]`
+
+Admin-only edit of one existing article (same-origin, session + IP checked, rate limited 120/15 min, honors `DATA_WRITE_PAUSED`).
+
+Body: `{ "revision": "<64-hex>", "changes": { ...fields } }`. `revision` comes from `GET /api/products?fresh=1` (`revisions[id]`, sha256 of the stored article). `changes` accepts only the create-form fields (`title`, `description`, `fullDescription`, `images`, `video`, `muxAssetId`, `muxPlaybackId`, `videos`, `teamMembers`, `references`, `section`) under the same validation as `POST`; optional fields may be `null` to remove them. `id`, `createdAt`, `status`, unknown keys are ignored; at least one valid change is required. Bodies over 1 MiB are rejected.
+
+Storage: PostgreSQL only — one conditional `UPDATE` replaces just that array element in place (order and other articles untouched) iff its revision still matches, then invalidates the public cache. Media is never deleted.
+
+Responses: `200 {success:true}`, `400` invalid, `401`, `403` origin, `404` unknown id, `409` stale revision (reload and retry), `429`, `503` (write pause, Redis rollback backend, or duplicate IDs — edits fail closed), `500`.
+
+`GET /api/products?fresh=1` (admin) now returns `{ products, revisions }`; `revisions` is `{}` on the Redis rollback backend.
+
 ## `GET /api/products/[id]`
 
 Returns one product by stringified ID comparison.

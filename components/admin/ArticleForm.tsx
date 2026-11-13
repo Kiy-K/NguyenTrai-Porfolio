@@ -7,27 +7,46 @@ import { SECTIONS } from '@/lib/constants';
 import MediaEditor from '@/components/admin/MediaEditor';
 import StatusMessage from '@/components/admin/StatusMessage';
 import type { AdminStatus, MutationState, UploadedMuxVideo } from '@/components/admin/types';
-import type { ArticleReference } from '@/data/products';
+import type { ArticleReference, Product } from '@/data/products';
 import { articleReferencesSchema } from '@/lib/article-references';
 
-export default function ArticleForm({ isMutationPending, setIsMutationPending }: MutationState) {
+type EditProps = { article?: Product; revision?: string; onDone?: (saved: boolean) => void };
+
+// Baseline form values derived from a stored article (legacy single-video fields supported).
+function baselineOf(article?: Product) {
+  const entries = article?.videos ?? [];
+  const mux = entries.filter(v => v.muxPlaybackId && v.muxAssetId).map(v => ({ muxAssetId: v.muxAssetId!, muxPlaybackId: v.muxPlaybackId! }));
+  if (!entries.length && article?.muxPlaybackId && article.muxAssetId) mux.push({ muxAssetId: article.muxAssetId, muxPlaybackId: article.muxPlaybackId });
+  const plain = entries.filter(v => v.video && !v.muxPlaybackId).map(v => v.video!);
+  return {
+    formData: {
+      title: article?.title ?? '',
+      description: article?.description ?? '',
+      fullDescription: article?.fullDescription ?? '',
+      video: plain[0] ?? (entries.length ? '' : article?.video ?? ''),
+      teamMembers: article?.teamMembers ?? '',
+      section: article?.section && SECTIONS.some(s => s.name === article.section) ? article.section : SECTIONS[0].name,
+    },
+    images: article?.images ?? [],
+    mux,
+    extraPlain: plain.slice(1),
+  };
+}
+
+export default function ArticleForm({ isMutationPending, setIsMutationPending, article, revision, onDone }: MutationState & EditProps) {
   const router = useRouter();
-  const [formData, setFormData] = useState({
-    title: '',
-    description: '',
-    fullDescription: '',
-    video: '',
-    teamMembers: '',
-    section: SECTIONS[0].name
-  });
-  const [images, setImages] = useState<string[]>([]);
-  const [uploadedMuxVideos, setUploadedMuxVideos] = useState<UploadedMuxVideo[]>([]);
+  const editing = !!article;
+  const [baseline] = useState(() => baselineOf(article));
+  const [formData, setFormData] = useState(baseline.formData);
+  const [images, setImages] = useState<string[]>(baseline.images);
+  const [uploadedMuxVideos, setUploadedMuxVideos] = useState<UploadedMuxVideo[]>(baseline.mux);
   const [status, setStatus] = useState<AdminStatus>({ type: null, message: '' });
   const [mediaBusy, setMediaBusy] = useState(false);
   const [mediaKey, setMediaKey] = useState(0);
-  const [references, setReferences] = useState<(ArticleReference & { key: number })[]>([]);
+  const [references, setReferences] = useState<(ArticleReference & { key: number })[]>(
+    () => (article?.references ?? []).map((reference, key) => ({ ...reference, key })));
   const [referenceErrors, setReferenceErrors] = useState<Record<string, string>>({});
-  const nextReferenceKey = useRef(0);
+  const nextReferenceKey = useRef(article?.references?.length ?? 0);
   const referenceFocus = useRef<string | null>(null);
   useEffect(() => {
     if (referenceFocus.current) {
@@ -130,6 +149,50 @@ export default function ArticleForm({ isMutationPending, setIsMutationPending }:
     setIsMutationPending(true);
     setStatus({ type: 'loading', message: 'Đang lưu bài viết. Vui lòng đợi...' });
 
+    if (editing) {
+      const same = (a: unknown, b: unknown) => JSON.stringify(a) === JSON.stringify(b);
+      const changes: Record<string, unknown> = {};
+      for (const key of ['title', 'description', 'section'] as const) if (formData[key] !== baseline.formData[key]) changes[key] = formData[key];
+      for (const key of ['fullDescription', 'teamMembers'] as const) {
+        if (formData[key] !== baseline.formData[key]) changes[key] = formData[key] || null;
+      }
+      if (!same(images, baseline.images)) changes.images = images;
+      const refsOut = parsedReferences.data;
+      if (!same(refsOut, article?.references ?? [])) changes.references = refsOut.length ? refsOut : null;
+      if (formData.video !== baseline.formData.video || !same(uploadedMuxVideos, baseline.mux)) {
+        const nextVideos = [
+          ...(formData.video.trim() ? [{ video: formData.video.trim() }] : []),
+          ...baseline.extraPlain.map(video => ({ video })),
+          ...uploadedMuxVideos,
+        ];
+        changes.videos = nextVideos.length ? nextVideos : null;
+        changes.video = formData.video.trim() || null;
+        changes.muxAssetId = uploadedMuxVideos[0]?.muxAssetId ?? null;
+        changes.muxPlaybackId = uploadedMuxVideos[0]?.muxPlaybackId ?? null;
+      }
+      if (!Object.keys(changes).length) {
+        setIsMutationPending(false);
+        setStatus({ type: 'error', message: 'Chưa có thay đổi nào để lưu.' });
+        return;
+      }
+      try {
+        const res = await fetch(`/api/products/${encodeURIComponent(String(article!.id))}`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ revision, changes }),
+        });
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok) throw new Error(res.status === 409 ? 'Bài viết đã được thay đổi ở nơi khác. Hãy hủy và tải lại danh sách trước khi sửa lại.' : data.error || 'Có lỗi xảy ra khi cập nhật bài viết');
+        setStatus({ type: 'success', message: 'Đã cập nhật bài viết.' });
+        setIsMutationPending(false);
+        onDone?.(true);
+      } catch (error: any) {
+        setIsMutationPending(false);
+        setStatus({ type: 'error', message: `${error.message || 'Không thể lưu bài viết.'} Nội dung đã nhập vẫn được giữ lại.` });
+      }
+      return;
+    }
+
     const videos = [
       ...(formData.video.trim() ? [{ video: formData.video.trim() }] : []),
       ...uploadedMuxVideos.map((item) => ({
@@ -191,9 +254,9 @@ export default function ArticleForm({ isMutationPending, setIsMutationPending }:
   return (
         <div className="bg-white rounded-sm shadow-sm border border-[#D4C4A8] overflow-hidden p-8 sm:p-12 relative animate-in fade-in slide-in-from-bottom-8 duration-700">
           <div className="mb-10 text-center">
-            <h1 className="text-4xl font-bold text-[#2C1E16] mb-4 font-playfair">Thêm Bài Viết Mới</h1>
+            <h1 className="text-4xl font-bold text-[#2C1E16] mb-4 font-playfair">{editing ? 'Sửa Bài Viết' : 'Thêm Bài Viết Mới'}</h1>
             <p className="text-[#5C4033] text-lg italic">
-              Điền thông tin bên dưới để thêm một bài viết mới hoặc nộp dự án của nhóm.
+              {editing ? 'Chỉnh sửa nội dung bài viết. Chỉ các trường bạn thay đổi được lưu.' : 'Điền thông tin bên dưới để thêm một bài viết mới hoặc nộp dự án của nhóm.'}
             </p>
             <div className="w-24 h-[1px] bg-[#B8860B] mx-auto mt-6"></div>
           </div>
@@ -400,8 +463,14 @@ export default function ArticleForm({ isMutationPending, setIsMutationPending }:
                     </svg>
                     {mediaBusy ? 'Đợi tải phương tiện hoàn tất...' : 'Đang lưu bài viết...'}
                   </span>
-                ) : 'Thêm Bài Viết'}
+                ) : editing ? 'Lưu Thay Đổi' : 'Thêm Bài Viết'}
               </button>
+              {editing && (
+                <button type="button" onClick={() => { if (JSON.stringify(formData) === JSON.stringify(baseline.formData) || window.confirm('Bỏ các thay đổi chưa lưu?')) onDone?.(false); }} disabled={isMutationPending}
+                  className="mt-3 w-full py-3 px-6 rounded-lg border-2 border-[#D4C4A8] text-[#2C1E16] font-playfair text-lg hover:bg-[#F4EBD0]">
+                  Hủy
+                </button>
+              )}
             </div>
           </form>
         </div>

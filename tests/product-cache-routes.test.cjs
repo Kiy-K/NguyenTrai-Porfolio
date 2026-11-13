@@ -10,8 +10,8 @@ function route({ authenticated = false, failure = false } = {}) {
   const api = loadTs('app/api/products/route.ts', {
     'next/server': { NextResponse }, 'next/cache': { revalidatePath() {} },
     '@/lib/data': { getProducts: async () => { publicReads++; return all.slice(0, 1); } },
-    '@/lib/persistence': { readContent: async () => { freshReads++; if (failure) throw Error('Neon unavailable'); return { products: all }; } },
-    '@/lib/article-references': loadTs('lib/article-references.ts'),
+    '@/lib/persistence': { readProductsWithRevisions: async () => { freshReads++; if (failure) throw Error('Neon unavailable'); return { products: all, revisions: {} }; } },
+    '@/lib/product-input': loadTs('lib/product-input.ts', { '@/lib/constants': loadTs('lib/constants.ts'), '@/lib/article-references': loadTs('lib/article-references.ts') }), '@/lib/article-references': loadTs('lib/article-references.ts'),
     '@/lib/constants': loadTs('lib/constants.ts'),
     '@/lib/admin-auth': { getClientIpFromHeaders: () => 'ip', getActiveAdminSession: async () => authenticated ? {} : null },
     '@/lib/request-security': {}, '@/lib/rate-limit': {},

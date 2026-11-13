@@ -16,7 +16,7 @@ function productsRoute({ authenticated = true, allowed = true, origin = 'https:/
     '@/lib/admin-auth': { getClientIpFromHeaders: () => 'test-ip', getActiveAdminSession: async () => authenticated ? { sessionId: 'test' } : null },
     '@/lib/rate-limit': { consumeRateLimit: async () => ({ allowed, retryAfterSeconds: 30 }) },
     '@/lib/request-security': loadTs('lib/request-security.ts'),
-    '@/lib/article-references': loadTs('lib/article-references.ts'),
+    '@/lib/product-input': loadTs('lib/product-input.ts', { '@/lib/constants': loadTs('lib/constants.ts'), '@/lib/article-references': loadTs('lib/article-references.ts') }), '@/lib/article-references': loadTs('lib/article-references.ts'),
     '@/lib/constants': loadTs('lib/constants.ts'),
   });
   const post = (body) => route.POST(new Request('https://test.invalid/api/products', {

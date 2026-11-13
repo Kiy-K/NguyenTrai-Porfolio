@@ -62,7 +62,7 @@ for (const backend of ['redis', 'postgres']) {
     });
     const api = loadTs('app/api/products/route.ts', {
       'next/server': { NextResponse }, '@/lib/data': data, '@/lib/persistence': store,
-      '@/lib/article-references': referenceModule, '@/lib/constants': loadTs('lib/constants.ts'),
+      '@/lib/product-input': loadTs('lib/product-input.ts', { '@/lib/constants': loadTs('lib/constants.ts'), '@/lib/article-references': loadTs('lib/article-references.ts') }), '@/lib/article-references': referenceModule, '@/lib/constants': loadTs('lib/constants.ts'),
       '@/lib/admin-auth': { getClientIpFromHeaders: () => 'ip', getActiveAdminSession: async () => ({}) },
       '@/lib/rate-limit': { consumeRateLimit: async () => ({ allowed: true }) },
       '@/lib/request-security': loadTs('lib/request-security.ts'),
@@ -79,7 +79,10 @@ for (const backend of ['redis', 'postgres']) {
     assert.deepEqual(await data.getProduct(product.id), product);
     assert.deepEqual((await data.getProduct(product.id)).references, [{ title: 'Book', author: 'Author' }, { title: 'Site', url: 'https://example.org' }]);
     assert.equal((await data.getProduct('legacy')).references, undefined);
-    const detail = loadTs('app/api/products/[id]/route.ts', { '@/lib/data': data });
+    const detail = loadTs('app/api/products/[id]/route.ts', {
+      'next/server': { NextResponse }, '@/lib/data': data, '@/lib/persistence': store,
+      '@/lib/admin-auth': {}, '@/lib/rate-limit': {}, '@/lib/request-security': {}, '@/lib/product-input': {},
+    });
     const get = id => detail.GET(new Request(`https://test.invalid/api/products/${id}`), { params: Promise.resolve({ id }) });
     const publicResponse = await get(product.id);
     assert.deepEqual((await publicResponse.json()).product, product);
